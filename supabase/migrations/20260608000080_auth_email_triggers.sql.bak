@@ -1,0 +1,49 @@
+-- 000080_auth_email_triggers.sql
+
+-- 1. Enable the pg_net extension to allow Postgres to make HTTP requests
+CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;
+
+-- 2. Create the webhook function
+CREATE OR REPLACE FUNCTION public.send_welcome_email()
+RETURNS TRIGGER AS $$
+DECLARE
+  -- NOTE: For local Docker development, we use host.docker.internal to reach the Next.js server.
+  -- In production on Supabase Cloud, you would replace this with your actual Vercel domain.
+  webhook_url TEXT := 'http://host.docker.internal:3000/api/send-email';
+  payload JSONB;
+BEGIN
+  -- Construct the JSON payload expected by our /api/send-email Next.js route
+  payload := jsonb_build_object(
+    'to', NEW.email,
+    'subject', 'Welcome to Nexus Events OS! 🎉',
+    'html', '
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E6E2DA; border-radius: 12px; overflow: hidden;">
+        <div style="background-color: #0F5B3E; padding: 32px; text-align: center;">
+          <h1 style="color: #FFFFFF; margin: 0; font-size: 24px;">Welcome to Nexus Events</h1>
+        </div>
+        <div style="padding: 32px; background-color: #FFFFFF;">
+          <p style="color: #1D1C17; font-size: 16px; line-height: 1.5;">Hello,</p>
+          <p style="color: #5E6460; font-size: 16px; line-height: 1.5;">Your account has been successfully provisioned. You can now access your personalized event operating system.</p>
+          <a href="http://localhost:3000/dashboard" style="display: inline-block; background-color: #0F5B3E; color: #FFFFFF; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin-top: 16px;">Go to Dashboard</a>
+        </div>
+      </div>
+    '
+  );
+
+  -- Perform the asynchronous HTTP POST request
+  PERFORM net.http_post(
+    url := webhook_url,
+    body := payload,
+    headers := '{"Content-Type": "application/json"}'::jsonb
+  );
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 3. Bind the trigger to the auth.users table
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.send_welcome_email();

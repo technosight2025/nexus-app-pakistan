@@ -1,0 +1,115 @@
+-- Phase 7: Host OS Expansions (Guest Management, Seating, Invitations, Memories)
+
+-- 1. Guest Management Table
+CREATE TABLE IF NOT EXISTS public.event_guests (
+    id UUID PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    group_name TEXT, -- e.g., "Bride's Family", "Colleagues"
+    rsvp_status TEXT DEFAULT 'Pending' CHECK (rsvp_status IN ('Pending', 'Confirmed', 'Declined', 'No Response')),
+    pax_count INTEGER DEFAULT 1,
+    contact_phone TEXT,
+    contact_email TEXT,
+    dietary_requirements TEXT,
+    seating_table_id UUID, -- References seating tables later
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.event_guests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage guests for their events"
+    ON public.event_guests
+    FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.events
+            WHERE events.id = event_guests.event_id
+            AND events.user_id = auth.uid()
+        )
+    );
+
+-- 2. Seating Tables
+CREATE TABLE IF NOT EXISTS public.event_seating_tables (
+    id UUID PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    capacity INTEGER NOT NULL DEFAULT 8,
+    x_position FLOAT,
+    y_position FLOAT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.event_seating_tables ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage seating tables for their events"
+    ON public.event_seating_tables
+    FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.events
+            WHERE events.id = event_seating_tables.event_id
+            AND events.user_id = auth.uid()
+        )
+    );
+
+-- Add foreign key reference from guests to tables
+ALTER TABLE public.event_guests
+    ADD CONSTRAINT fk_seating_table
+    FOREIGN KEY (seating_table_id)
+    REFERENCES public.event_seating_tables(id)
+    ON DELETE SET NULL;
+
+
+-- 3. Digital Invitations
+CREATE TABLE IF NOT EXISTS public.event_invitations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    template_id TEXT NOT NULL, -- e.g., "royal-gold", "minimalist"
+    custom_message TEXT,
+    design_data JSONB DEFAULT '{}'::jsonb,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.event_invitations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage invitations for their events"
+    ON public.event_invitations
+    FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.events
+            WHERE events.id = event_invitations.event_id
+            AND events.user_id = auth.uid()
+        )
+    );
+
+
+-- 4. Event Memories
+CREATE TABLE IF NOT EXISTS public.event_memories (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    uploader_name TEXT NOT NULL,
+    uploader_guest_id UUID REFERENCES public.event_guests(id) ON DELETE SET NULL,
+    image_url TEXT NOT NULL,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    likes_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.event_memories ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage memories for their events"
+    ON public.event_memories
+    FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.events
+            WHERE events.id = event_memories.event_id
+            AND events.user_id = auth.uid()
+        )
+    );
+
+-- Note: We might want a public policy to allow guests to INSERT into event_memories
+-- if they have a special token, but for now we'll stick to basic RLS.

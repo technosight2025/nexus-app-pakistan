@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NEXUS | Orchestrate Perfection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+        .hero-gradient {
+            background: linear-gradient(160deg, rgba(0, 40, 25, 0.55) 0%, rgba(0, 66, 43, 0.88) 100%);
+        }
+        .luxury-shadow {
+            box-shadow: 0 20px 50px rgba(15, 91, 62, 0.13), 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.35s ease, transform 0.35s ease;
+        }
+        /* Navbar scroll effect */
+        #site-header {
+            transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+        }
+        #site-header.scrolled {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 2px 24px rgba(0,66,43,0.10);
+        }
+        /* Animated hero orbs */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.18;
+            animation: orbFloat 8s ease-in-out infinite alternate;
+        }
+        .hero-orb-1 { width: 520px; height: 520px; background: #00422b; top: -100px; left: -120px; animation-delay: 0s; }
+        .hero-orb-2 { width: 380px; height: 380px; background: #fed65b; bottom: 0; right: 80px; animation-delay: -3s; }
+        .hero-orb-3 { width: 260px; height: 260px; background: #8fd5b0; top: 40%; left: 45%; animation-delay: -5.5s; }
+        @keyframes orbFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -40px) scale(1.08); }
+        }
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-32px);
+            transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+        }
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(32px);
+            transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+        }
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        /* Stagger delays */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+        /* Scroll indicator */
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            60%       { transform: translateX(-50%) translateY(12px); opacity: 0.4; }
+        }
+        .scroll-indicator {
+            animation: scrollBounce 1.8s ease-in-out infinite;
+        }
+        /* Mobile menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(.22,1,.36,1);
+        }
+        #mobile-menu.open {
+            max-height: 400px;
+        }
+        /* Category card pop */
+        .cat-card {
+            transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease;
+        }
+        .cat-card:hover {
+            transform: translateY(-8px);
+        }
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #00422b 0%, #246a4c 50%, #fed65b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        /* Pulse badge */
+        @keyframes pulse-ring {
+            0%   { box-shadow: 0 0 0 0 rgba(254,214,91,0.5); }
+            70%  { box-shadow: 0 0 0 10px rgba(254,214,91,0); }
+            100% { box-shadow: 0 0 0 0 rgba(254,214,91,0); }
+        }
+        .pulse-badge { animation: pulse-ring 2.2s cubic-bezier(0.66,0,0,1) infinite; }
+        /* Progress bar */
+        @keyframes progressFill {
+            from { width: 0%; }
+            to   { width: var(--target-w); }
+        }
+        .progress-bar-fill {
+            animation: progressFill 1.4s cubic-bezier(.22,1,.36,1) forwards;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "surface-container-low": "#f4f4ee",
+                "inverse-primary": "#8fd5b0",
+                "surface-dim": "#dadad5",
+                "error": "#ba1a1a",
+                "primary": "#00422b",
+                "tertiary-fixed-dim": "#b4c5ff",
+                "on-tertiary-fixed-variant": "#003ea8",
+                "error-container": "#ffdad6",
+                "on-error-container": "#93000a",
+                "overlay-dark": "rgba(0, 0, 0, 0.7)",
+                "surface-tint": "#246a4c",
+                "secondary-container": "#fed65b",
+                "on-surface": "#1a1c19",
+                "primary-fixed": "#abf2cb",
+                "on-primary": "#ffffff",
+                "on-secondary-container": "#745c00",
+                "on-tertiary": "#ffffff",
+                "outline": "#707972",
+                "inverse-surface": "#2f312e",
+                "tertiary-fixed": "#dbe1ff",
+                "tertiary-container": "#0046bb",
+                "primary-container": "#0f5b3e",
+                "on-secondary-fixed": "#241a00",
+                "surface-variant": "#e3e3de",
+                "secondary-fixed": "#ffe088",
+                "surface-container": "#eeeee9",
+                "glass-fill": "rgba(255, 255, 255, 0.75)",
+                "surface-container-high": "#e8e8e3",
+                "on-tertiary-fixed": "#00174b",
+                "on-primary-container": "#8bd1ac",
+                "glass-border": "rgba(255, 255, 255, 0.3)",
+                "on-background": "#1a1c19",
+                "surface": "#fafaf4",
+                "on-surface-variant": "#404943",
+                "background": "#fafaf4",
+                "tertiary": "#00318a",
+                "on-primary-fixed": "#002113",
+                "on-error": "#ffffff",
+                "inverse-on-surface": "#f1f1ec",
+                "secondary-fixed-dim": "#e9c349",
+                "surface-bright": "#fafaf4",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "secondary": "#735c00",
+                "on-tertiary-container": "#aec0ff",
+                "on-secondary-fixed-variant": "#574500",
+                "outline-variant": "#bfc9c1",
+                "primary-fixed-dim": "#8fd5b0",
+                "on-primary-fixed-variant": "#005236",
+                "surface-container-highest": "#e3e3de",
+                "canvas": "#FAF8F5"
+              },
+              "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "margin-mobile": "16px",
+                "section-xl": "80px",
+                "margin-desktop": "48px",
+                "container-max": "1280px",
+                "gutter": "24px"
+              },
+              "fontFamily": {
+                "headline-md": ["Plus Jakarta Sans"],
+                "title-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "label-sm": ["Plus Jakarta Sans"],
+                "display-xl-mobile": ["Plus Jakarta Sans"],
+                "display-xl": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "title-lg": ["24px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "label-sm": ["10px", {"lineHeight": "1.0", "letterSpacing": "0.2em", "fontWeight": "800"}],
+                "display-xl-mobile": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "display-xl": ["96px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                "body-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-canvas text-on-surface font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<header id="site-header" class="fixed top-0 w-full z-50 bg-glass-fill/20 backdrop-blur-3xl border-b border-glass-border">
+<nav class="max-w-container-max mx-auto px-margin-desktop flex justify-between items-center h-20">
+<div class="flex items-center gap-12">
+<a href="#" class="font-headline-md text-headline-md tracking-tighter font-black text-primary hover:opacity-80 transition-opacity">NEXUS</a>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-secondary-container pb-1 font-body-md text-body-md" href="#">Discover</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Architect</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Portfolio</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Venues</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Concierge</a>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden lg:block px-6 py-2 rounded-full font-bold text-primary border border-primary/20 hover:bg-primary/5 transition-all duration-300 active:scale-95">Login</button>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:translate-y-[-2px] active:scale-95 transition-all duration-300">Get Started</button>
+<button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" aria-label="Toggle menu">
+  <span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Mobile menu -->
+<div id="mobile-menu" class="md:hidden bg-white/95 backdrop-blur-xl border-t border-surface-variant">
+  <div class="px-6 py-4 flex flex-col gap-4">
+    <a class="text-primary font-bold py-2 border-b border-surface-variant" href="#">Discover</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors py-2 border-b border-surface-variant" href="#">Architect</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors py-2 border-b border-surface-variant" href="#">Portfolio</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors py-2 border-b border-surface-variant" href="#">Venues</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors py-2" href="#">Concierge</a>
+    <div class="flex gap-3 pt-2">
+      <button class="flex-1 border border-primary text-primary py-3 rounded-full font-bold hover:bg-primary/5 transition-all">Login</button>
+      <button class="flex-1 bg-primary text-on-primary py-3 rounded-full font-bold">Get Started</button>
+    </div>
+  </div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover scale-105" alt="A luxurious, grand ballroom event space with massive crystal chandeliers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx7fP19UHvEJRSQyNW4_p24d50KTbk1K0u7FkXwEkTQWYgOoTYjpQmjc3tA410194_b2H7L9KMSZ9LbDN-eHCwFzWLs7y_I6T8KZjd0nSSlbljj4c6_RBQqBtWjEiouqY5dUcU1aELxS67kRUOHImoE7eEoXtSczR1sgRWeJDOs8RZMtBLEZWVQeSdLH9oxkJ2zN-ZXAoVOcSCtJCrQszhg77dVW0_CcsEIUhz7pSDwUGfvZbbTKL-HbE26ElWGwK7oIU6_dirqYJt"/>
+<div class="absolute inset-0 hero-gradient"></div>
+<!-- Animated orbs -->
+<div class="hero-orb hero-orb-1"></div>
+<div class="hero-orb hero-orb-2"></div>
+<div class="hero-orb hero-orb-3"></div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop w-full grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10 py-20 lg:py-0">
+<div class="flex flex-col justify-center text-on-primary space-y-8">
+<div class="reveal inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit pulse-badge">
+<span class="material-symbols-outlined text-secondary-fixed text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">Elite Event Ecosystem</span>
+</div>
+<h1 class="reveal delay-1 font-display-xl text-display-xl-mobile lg:text-display-xl leading-none">
+  Orchestrate <br/> <span class="text-secondary-fixed">Perfection</span>
+</h1>
+<p class="reveal delay-2 font-body-lg text-body-lg max-w-lg opacity-90">
+  Design, procure, and manage ultra-luxury events with the precision of a fintech platform. Your vision, scaled by our network of elite professionals.
+</p>
+<div class="reveal delay-3 flex flex-wrap gap-4 pt-4">
+<button class="bg-secondary-container text-on-secondary-container px-10 py-4 rounded-full font-bold text-lg luxury-shadow hover:translate-y-[-4px] hover:shadow-2xl transition-all duration-300">Build My Event</button>
+<button class="glass-card text-on-primary px-10 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-all duration-300">Explore Venues</button>
+</div>
+<!-- Trust pills -->
+<div class="reveal delay-4 flex flex-wrap gap-3 pt-2">
+<div class="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5">
+  <span class="material-symbols-outlined text-secondary-fixed text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+  <span class="text-white text-xs font-semibold">5.0 Platform Rating</span>
+</div>
+<div class="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5">
+  <span class="material-symbols-outlined text-secondary-fixed text-xs" style="font-variation-settings: 'FILL' 1;">shield</span>
+  <span class="text-white text-xs font-semibold">NVP Verified Vendors</span>
+</div>
+<div class="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5">
+  <span class="material-symbols-outlined text-secondary-fixed text-xs" style="font-variation-settings: 'FILL' 1;">location_city</span>
+  <span class="text-white text-xs font-semibold">12+ Cities</span>
+</div>
+</div>
+</div>
+<!-- Interactive Architect Card -->
+<div class="reveal-right delay-2 flex items-center justify-center lg:justify-end">
+<div class="glass-card p-8 rounded-lg w-full max-w-md luxury-shadow border-white/40 space-y-6 hover:rotate-1 hover:scale-[1.02] transition-all duration-500">
+<div class="flex justify-between items-center">
+<h3 class="font-title-lg text-title-lg text-primary">Event Architect</h3>
+<div class="bg-primary/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">architecture</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-white/50 p-4 rounded-xl border border-white/30 hover:bg-white/70 transition-colors cursor-pointer">
+<label class="font-label-sm block mb-1 opacity-60">SELECTED VENUE</label>
+<div class="flex justify-between items-center">
+<span class="font-bold text-sm">The Royal Marquee, Lahore</span>
+<span class="text-primary font-black text-sm">PKR 850k</span>
+</div>
+<!-- Mini progress bar -->
+<div class="mt-2 h-1 bg-surface-variant rounded-full overflow-hidden">
+  <div class="h-full bg-primary rounded-full progress-bar-fill" style="--target-w: 58%"></div>
+</div>
+</div>
+<div class="bg-white/50 p-4 rounded-xl border border-white/30 hover:bg-white/70 transition-colors cursor-pointer">
+<label class="font-label-sm block mb-1 opacity-60">VENDOR CLUSTER</label>
+<div class="flex justify-between items-center">
+<span class="font-bold text-sm">Catering + Decor + AV</span>
+<span class="text-primary font-black text-sm">PKR 600k</span>
+</div>
+<div class="mt-2 h-1 bg-surface-variant rounded-full overflow-hidden">
+  <div class="h-full bg-secondary rounded-full progress-bar-fill" style="--target-w: 41%"></div>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-primary/10">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-sm opacity-60">ESTIMATED TOTAL</p>
+<h2 class="font-display-xl-mobile text-primary font-black tracking-tighter" id="live-total">PKR 1,450,000</h2>
+</div>
+<div class="bg-primary text-on-primary p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 group hover:bg-primary-container hover:text-primary transition-all duration-300 shadow-lg">
+  Finalize Architecture
+  <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Scroll indicator -->
+<div class="scroll-indicator absolute bottom-8 left-1/2 z-20 flex flex-col items-center gap-1 text-white/60">
+<span class="text-xs tracking-widest uppercase font-semibold">Scroll</span>
+<span class="material-symbols-outlined text-xl">keyboard_arrow_down</span>
+</div>
+</section>
+<!-- Trust & Metrics Strip -->
+<section class="py-section-xl bg-canvas">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- B2C Card -->
+<div class="glass-card p-12 rounded-lg border-secondary-container/30 luxury-shadow flex flex-col justify-between space-y-8">
+<div class="space-y-6">
+<div class="w-16 h-16 bg-secondary-container/20 rounded-full flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl">person_celebration</span>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-md text-headline-md text-primary">Personal Event Architecture</h3>
+<p class="font-body-lg text-on-surface-variant">Bespoke planning for those who demand perfection in every detail of their private celebrations.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm font-bold">Couture Rentals</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm font-bold">Digital Invitations</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm font-bold">Concierge Planning</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm font-bold">Elite Verification</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-bold hover:translate-y-[-2px] transition-all active:scale-95">Plan Your Masterpiece</button>
+</div>
+<!-- B2B Card -->
+<div class="bg-primary-container p-12 rounded-lg luxury-shadow flex flex-col justify-between space-y-8">
+<div class="space-y-6">
+<div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-3xl">command_key</span>
+</div>
+<div class="space-y-2">
+<h3 class="font-headline-md text-headline-md text-on-primary">Professional Command Center</h3>
+<p class="font-body-lg text-on-primary-container/80">Advanced tools and ecosystem access for agencies, vendors, and venues to scale their operations.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2 text-on-primary-container/80">
+<span class="material-symbols-outlined text-secondary-fixed text-sm">check_circle</span>
+<span class="text-sm font-bold">Smart Quote Builder</span>
+</div>
+<div class="flex items-center gap-2 text-on-primary-container/80">
+<span class="material-symbols-outlined text-secondary-fixed text-sm">check_circle</span>
+<span class="text-sm font-bold">Venue Displays</span>
+</div>
+<div class="flex items-center gap-2 text-on-primary-container/80">
+<span class="material-symbols-outlined text-secondary-fixed text-sm">check_circle</span>
+<span class="text-sm font-bold">Fleet Tracking</span>
+</div>
+<div class="flex items-center gap-2 text-on-primary-container/80">
+<span class="material-symbols-outlined text-secondary-fixed text-sm">check_circle</span>
+<span class="text-sm font-bold">Business Analytics</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-full font-bold hover:translate-y-[-2px] transition-all active:scale-95">Scale Your Agency</button>
+</div>
+</div>
+</div>
+</section><section class="relative z-20 -mt-12">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="bg-white rounded-lg luxury-shadow py-10 px-8 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-surface-variant">
+<div class="flex flex-col items-center text-center px-4 reveal delay-1">
+<span class="font-headline-md text-headline-md text-primary font-black count-up" data-target="1500" data-suffix="+">0+</span>
+<span class="font-body-md text-on-surface-variant">Verified Vendors</span>
+</div>
+<div class="flex flex-col items-center text-center px-4 reveal delay-2">
+<span class="font-headline-md text-headline-md text-primary font-black count-up" data-target="12" data-suffix="+">0+</span>
+<span class="font-body-md text-on-surface-variant">Major Cities</span>
+</div>
+<div class="flex flex-col items-center text-center px-4 reveal delay-3">
+<span class="font-headline-md text-headline-md text-primary font-black count-up" data-target="25000" data-suffix="+">0+</span>
+<span class="font-body-md text-on-surface-variant">Events Orchestrated</span>
+</div>
+<div class="flex flex-col items-center text-center px-4 reveal delay-4">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-body-md text-on-surface-variant">Premium Rating</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Service Categories -->
+<section class="py-section-xl">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex justify-between items-end mb-12">
+<div class="reveal">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2 block">What We Offer</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Core Services</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Every element of your event, flawlessly integrated.</p>
+</div>
+<button class="reveal text-primary font-bold flex items-center gap-2 group border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all duration-300">
+  View Ecosystem <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-6 gap-6">
+<!-- Category Item -->
+<div class="group cursor-pointer cat-card reveal delay-1">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">temple_buddhist</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Venues</h4>
+<span class="text-xs text-on-surface-variant">340+ listed</span>
+</div>
+</div>
+<div class="group cursor-pointer cat-card reveal delay-2">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">restaurant</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Catering</h4>
+<span class="text-xs text-on-surface-variant">280+ vendors</span>
+</div>
+</div>
+<div class="group cursor-pointer cat-card reveal delay-3">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">camera_enhance</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Media</h4>
+<span class="text-xs text-on-surface-variant">195+ studios</span>
+</div>
+</div>
+<div class="group cursor-pointer cat-card reveal delay-4">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">forest</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Decor</h4>
+<span class="text-xs text-on-surface-variant">420+ artisans</span>
+</div>
+</div>
+<div class="group cursor-pointer cat-card reveal delay-5">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">music_note</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Entertainment</h4>
+<span class="text-xs text-on-surface-variant">170+ acts</span>
+</div>
+</div>
+<div class="group cursor-pointer cat-card reveal delay-6">
+<div class="bg-white p-6 rounded-lg border border-surface-variant text-center space-y-3 hover:border-primary/50 hover:shadow-xl luxury-shadow">
+<div class="w-14 h-14 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">styler</span>
+</div>
+<h4 class="font-title-lg text-body-lg font-bold">Stylists</h4>
+<span class="text-xs text-on-surface-variant">95+ designers</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Destinations (Bento Grid) -->
+<section class="py-section-xl bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-12">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2 block reveal">Curated Spaces</span>
+<h2 class="font-headline-lg text-headline-lg text-primary reveal delay-1">Elite Venues</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-[800px]">
+<!-- Bento Card 1 -->
+<div class="md:col-span-2 md:row-span-2 relative rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A grand, historic colonial-style mansion at twilight in Islamabad, Pakistan. The exterior is illuminated by soft spotlighting, showcasing intricate architectural details and tall white columns. The surrounding lush gardens are filled with fairy lights and elegant outdoor seating. The style is premium, high-fidelity photography with a sense of timeless prestige and exclusivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmxbhdTt1ZxCLhIpXLQxwR4m7z5jFtxKlJZ5hkp9Cfaftxw5AJX3X4dcz7QDLqoouyXBrNyv1ww6jzMoMZu8Wjz9Yse1BHL7jH2z05DCb2kdolLyHGnFwIH582X9DIoHjdS0JUPTOAy98x4FRLUYo9AK9-YTk_zKt5RQoRJ42Z2Xv5iy7q6p_ucmh9kVQEwd4xvnIR8dE-qChEWRHxldxOeEV3eByMa9I7FTsQ0r3mWDyYoKzu2qebEIkd9IeBv88GMS6sjD7LLHrl"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute top-6 left-6 bg-secondary text-on-secondary px-4 py-1 rounded-full font-label-sm uppercase">Legacy Estate</div>
+<div class="absolute bottom-8 left-8 text-white">
+<h3 class="font-headline-md text-headline-md">The Monal Palace, Islamabad</h3>
+<p class="font-body-lg opacity-80 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span> Margalla Hills Pinnacle
+                            </p>
+<div class="mt-4 flex items-center gap-6">
+<div class="text-secondary-fixed font-black text-2xl">PKR 1.2M <span class="text-sm font-normal opacity-70">starting</span></div>
+<button class="bg-white text-primary px-6 py-2 rounded-full font-bold hover:bg-secondary-container transition-colors">Book Exclusive Tour</button>
+</div>
+</div>
+</div>
+<!-- Bento Card 2 -->
+<div class="relative rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A contemporary, glass-walled rooftop event space overlooking the urban skyline of Karachi at night. The interior is decorated with minimalist white floral arrangements and sleek, modern furniture. Glowing blue and emerald ambient lighting creates a futuristic, high-tech luxury vibe. The overall atmosphere is energetic, clean, and perfectly suited for a premium fintech-style event ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTSXlwrdxCb-1uy-GmE4E7H05gyxa5JOkFms1Mzam_Gekbm1cgw7vpCdPdvrGSf6y04XARukiXRZC6MmgJoT-C3oeF8d6CaQG92UkmqzhME92dbYBT5lRYyPjX2I5jF7D60MzYRCWI3mp-fDRxeNMelVi3Wmw1eLV10vfUR1CJH1oqFqspzWcOgr7JGU8k-hxPMxFj_qB-0MHYsIU2M7-zxbY4iDQF15hXC8yATNOqoh44NHzddBGNp9X2AsD0dGXnmCw2IbEXx7A6"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute top-6 left-6 bg-secondary text-on-secondary px-4 py-1 rounded-full font-label-sm uppercase">Sky Deck</div>
+<div class="absolute bottom-6 left-6 text-white">
+<h3 class="font-title-lg text-title-lg">Ocean View Plaza</h3>
+<p class="font-body-md opacity-80">Karachi Financial District</p>
+</div>
+</div>
+<!-- Bento Card 3 -->
+<div class="relative rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A grand banquet hall in Lahore with traditional Mughal-inspired arches and gold leaf ceiling motifs. The room is filled with large floral installations and thousands of candles, creating a warm, regal glow. The style is classic luxury, emphasizing heritage and opulence with a modern, clean photographic finish. The color palette features deep reds, golds, and emerald greens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_35G5FHExHLwgaVBtwGs1_HS-qAEIE0vhH6wmaMD7nQp_GyEwqdLzdRBe0p1oDW0DbCUegwEmtHTSvZtoor5SSd7xt8JRGZmcJJhYc0u8iwhQkC31_wEwHDpZzmEv13wyRio_vNjf30xA8eJGmvl-S82jm1db4trKss5PBsWSI1KvXm0UGVkZtUv0UpMVEhoLOrQb2z96L-eH317vUt4vqymLIO73XIU53Q4z3qxEnOVcB3zx33b4oa5adpiauglfkv8IekCR8Wy_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute top-6 left-6 bg-secondary text-on-secondary px-4 py-1 rounded-full font-label-sm uppercase">Heritage Hall</div>
+<div class="absolute bottom-6 left-6 text-white">
+<h3 class="font-title-lg text-title-lg">The Heritage Grand</h3>
+<p class="font-body-md opacity-80">Old Lahore Precinct</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Verified Professionals -->
+<section class="py-section-xl bg-canvas">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16 space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">Elite Verified Professionals</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Only the top 1% of vendors pass our rigorous Nexus Verification Process (NVP).</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Vendor Card -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A professional chef in a pristine white uniform carefully plating a high-end gourmet dish in a modern, stainless steel commercial kitchen. The lighting is crisp and bright, highlighting the vibrant colors of the fresh ingredients. The image communicates professional precision, quality, and high-end catering expertise within the Nexus ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwmFI8rL9aiSwkjfIQDUUKvotg1lLfN33Z-lL1xTd6__OXRXMSU-JX2TF6neMirLgpZOhhYa3jtTjuo8DRy4F4Zoua8tKPJqsbFVrafZHJUKWVZqyZkwSrE4ASwkGk7Up4Ynb0sYw24rS07EihvaG13lai-yMnPec0O4n4NwSzAdOb72enUGLI5PRBEmesZvGAlxIiqr_ZpVwv33eEqflMs_Auiipy7Ol8HKbzYHkrI10XAVBM61QXGtSVkGhYai97FexP3OH_0ynk"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-title-lg text-title-lg text-primary">Silver Spoon</h4>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest">Catering Specialist</p>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-sm">4.9</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Modern Fusion</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Mughal Classic</span>
+</div>
+<button class="w-full border-2 border-primary text-primary font-bold py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-all">Check Availability</button>
+</div>
+</div>
+<!-- Vendor Card 2 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A wide-angle shot of a cinematic wedding cinematography setup, with a gimbal-mounted camera capturing a grand entrance. The lighting is atmospheric with bokeh effects from fairy lights in the background. The equipment is modern and high-end, signaling top-tier professional media services in the event planning industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxNsyHcixwvBYVp4akBmVLu0iFXbSdyuVAQESETPnqvp_q73qSmDUWOir6kfGBHNMeDqYFzak5aE9_ujVgMKEgg_li5VKoF9QNo9F5trjoOUoBLn3doHubTvFOxcMg8jmMTLdds59zYaFbLnjPyQ3s3lMmqxSxSrDd3pZb2uA3dXzp9TBZ9B7M5a6-rOMorRMqQnUG_L7wMMeG53JaBAQWEpoCzdHL62vYk2Vwpxaa8lTX95mB3hQh3-2iMLF6t0S6Q4hDErFhm4tt"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-title-lg text-title-lg text-primary">Cinematic Arts</h4>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest">Media &amp; Film</p>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-sm">5.0</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">8K RAW</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Drone Live</span>
+</div>
+<button class="w-full border-2 border-primary text-primary font-bold py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-all">Check Availability</button>
+</div>
+</div>
+<!-- Vendor Card 3 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A macro shot of a complex floral installation, featuring exotic orchids and emerald green foliage. The lighting is soft and directional, creating dramatic shadows and highlighting textures. The aesthetic is extremely high-end, sophisticated, and artistic, perfect for an elite event decor provider." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQq3htGlr9O3tpyjaCHWXnTXjP763REcKoQSmGAGMV0_-JT4jJ781W5ySe3kyGRUrEmDhgHnUdKjtPsWBW7rTohTB2pIi1SxKqh_1CbQMoUALPbo2DsdWlqGGqZ3w2od97bxmgH9cJE9KFVqU8MGTUdH4kL0QoRNQz4LPEL90OaLGjA_aZllUPw13FWGV_Z274PJyw7223jeJE7wi3Rsm52knT8HOcN2kuLCCYOTMFzKN6EiOsHMyylrZc_0lpzeOVjzXopuAGvVWA"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-title-lg text-title-lg text-primary">Floral Essence</h4>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest">Luxury Decor</p>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-sm">4.8</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Imported Florals</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Artisan</span>
+</div>
+<button class="w-full border-2 border-primary text-primary font-bold py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-all">Check Availability</button>
+</div>
+</div>
+<!-- Vendor Card 4 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A professional soundboard in a luxury event venue, with hundreds of glowing faders and knobs. In the background, a massive high-resolution LED screen displays vibrant abstract patterns. The lighting is dark with neon blue and emerald accents, emphasizing high-tech production capabilities and advanced audio-visual technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsn8IxrufWYzZU0Ed6H1Dr6rQQ8U4JH35gcp6N7JGILBfN5cqN2jQpwL3h9lvo_KG7aN6K886i_ZqEsLgyDz0sBAS2QojdeO_dIT6tBo-Yr6diUAJboHWJAnTGeoTWVgZSYSwgB3mphPVHROnLR2J0SrNtqfxLTanj744hvc7PR88yk2TXgP1BqQbPLhKFP5aqxE11KNwrDz5jkv-_gnJRGW87XP9ABeEYQXlfBR3serJkTUQ5u7FE6fWPAiq6RqRSy5L838ybXEjJ"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-title-lg text-title-lg text-primary">Nova Pro AV</h4>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest">Tech &amp; Production</p>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-sm">4.9</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">LED Mapping</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs">Surround</span>
+</div>
+<button class="w-full border-2 border-primary text-primary font-bold py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-all">Check Availability</button>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-section-xl bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16 space-y-4">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit mx-auto">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Premium Inventory</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Elite Event Rentals</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Source luxury furniture, high-end AV technology, and bespoke decor for your signature event.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Rental Card 1 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative overflow-hidden">
+<img alt="Luxury Furniture &amp; Decor" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgzGhzcEFxfo6EGaA2je1YHfdJVcueC2tqNj7xDLRqTnDoSSPrZf74a23Hq9-kQod4u91l1q7LtDF8vozo_0Xqsa6ZwCYDSVHZ5fY8C5rzVhvo6gnCs_GWpGGrogch3IBxH6sxdUtpKlCKQIs3-Rse6XDJDWHWNmvpvUJ0Oln7lxLT3viC1VrdWWA-5l3DqIXpE1pWMc9nC-uF4mBIoxSl-bDe0U9MJbDrwN72m-oeoxSmwSDLCi9AdHdlmAL_9EFb78QxkVmxYVL0"/>
+<div class="absolute top-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm uppercase">Furniture</div>
+</div>
+<div class="p-6 space-y-4">
+<h4 class="font-title-lg text-title-lg text-primary">Luxury Furniture &amp; Decor</h4>
+<p class="text-on-surface-variant font-body-md">Designer seating, crystal centerpieces, and premium tableware.</p>
+<div class="flex justify-between items-center pt-2">
+<div class="text-primary font-black">PKR 15k <span class="text-xs font-normal opacity-60">/ unit</span></div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+              View Catalog <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Rental Card 2 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative overflow-hidden">
+<img alt="Premium AV &amp; Tech" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOOWzSbkuAaSFUI2GwxtiDT958tkd1bXgemw_J3oiDok2_haSSGV2SuRAO_BursBaRK4jMnB9glL3VbZiRXi_4mtxdXBqtgX5CeskU32xja2ZEY1jrcpBSGgsYVV4B6iwPy340gGwjb-wiq9Ulm09Bd5WtRevLEK-jdvYNN1PRueA0UdFXKQTGaXhvg33dimYMZO4ofHdONaDiACGhKoS72Y8WSTUpfFWb0C1y8bzlnnhlqCy9KV8658L_XLSXewDjd3xTIbW1srGJ"/>
+<div class="absolute top-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm uppercase">AV Tech</div>
+</div>
+<div class="p-6 space-y-4">
+<h4 class="font-title-lg text-title-lg text-primary">Premium AV &amp; Tech</h4>
+<p class="text-on-surface-variant font-body-md">4K LED walls, line-array sound, and intelligent stage lighting.</p>
+<div class="flex justify-between items-center pt-2">
+<div class="text-primary font-black">PKR 45k <span class="text-xs font-normal opacity-60">/ day</span></div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+              View Catalog <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Rental Card 3 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-64 relative overflow-hidden">
+<img alt="Gala &amp; Marquee Setup" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc48lDlYS2yDKdIkEKqX2_igxsghr5SH180ArulSEQtPDtbILfL3Bf454QAKQw2jcOP9OQFmA6qNJP6ZXQ9T45kcPXhRSoBjZ778Yi8PKj2Bweb9_0m_uLyTngOqLoWDlcVT5QeNgahfD5Ln8r6bK2PhmVgzl0RRFyfE9xG8RN-aAWjHyX8lISMYHm47aNWOziUOvMLA4Pa2oISpT7DQAkqXo571gjrMNl0fQ0nPbqM5u4duotPRxExRxAIAJOXK0AVMnJX-y4tnFq"/>
+<div class="absolute top-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm uppercase">Marquee</div>
+</div>
+<div class="p-6 space-y-4">
+<h4 class="font-title-lg text-title-lg text-primary">Gala &amp; Marquee Setup</h4>
+<p class="text-on-surface-variant font-body-md">Modular white lounge systems, mirrored tables, and floral structures.</p>
+<div class="flex justify-between items-center pt-2">
+<div class="text-primary font-black">PKR 85k <span class="text-xs font-normal opacity-60">/ setup</span></div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+              View Catalog <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-section-xl bg-canvas">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16 space-y-4">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit mx-auto">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">apparel</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Couture Collection</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Bridal &amp; Couture Rentals</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Elite Lehngas, designer Sherwanis, and luxury jewelry for your signature look.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Couture Card 1 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-[400px] relative overflow-hidden">
+<img alt="Luxury Bridal Couture" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8LMn-ttXIhD00P1InEY9tOvn4idp8hk_uVmRbMI2DejU57NwXaOpOpqsed6z6m1dv9KHDC7QA8nvoK_KaiU3IvWkmwdI6dsWN4ZXJeBti2rbXd3yRjclt54WvDNIf8NtQCy0YjIdXIN7TT7S6jTxWjT-Ek3E81wbmea6EdhQ20V10SCFl_uhQZmEGiO9TRIRCgOfvHcUpm9AgU7rf6W9e9kYBXVjgH4oAT3Y5nVuFeQrrEblGtxn1FOIsD5ZaYrNsiaP3Xi6gwjW1"/>
+<div class="absolute top-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm uppercase">Couture</div>
+</div>
+<div class="p-8 space-y-4">
+<h4 class="font-title-lg text-title-lg text-primary">Luxury Bridal Couture</h4>
+<p class="text-on-surface-variant font-body-md">Hand-embroidered designer Lehngas and bridal wear from Pakistan's top couturiers.</p>
+<div class="flex justify-between items-center pt-2">
+<div class="text-primary font-black">From PKR 45k <span class="text-xs font-normal opacity-60">/ event</span></div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+              Browse Collection <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Couture Card 2 -->
+<div class="bg-white rounded-lg luxury-shadow overflow-hidden group border border-surface-variant">
+<div class="h-[400px] relative overflow-hidden">
+<img alt="Elite Jewelry &amp; Accents" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUQQU5_fYPvoP2lRMkcS1Pf74Mvfchi13544uBHXF6egIIMsmLTV0EKJZ00SghXsDekPfGCjqCqrSOeiogYkDSuCNaQd_3Te_ftbZP9UaUI-CV42fUkA0dU_2H3lKRLkq3C0uyr7OY-CqNHKuCfHzTvH1Mse0T6HsjZOSuhHeU2HD5ufDRDUdNDkkjeFhsdU5kmNdMOCuTpTlE3-iwYwiW8tP_EVu4pnyTVSBqvepvboXehWWC_SB77B95IF5XCd2kP2MztP2srQC5"/>
+<div class="absolute top-4 right-4 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm uppercase">Jewelry</div>
+</div>
+<div class="p-8 space-y-4">
+<h4 class="font-title-lg text-title-lg text-primary">Elite Jewelry &amp; Accents</h4>
+<p class="text-on-surface-variant font-body-md">Authentic kundan, polki, and gold-plated jewelry sets to complement your attire.</p>
+<div class="flex justify-between items-center pt-2">
+<div class="text-primary font-black">From PKR 15k <span class="text-xs font-normal opacity-60">/ event</span></div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+              View Jewelry <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-section-xl bg-surface-container-low overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">auto_videocam</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Digital Invitation Studio</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Orchestrate Your Arrival</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Animated, Musical, and Purely Cinematic. Set the tone for your ultra-luxury event with digital invitations that feel like a movie premiere.
+        </p>
+<div class="glass-card p-8 rounded-lg luxury-shadow border-white/40 space-y-6">
+<h4 class="font-title-lg text-title-lg text-primary">Cinematic Digital Invitations</h4>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span>Custom Motion Graphics &amp; Calligraphy</span>
+</li>
+<li class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span>Integrated RSVP &amp; Guest Management</span>
+</li>
+<li class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span>Immersive Background Scores</span>
+</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 group transition-all hover:translate-y-[-2px]">
+            Start Designing
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute -inset-4 bg-primary/5 rounded-xl blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="relative rounded-xl overflow-hidden luxury-shadow border-4 border-white">
+<img alt="Cinematic Digital Invitation Preview" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD741YSyMS0BcFbCYLbhRzn7dGA6QZnpo0SVRwOnJEWzEc90fiAWfxYL_2SqXsH5zaza1d7i82AhT_DZGlMViXzTdu2OhBBXls94rQtwiFifKPNzoOUQfitlF6-87A1D_nf4Qas6q8uqTrzPZEnoHicf1twf_s5cTuT_bTk9xA8UUP-ltmYKefuzT4MekjwjJ5XUQ98dOvXHMoTmDIkx-yySBIIBkeCbiICwRNbqcOP0TyEMHuiIFBKe_uvxo_mQRI-VmyvySd71Up5"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+<span class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined">play_circle</span> Preview Animation
+            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-section-xl bg-canvas overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="relative group order-2 lg:order-1">
+<div class="absolute -inset-4 bg-primary/5 rounded-xl blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="relative rounded-xl overflow-hidden luxury-shadow border-4 border-white">
+<img alt="Intelligent Venue Displays" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-YHlIK7GAgdMS3AagI4fKsA9YnSvLwlnpzemjErKLES7s9EWMLwwHL-xrQcGDX3LL5Dwb9QwvvI9I74KJl76zA5IYJ2UpO3ux5nF5lTpLYd94D-sKbi0bZIAzxhuAWRFQp6Gd1ukzxNp3ddauKe14EXDv_zFoPAztKRO0Tti2fGn66CMpCmJumGNrBI5vc-Zb98oj2MvZSi3baFoKgLhqTDXMQqFy3ByJZjiTSqsoJsp41RocfPK5mb_tFy4QccsTGmCqDzqZvRU3"/>
+</div>
+</div>
+<div class="space-y-8 order-1 lg:order-2">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">display_settings</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Digital Display System</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Intelligent Venue Displays</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Transform your space with real-time digital signage, interactive wayfinding, and cinematic ambient visuals.
+        </p>
+<div class="glass-card p-8 rounded-lg luxury-shadow border-white/40 space-y-6">
+<ul class="space-y-4">
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">map</span>
+<div>
+<span class="font-bold text-primary block">Smart Wayfinding</span>
+<span class="text-sm">Guide guests with dynamic, real-time directional signage.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">schedule</span>
+<div>
+<span class="font-bold text-primary block">Live Event Timelines</span>
+<span class="text-sm">Keep everyone synchronized with auto-updating schedules.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">branding_watermark</span>
+<div>
+<span class="font-bold text-primary block">Immersive Branding</span>
+<span class="text-sm">Project your event's visual identity across high-fidelity displays.</span>
+</div>
+</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 group transition-all hover:translate-y-[-2px]">
+            Explore Display Solutions
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-section-xl bg-surface-container-low overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-secondary-container/30 backdrop-blur-md rounded-full w-fit">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Financial Precision for Elite Events</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Smart Budget Designer</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Take control of your event finances with our real-time budget orchestration engine. Plan with confidence using AI-driven cost projections and vendor expense tracking.
+        </p>
+<div class="glass-card p-8 rounded-lg luxury-shadow border-white/40 space-y-6">
+<ul class="space-y-4">
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">monitoring</span>
+<div>
+<span class="font-bold text-primary block">Live Expense Tracking</span>
+<span class="text-sm">Monitor every rupee with real-time updates and allocation alerts.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">insights</span>
+<div>
+<span class="font-bold text-primary block">AI Cost Projections</span>
+<span class="text-sm">Anticipate market fluctuations with intelligent financial forecasting.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary mt-1">account_balance_wallet</span>
+<div>
+<span class="font-bold text-primary block">Vendor Payment Portal</span>
+<span class="text-sm">Streamline transactions with integrated, secure payment management.</span>
+</div>
+</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 group transition-all hover:translate-y-[-2px]">
+            Launch Budget Designer
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute -inset-4 bg-primary/5 rounded-xl blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="relative rounded-xl overflow-hidden luxury-shadow border-4 border-white">
+<img alt="Smart Budget Designer Dashboard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_35G5FHExHLwgaVBtwGs1_HS-qAEIE0vhH6wmaMD7nQp_GyEwqdLzdRBe0p1oDW0DbCUegwEmtHTSvZtoor5SSd7xt8JRGZmcJJhYc0u8iwhQkC31_wEwHDpZzmEv13wyRio_vNjf30xA8eJGmvl-S82jm1db4trKss5PBsWSI1KvXm0UGVkZtUv0UpMVEhoLOrQb2z96L-eH317vUt4vqymLIO73XIU53Q4z3qxEnOVcB3zx33b4oa5adpiauglfkv8IekCR8Wy_"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Call to Action Banner -->
+<section class="py-section-xl">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="bg-primary-container rounded-lg overflow-hidden relative flex flex-col md:flex-row items-center">
+<div class="md:w-1/2 p-12 lg:p-20 space-y-8 z-10">
+<h2 class="font-headline-lg text-headline-lg text-on-primary-container">Ready to Orchestrate?</h2>
+<p class="font-body-lg text-body-lg text-on-primary-container/80">
+                            Join the elite circle of hosts who value precision, luxury, and peace of mind. Get a tailored architectural plan for your next event in under 5 minutes.
+                        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-10 py-4 rounded-full font-bold luxury-shadow hover:scale-105 transition-all">Start Your Plan</button>
+<button class="border border-on-primary-container/30 text-on-primary-container px-10 py-4 rounded-full font-bold hover:bg-white/10 transition-all">Talk to Concierge</button>
+</div>
+</div>
+<div class="md:w-1/2 h-[400px] md:h-full relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-end gala dinner event with hundreds of guests in black-tie attire. The room is filled with warmth, luxury, and professional orchestration. Long banquet tables are perfectly aligned, with crystal glasses sparkling under soft spotlights. The image captures the successful realization of a massive, perfectly planned event, reflecting the ultimate result of the Nexus ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcaTuG-HHa37DXzG_DukAfLKHh8s0A6EsN6Mf4qLnCMkPIZn_1oNSe0qPVKITREspJYOuqEBmFZJO9ZNfKxnrCJ26uLYse53DYoYQQ1EPuDVIWRKyAQ_mAlaKWkejsqADMXGmW5vzxE5LV-Siq_09Xzh_r-oW28NKKM5jM6Pz6UW6RuIsvMunOwI6ISoVU5SEvQ1ujrK5i-leLon0kiz724mW-5ouNlWHRD9DlhJ-BdkkyDT1gbzT64M1IObRJRg630qnxc3LAbXzK"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full relative bottom-0 bg-primary border-t border-primary-container">
+<div class="max-w-container-max mx-auto px-margin-desktop py-section-xl flex flex-col space-y-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="space-y-6">
+<span class="font-headline-md text-headline-md text-secondary-fixed">NEXUS</span>
+<p class="font-body-md text-body-md text-on-primary/60 max-w-xs">
+                        The ultimate ecosystem for luxury event planning. Technology-driven, human-centered, and flawlessly executed.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-on-primary hover:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-on-primary hover:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined">camera</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-on-primary hover:bg-secondary-container transition-colors" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+</a>
+</div>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold">Services</h5>
+<ul class="space-y-3">
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Venue Acquisition</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Vendor Orchestration</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Budget Architect</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Event Concierge</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold">Company</h5>
+<ul class="space-y-3">
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Our Vision</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Elite Network</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Vendor Portal</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Press Kit</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold">Regional Presence</h5>
+<ul class="space-y-3">
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Lahore (HQ)</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Karachi Hub</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Islamabad Center</a></li>
+<li><a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Dubai Global</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div>
+<span class="text-on-primary/60 text-sm">© 2026 NEXUS Event Ecosystem. Pakistan's Premier Luxury Platform.</span>
+<p class="text-on-primary/30 text-xs mt-1">Registered in Pakistan · All rights reserved.</p>
+</div>
+<div class="flex gap-8 text-sm">
+<a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-primary/60 hover:text-on-primary transition-colors" href="#">Cookie Settings</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    /* ── Navbar scroll effect ── */
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    /* ── Mobile menu toggle ── */
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    mobileBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        mobileBtn.querySelector('span').textContent = menuOpen ? 'close' : 'menu';
+    });
+
+    /* ── Scroll reveal (IntersectionObserver) ── */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                revealObserver.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => revealObserver.observe(el));
+    // Immediately reveal hero elements
+    document.querySelectorAll('section:first-of-type .reveal, section:first-of-type .reveal-right').forEach(el => el.classList.add('visible'));
+
+    /* ── Count-up animation ── */
+    const countEls = document.querySelectorAll('.count-up');
+    const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            const el = e.target;
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const duration = 1800;
+            const start = performance.now();
+            const easeOut = t => 1 - Math.pow(1 - t, 3);
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const value = Math.floor(easeOut(progress) * target);
+                el.textContent = value.toLocaleString() + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            countObserver.unobserve(el);
+        });
+    }, { threshold: 0.5 });
+    countEls.forEach(el => countObserver.observe(el));
+
+    /* ── Live total hero animation ── */
+    function animateTotal() {
+        const el = document.getElementById('live-total');
+        if (!el) return;
+        let current = 1380000;
+        const target = 1450000;
+        const duration = 2200;
+        const start = performance.now();
+        const easeOut = t => 1 - Math.pow(1 - t, 3);
+        function tick(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const value = Math.floor(current + easeOut(progress) * (target - current));
+            el.textContent = 'PKR ' + value.toLocaleString();
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+    window.addEventListener('load', () => setTimeout(animateTotal, 800));
+
+    /* ── Smooth scroll indicator hide on scroll ── */
+    const scrollInd = document.querySelector('.scroll-indicator');
+    if (scrollInd) {
+        window.addEventListener('scroll', () => {
+            scrollInd.style.opacity = window.scrollY > 120 ? '0' : '1';
+        }, { passive: true });
+    }
+
+    /* ── Card tilt micro-interaction ── */
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
+            card.style.transform = `perspective(800px) rotateX(${-dy * 4}deg) rotateY(${dx * 4}deg) scale(1.01)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+    </script>
+</body></html>

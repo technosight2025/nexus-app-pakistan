@@ -1,0 +1,94 @@
+-- Phase 8: Marketplace Discovery & Public Storefronts
+
+-- 1. Ensure public visibility for business profiles (Venues/Vendors)
+-- Businesses are either 'VENUE', 'STUDIO', 'CATERER', etc.
+-- For the marketplace to work, 'anon' users need to be able to SELECT from these tables.
+
+-- Allow public read access to active businesses
+CREATE POLICY "Allow public read access to active businesses"
+    ON public.businesses
+    FOR SELECT
+    TO anon, authenticated
+    USING (is_active = true);
+
+-- Allow public read access to branches (e.g. Venue branches)
+CREATE POLICY "Allow public read access to active branches"
+    ON public.branches
+    FOR SELECT
+    TO anon, authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.businesses
+            WHERE businesses.id = branches.business_id
+            AND businesses.is_active = true
+        )
+    );
+
+-- Allow public read access to packages so storefronts can display pricing
+CREATE POLICY "Allow public read access to packages"
+    ON public.packages
+    FOR SELECT
+    TO anon, authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.branches
+            WHERE branches.id = packages.branch_id
+            AND EXISTS (
+                SELECT 1 FROM public.businesses
+                WHERE businesses.id = branches.business_id
+                AND businesses.is_active = true
+            )
+        )
+    );
+
+-- Allow public read access to business portfolios (images)
+CREATE POLICY "Allow public read access to portfolio items"
+    ON public.business_portfolios
+    FOR SELECT
+    TO anon, authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.businesses
+            WHERE businesses.id = business_portfolios.business_id
+            AND businesses.is_active = true
+        )
+    );
+
+-- 2. New Table: Booking Inquiries (Public Booking Funnel)
+-- This table captures requests from the public storefronts before they become full leads.
+CREATE TABLE IF NOT EXISTS public.booking_inquiries (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    business_id UUID NOT NULL REFERENCES public.businesses(id) ON DELETE CASCADE,
+    branch_id UUID REFERENCES public.branches(id) ON DELETE CASCADE,
+    package_id UUID REFERENCES public.packages(id) ON DELETE SET NULL,
+    customer_name TEXT NOT NULL,
+    customer_email TEXT,
+    customer_phone TEXT NOT NULL,
+    event_date DATE,
+    guest_count INTEGER,
+    message TEXT,
+    status TEXT DEFAULT 'New' CHECK (status IN ('New', 'Contacted', 'Converted', 'Closed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.booking_inquiries ENABLE ROW LEVEL SECURITY;
+
+-- Allow 'anon' to insert inquiries (Customer submitting form)
+CREATE POLICY "Allow anon to submit inquiries"
+    ON public.booking_inquiries
+    FOR INSERT
+    TO anon, authenticated
+    WITH CHECK (true);
+
+-- Allow business owners to read their own inquiries
+CREATE POLICY "Users can manage inquiries for their businesses"
+    ON public.booking_inquiries
+    FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.businesses
+            WHERE businesses.id = booking_inquiries.business_id
+            AND businesses.owner_id = auth.uid()
+        )
+    );
