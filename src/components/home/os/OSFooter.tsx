@@ -35,10 +35,10 @@ export function OSFooter() {
             <div className="space-y-4">
               <h4 className="text-xs font-bold text-white uppercase tracking-widest">Solutions</h4>
               <ul className="space-y-2 text-sm text-emerald-100/60 font-medium">
-                <li><Link href="/search" className="hover:text-emerald-300 transition-colors">Small Companies</Link></li>
-                <li><Link href="/search" className="hover:text-emerald-300 transition-colors">Showrooms</Link></li>
-                <li><Link href="/search" className="hover:text-emerald-300 transition-colors">Venues</Link></li>
-                <li><Link href="/search" className="hover:text-emerald-300 transition-colors">Studios</Link></li>
+                <li><Link href="/explore" className="hover:text-emerald-300 transition-colors">Small Companies</Link></li>
+                <li><Link href="/explore" className="hover:text-emerald-300 transition-colors">Showrooms</Link></li>
+                <li><Link href="/explore" className="hover:text-emerald-300 transition-colors">Venues</Link></li>
+                <li><Link href="/explore" className="hover:text-emerald-300 transition-colors">Studios</Link></li>
               </ul>
             </div>
 

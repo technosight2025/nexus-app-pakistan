@@ -2,7 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Star, MapPin, ArrowLeftRight, Calendar } from 'lucide-react'
+import { Star, MapPin, ArrowLeftRight, Calendar, Heart } from 'lucide-react'
+import { useFavorites } from '@/contexts/FavoritesContext'
 
 export interface MarketplaceCardProps {
   id: string
@@ -40,20 +41,16 @@ export function MarketplaceCard({
   }
 
   const categorySlug = getCategorySlug(type, category)
-  const profileId = id
-  const isCompared = compareList.includes(id)
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites()
+  const isShortlisted = isFavorite(id)
 
-  const handleCompareToggle = (e: React.MouseEvent) => {
+  const handleShortlistToggle = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (isCompared) {
-      setCompareList(prev => prev.filter(item => item !== id))
+    if (isShortlisted) {
+      removeFavorite(id)
     } else {
-      if (compareList.length >= 3) {
-        alert("You can compare up to 3 professionals side-by-side.")
-        return
-      }
-      setCompareList(prev => [...prev, id])
+      addFavorite({ id, name, category, type, price, image: images[0] })
     }
   }
 
@@ -146,15 +143,15 @@ export function MarketplaceCard({
             Explore & Book
           </button>
           <button 
-            onClick={handleCompareToggle}
+            onClick={handleShortlistToggle}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded border text-xs font-semibold transition-colors cursor-pointer ${
-              isCompared 
-                ? 'bg-[#1B3B2B] border-[#1B3B2B] text-white' 
+              isShortlisted 
+                ? 'bg-rose-50 border-rose-200 text-rose-500' 
                 : 'bg-white border-[#D5CFC0] text-slate-700 hover:bg-slate-50'
             }`}
           >
-            <ArrowLeftRight className="w-3 h-3" />
-            Compare
+            <Heart className={`w-3.5 h-3.5 ${isShortlisted ? 'fill-rose-500' : ''}`} />
+            {isShortlisted ? 'Saved' : 'Shortlist'}
           </button>
         </div>
       </div>

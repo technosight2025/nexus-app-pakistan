@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import crypto from 'crypto';
 
 export async function createEventAction(formData: FormData) {
-  const { userId } = await auth();
+  const { userId, orgId: activeOrgId } = await auth();
   const user = await currentUser();
 
   if (!userId || !user) {
@@ -26,7 +26,24 @@ export async function createEventAction(formData: FormData) {
 
   const supabase = await createClient();
   const role = user.publicMetadata?.role || 'customer';
-  let orgId = user.publicMetadata?.organizationId as string;
+  let orgId = (user.publicMetadata?.organizationId as string) || (activeOrgId as string);
+
+  // Fallback: Query Supabase if Clerk doesn't have the orgId in context or metadata
+  if (!orgId) {
+    const { data: memberData } = await supabase
+      .from('organization_members')
+      .select('organization_id')
+      .eq('user_id', userId)
+      .limit(1)
+      .maybeSingle();
+    
+    if (memberData?.organization_id) {
+      orgId = memberData.organization_id;
+    } else if (process.env.NODE_ENV === 'development') {
+      // Dev mock fallback if absolutely no org is found
+      orgId = 'org_mock_vendor'; 
+    }
+  }
 
   const eventId = crypto.randomUUID();
   const eventDate = dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();

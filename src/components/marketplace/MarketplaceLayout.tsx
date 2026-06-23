@@ -6,6 +6,7 @@ import { MarketplaceSidebar } from './MarketplaceSidebar'
 import { ContentGrid } from './ContentGrid'
 import { HybridDetailDrawer, HybridDetailItem } from './HybridDetailDrawer'
 import { EscrowTrackerHub, EscrowContract } from './EscrowTrackerHub'
+import { FavoritesTray } from './FavoritesTray'
 
 export function MarketplaceLayout() {
   const [activeMode, setActiveMode] = useState<'gigs' | 'rentals'>('gigs')
@@ -222,6 +223,8 @@ export function MarketplaceLayout() {
         contracts={contracts}
         onUpdateStatus={handleUpdateStatus}
       />
+
+      <FavoritesTray />
 
     </div>
   )

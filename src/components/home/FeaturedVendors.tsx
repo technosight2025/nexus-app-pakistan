@@ -54,7 +54,7 @@ export function FeaturedVendors() {
           </div>
 
           <Link
-            href="/search"
+            href="/explore"
             className="text-xs font-black text-[#0F5B3E] hover:underline flex items-center gap-1 cursor-pointer shrink-0"
           >
             <span>View All Creators</span>

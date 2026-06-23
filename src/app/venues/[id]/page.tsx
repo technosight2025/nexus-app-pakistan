@@ -1,201 +1,527 @@
 "use client"
-import { PublicLayout } from "@/components/layout/PublicLayout"
-import { ProfileSubNav } from "@/components/layout/ProfileSubNav"
-import { MegaFooter } from "@/components/layout/MegaFooter"
-import Image from "next/image"
-import { MapPin, Star, Share2, Heart, Award, ShieldCheck, CheckCircle2, ChevronRight, Users, Car, Coffee, Music, Wifi } from "lucide-react"
-import { LiveAvailabilityCalendar } from "@/components/shared/LiveAvailabilityCalendar"
 
-// Simple mock data
-const VENUE = {
-  name: "The Royal Palm Golf & Country Club",
-  type: "Premium Marquee & Banquet",
-  location: "DHA Phase 8, Lahore",
-  rating: 4.9,
-  reviews: 342,
-  pricePerHead: 4500,
-  capacity: "500 - 1,200",
-  about: "Experience unparalleled luxury and elegance at the Royal Palm. With sprawling green lawns and a majestic indoor banquet hall, it is the perfect destination for grand weddings and corporate events. Our dedicated team ensures every detail is flawless.",
-  amenities: [
-    { name: "Valet Parking", icon: Car },
-    { name: "In-house Catering", icon: Coffee },
-    { name: "Bridal Room", icon: Heart },
-    { name: "DJ Setup", icon: Music },
-    { name: "High-speed WiFi", icon: Wifi },
-    { name: "Wheelchair Accessible", icon: Users }
-  ],
-  packages: [
-    { name: "Standard Mehndi", price: 3500, features: ["Chicken Biryani", "Live BBQ", "Standard Decor", "DJ Audio System"] },
-    { name: "Premium Barat", price: 5500, features: ["Mutton Qorma", "Live Pasta Station", "Floral Decor", "Valet Service"] },
-    { name: "Royal Walima", price: 6500, features: ["Gourmet Buffet", "Imported Flowers", "Stage Setup", "Photography Partner Discount"] }
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop",
-  ]
-}
+import React, { useState, useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { 
+  ChevronLeft, Star, MapPin, CheckCircle2, 
+  Calendar, Users, ShieldCheck, Heart, Share, AlertTriangle
+} from 'lucide-react'
+import { NexusLogo } from '@/components/layout/NexusLogo'
 
-export default function VenueProfilePage({ params }: { params: { id: string } }) {
+// Mock Data (Must match the Explore Client)
+const VENUE_DB = [
+  {
+    id: 'l-1',
+    title: "Royal Palm Grand Ballroom",
+    category: "halls",
+    categoryName: "Banquet Hall",
+    location: "DHA Phase 5, Lahore",
+    rating: 4.92,
+    reviews: 128,
+    price: 350000,
+    unit: "event",
+    images: [
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
+    ],
+    maxGuests: 1200,
+    description: "The Royal Palm Grand Ballroom offers an exquisite experience with premium crystal chandeliers, central air conditioning, and full-service gourmet catering. Perfect for luxury weddings and grand corporate events."
+  },
+  {
+    id: 'l-2',
+    title: "Monal Scenic Marquee",
+    category: "marquees",
+    categoryName: "Premium Marquee",
+    location: "Margalla Hills, Islamabad",
+    rating: 4.88,
+    reviews: 94,
+    price: 450000,
+    unit: "event",
+    images: [
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
+    ],
+    maxGuests: 800,
+    description: "Nestled in the beautiful Margalla hills, this marquee provides a breathtaking view of the city alongside state-of-the-art facilities and open-air lawn extensions."
+  },
+  {
+    id: 'l-3',
+    title: "Green Meadows Farmhouse",
+    category: "farmhouses",
+    categoryName: "Farmhouse",
+    location: "Bedian Road, Lahore",
+    rating: 4.75,
+    reviews: 56,
+    price: 180000,
+    unit: "night",
+    images: [
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop"
+    ],
+    maxGuests: 250,
+    description: "A serene and private farmhouse featuring a large swimming pool, lush green botanical gardens, and 4 luxury bedrooms for overnight stays."
+  },
+  {
+    id: 'l-7',
+    title: "Mughal Heritage Fine Catering & Banquet",
+    category: "halls",
+    categoryName: "Premium Banquet & Catering",
+    location: "DHA Phase 5, Lahore",
+    rating: 4.98,
+    reviews: 320,
+    price: 5000,
+    unit: "guest",
+    images: [
+      "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop"
+    ],
+    maxGuests: 2000,
+    menus: [
+      {
+        name: "Standard Package",
+        price: "Rs. 3,500 / head",
+        items: ["Chicken Biryani", "Chicken Qorma", "Naan & Roti", "Fresh Salad", "Gajar Halwa"]
+      },
+      {
+        name: "Premium Mughal Package",
+        price: "Rs. 5,000 / head",
+        items: ["Mutton Mandi", "Chicken Malai Boti", "Live BBQ Station", "Palak Paneer", "Assorted Naans", "Shahi Tukda & Gulab Jamun"]
+      }
+    ],
+    description: "Experience the royal taste of authentic Mughal cuisine in our opulent banquet hall. Our premium service includes live BBQ stations, traditional slow-cooked delicacies, and opulent royal dessert spreads. Perfect for grand weddings and luxury corporate events."
+  }
+]
+
+export default function VenueDetailsPage() {
+  const router = useRouter()
+  const params = useParams()
+  const id = params?.id as string
+  
+  const [venue, setVenue] = useState<typeof VENUE_DB[0] | null>(null)
+  
+  // Booking State
+  const [selectedDate, setSelectedDate] = useState("")
+  const [quantity, setQuantity] = useState(100) // Default 100 for guests
+  const [isBooking, setIsBooking] = useState(false)
+
+  useEffect(() => {
+    if (id === 'preview') {
+      try {
+        const previewData = localStorage.getItem("nexus_preview_listing")
+        if (previewData) {
+          setVenue(JSON.parse(previewData))
+          return
+        }
+      } catch (e) {}
+    }
+
+    if (id) {
+      let found = VENUE_DB.find(v => v.id === id)
+      
+      if (!found) {
+        try {
+          const custom = localStorage.getItem("nexus_custom_listings")
+          if (custom) {
+            const parsed = JSON.parse(custom)
+            if (Array.isArray(parsed)) {
+              found = parsed.find((v: any) => v.id === id)
+            }
+          }
+        } catch (e) {}
+      }
+
+      setVenue(found || VENUE_DB[0]) // Fallback to first if not found
+    }
+  }, [id])
+
+  const formatPKR = (val: number) => {
+    return 'Rs. ' + new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 }).format(val);
+  }
+
+  const handleRequestBooking = () => {
+    if (!selectedDate) {
+      alert("Please select an event date before booking.")
+      return
+    }
+
+    setIsBooking(true)
+
+    setTimeout(() => {
+      // 1. Fetch current hired vendors
+      const stored = localStorage.getItem("nexus_crm_hired_vendors")
+      let vendors = []
+      if (stored) {
+        try { vendors = JSON.parse(stored) } catch (e) {}
+      }
+
+      // 2. Prevent Duplicate Booking
+      if (vendors.find((v: any) => v.id === venue?.id)) {
+        alert("You already have an active booking or pending contract with this vendor.")
+        setIsBooking(false)
+        router.push("/dashboard/host/v2/bookings")
+        return
+      }
+
+      // 3. Construct Standard 50/50 Milestones
+      const isPerGuest = venue?.unit === 'guest'
+      const totalContract = isPerGuest ? (venue?.price || 0) * quantity : (venue?.price || 0)
+      const depositAmt = Math.round(totalContract * 0.5)
+      const finalAmt = totalContract - depositAmt
+
+      const newVendor = {
+        id: venue?.id,
+        businessName: venue?.title,
+        category: venue?.categoryName,
+        image: venue?.images[0],
+        contractAmount: totalContract,
+        paidAmount: 0,
+        status: 'Pending Signature',
+        milestones: [
+          {
+            id: 'm1',
+            name: 'Booking Deposit (50%)',
+            percentage: 50,
+            amount: depositAmt,
+            dueDate: 'Upon Signature',
+            status: 'Pending'
+          },
+          {
+            id: 'm2',
+            name: 'Final Delivery Payment',
+            percentage: 50,
+            amount: finalAmt,
+            dueDate: selectedDate,
+            status: 'Locked'
+          }
+        ],
+        contractTerms: `STANDARD NEXUS ESCROW AGREEMENT
+Client agrees to rent ${venue?.title} on ${selectedDate}.
+${isPerGuest ? `Estimated Guests: ${quantity}` : ''}
+Total Escrow Amount: ${formatPKR(totalContract)}
+Milestone 1: 50% non-refundable deposit to secure the date.
+Milestone 2: 50% remaining balance due on or before the event date.`
+      }
+
+      // 4. Save to LocalStorage
+      vendors.push(newVendor)
+      localStorage.setItem("nexus_crm_hired_vendors", JSON.stringify(vendors))
+
+      // 5. Redirect to Dashboard
+      router.push("/dashboard/host/v2/bookings")
+    }, 1200)
+  }
+
+  if (!venue) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-8 h-8 border-4 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  )
+
   return (
-    <PublicLayout>
-      <ProfileSubNav price={VENUE.pricePerHead} targetWidgetId="booking-widget" />
-      <div className="bg-white min-h-screen pb-24">
-        
-        {/* 🌟 Joyfeel Hero Image Grid 🌟 */}
-        <div id="gallery" className="w-full bg-white pt-8 pb-8 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">
-              <span className="hover:text-blue-600 cursor-pointer transition-colors">Home</span> <ChevronRight className="w-3 h-3" /> 
-              <span className="hover:text-blue-600 cursor-pointer transition-colors">Venues</span> <ChevronRight className="w-3 h-3" /> 
-              <span className="hover:text-blue-600 cursor-pointer transition-colors">Lahore</span> <ChevronRight className="w-3 h-3" /> 
-              <span className="text-slate-900">{VENUE.name}</span>
-            </div>
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
+      
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
+        <div className="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
+          <button 
+            onClick={() => {
+              if (id === 'preview') {
+                router.push('/business/venues/profile')
+              } else {
+                router.back()
+              }
+            }}
+            className="flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" /> Back
+          </button>
+          <div className="cursor-pointer" onClick={() => router.push("/")}>
+            <NexusLogo iconSize={32} />
+          </div>
+          <div className="w-20" /> {/* Spacer */}
+        </div>
+      </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[40vh] md:h-[60vh] rounded-3xl overflow-hidden">
-              <div className="md:col-span-2 relative h-full group overflow-hidden">
-                <Image src={VENUE.images[0]} alt="Main" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
-              </div>
-              <div className="hidden md:grid grid-rows-2 gap-3 h-full">
-                <div className="relative h-full overflow-hidden group"><Image src={VENUE.images[1]} alt="Gallery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" /></div>
-                <div className="relative h-full overflow-hidden group"><Image src={VENUE.images[2]} alt="Gallery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" /></div>
-              </div>
-              <div className="hidden md:block relative h-full overflow-hidden group">
-                <Image src={VENUE.images[3]} alt="Gallery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer hover:bg-black/50 transition-colors">
-                  <span className="text-white font-bold text-lg flex items-center gap-2 bg-white/20 backdrop-blur-md px-6 py-3 rounded-xl border border-white/30 hover:bg-white hover:text-slate-900 transition-all">
-                    Show all photos
-                  </span>
-                </div>
-              </div>
-            </div>
+      <main className="max-w-[1200px] mx-auto px-6 py-8">
+        {/* Title Section */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-black text-slate-900 mb-2">{venue.title}</h1>
+          <div className="flex items-center gap-4 text-sm font-semibold text-slate-600">
+            <span className="flex items-center gap-1 text-slate-900"><Star className="w-4 h-4 fill-slate-900" /> {venue.rating} ({venue.reviews} reviews)</span>
+            <span className="flex items-center gap-1 underline cursor-pointer"><MapPin className="w-4 h-4" /> {venue.location}</span>
           </div>
         </div>
 
-        {/* 🌟 Main Content 🌟 */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Gallery */}
+        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-[450px] rounded-[24px] overflow-hidden mb-12">
+          <div className="md:col-span-2 row-span-2 relative group">
+            <img src={venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Main" />
+          </div>
+          <div className="relative group overflow-hidden">
+            <img src={venue.images[1]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 1" />
+          </div>
+          <div className="relative group overflow-hidden">
+            <img src={venue.images[2]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 2" />
+          </div>
+          <div className="relative group overflow-hidden">
+            <img src={venue.images[1]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 3" />
+          </div>
+          <div className="relative group overflow-hidden">
+            <img src={venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 4" />
+          </div>
+        </div>
+
+        {/* Content & Booking Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          
+          {/* Left Column: Details */}
+          <div className="lg:col-span-2 space-y-10">
             
-            {/* Left Column - Details */}
-            <div className="lg:col-span-2 space-y-12">
-              
-              {/* Header Info */}
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-100 text-blue-700 rounded-lg text-xs font-bold mb-4">
-                    <Award className="w-3.5 h-3.5" /> Premium Venue
+            <div className="pb-8 border-b border-slate-200">
+              <h2 className="text-2xl font-bold mb-2">Hosted by Nexus Verified Partner</h2>
+              <div className="flex items-center gap-6 text-slate-500 font-medium">
+                <span className="flex items-center gap-2"><Users className="w-5 h-5" /> Up to {venue.maxGuests} guests</span>
+                <span className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-emerald-600" /> Escrow Protected</span>
+              </div>
+            </div>
+
+            <div className="pb-8 border-b border-slate-200 space-y-4">
+              <h3 className="text-xl font-bold">About this space</h3>
+              <p className="text-slate-600 leading-relaxed text-lg">{venue.description}</p>
+            </div>
+
+            <div className="pb-8 border-b border-slate-200">
+              <h3 className="text-xl font-bold mb-6">What this place offers</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {['Air Conditioning', 'Valet Parking', 'Bridal Room', 'Backup Generator', 'Wheelchair Accessible', 'Catering Area'].map(amenity => (
+                  <div key={amenity} className="flex items-center gap-3 text-slate-700 font-medium text-lg">
+                    <CheckCircle2 className="w-5 h-5 text-slate-400" />
+                    {amenity}
                   </div>
-                  <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">{VENUE.name}</h1>
-                  <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-600">
-                    <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-slate-400" /> {VENUE.location}</div>
-                    <div className="flex items-center gap-1.5 text-slate-900"><Star className="w-4 h-4 fill-amber-400 text-amber-400" /> <span className="font-bold">{VENUE.rating}</span> <span className="text-slate-500 underline decoration-slate-300 hover:decoration-slate-500 cursor-pointer">({VENUE.reviews} reviews)</span></div>
-                    <div className="flex items-center gap-1.5"><Users className="w-4 h-4 text-slate-400" /> Capacity: {VENUE.capacity}</div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center hover:border-slate-300 hover:bg-slate-50 transition-all"><Share2 className="w-5 h-5 text-slate-600" /></button>
-                  <button className="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center hover:border-rose-200 hover:bg-rose-50 transition-all"><Heart className="w-5 h-5 text-rose-500" /></button>
-                </div>
+                ))}
               </div>
+            </div>
 
-              <div className="w-full h-px bg-slate-200" />
-
-              {/* About */}
-              <div id="about">
-                <h3 className="text-2xl font-black text-slate-900 mb-4">About the Venue</h3>
-                <p className="text-slate-600 font-medium leading-relaxed text-lg">{VENUE.about}</p>
-              </div>
-
-              <div className="w-full h-px bg-slate-200" />
-
-              {/* Amenities */}
-              <div id="amenities">
-                <h3 className="text-2xl font-black text-slate-900 mb-6">What this place offers</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
-                  {VENUE.amenities.map(amenity => (
-                    <div key={amenity.name} className="flex items-center gap-3 text-slate-700 font-medium text-lg">
-                      <amenity.icon className="w-6 h-6 text-slate-400" /> {amenity.name}
-                    </div>
-                  ))}
-                </div>
-                <button className="mt-8 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-bold text-slate-800 hover:bg-slate-50 transition-colors">
-                  Show all 24 amenities
-                </button>
-              </div>
-
-              <div className="w-full h-px bg-slate-200" />
-
-              {/* Packages */}
-              <div id="packages">
-                <h3 className="text-2xl font-black text-slate-900 mb-6">Available Packages</h3>
+            {/* Menus Section (If Applicable) */}
+            {(venue as any).menus && (
+              <div className="pb-8 border-b border-slate-200">
+                <h3 className="text-xl font-bold mb-6">Catering Packages</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {VENUE.packages.map((pkg, i) => (
-                    <div key={i} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all group">
-                      <h4 className="text-xl font-black text-slate-900 mb-2">{pkg.name}</h4>
-                      <p className="text-2xl font-bold text-blue-600 mb-6">₨ {pkg.price.toLocaleString()}<span className="text-sm font-medium text-slate-500"> / head</span></p>
+                  {(venue as any).menus.map((menu: any, i: number) => (
+                    <div key={i} className="border border-slate-200 rounded-2xl p-5 hover:border-indigo-200 transition-colors shadow-sm bg-white">
+                      <div className="flex flex-col gap-1 mb-4">
+                        <h4 className="font-black text-lg text-slate-900">{menu.name}</h4>
+                        <span className="text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg text-sm self-start inline-block">{menu.price}</span>
+                      </div>
                       <ul className="space-y-3">
-                        {pkg.features.map((feature, j) => (
-                          <li key={j} className="flex items-start gap-2 text-sm font-medium text-slate-600">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> {feature}
+                        {menu.items.map((item: string, j: number) => (
+                          <li key={j} className="flex items-start gap-2 text-slate-600 text-sm font-medium">
+                            <CheckCircle2 className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                            <span>{item}</span>
                           </li>
                         ))}
                       </ul>
-                      <button className="w-full mt-6 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 group-hover:bg-blue-50 group-hover:border-blue-200 group-hover:text-blue-700 transition-colors">
-                        Select Package
-                      </button>
                     </div>
                   ))}
                 </div>
               </div>
+            )}
 
+            {/* Host Section */}
+            <div className="pb-8 border-b border-slate-200">
+              <div className="flex items-center gap-4 mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop" 
+                  alt="Host" 
+                  className="w-16 h-16 rounded-full object-cover border-2 border-indigo-100"
+                />
+                <div>
+                  <h3 className="text-xl font-bold">Hosted by Nexus Verified Partner</h3>
+                  <p className="text-slate-500 text-sm">Joined May 2024 · Premium Host</p>
+                </div>
+              </div>
+              <p className="text-slate-600 leading-relaxed text-lg mb-4">
+                We pride ourselves on delivering 5-star experiences. Our team is dedicated to ensuring your event runs flawlessly from start to finish.
+              </p>
+              <button className="px-6 py-3 border border-slate-900 rounded-xl font-bold hover:bg-slate-50 transition-colors">
+                Contact Host
+              </button>
             </div>
 
-            {/* Right Column - Booking Widget */}
-            <div className="lg:col-span-1" id="booking-widget">
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8 sticky top-24" id="availability">
-                <div className="flex items-end gap-1 mb-6">
-                  <span className="text-3xl font-black text-slate-900">₨ {VENUE.pricePerHead.toLocaleString()}</span>
-                  <span className="text-slate-500 font-medium mb-1">/ head starting</span>
-                </div>
-
-                <div className="mb-6">
-                  <LiveAvailabilityCalendar />
-                </div>
-
-                <div className="space-y-4 mb-6">
-                  <div className="border border-slate-200 rounded-2xl p-4 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">Event Date</label>
-                    <input type="date" className="w-full bg-transparent font-bold text-slate-900 outline-none cursor-pointer" />
+            {/* Reviews Section */}
+            <div className="pb-8 border-b border-slate-200">
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <Star className="w-5 h-5 fill-slate-900" /> {venue.rating} · {venue.reviews} reviews
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                {[
+                  { name: "Ahmed", date: "October 2025", text: "Absolutely stunning venue. The management was incredibly helpful and the food was fantastic." },
+                  { name: "Fatima", date: "September 2025", text: "Booked this for my Mehndi. The decor was exactly as promised and the escrow system made payments stress-free." },
+                  { name: "Usman", date: "August 2025", text: "Great location and ample parking. The bridal room was spacious. Highly recommend!" },
+                  { name: "Zainab", date: "July 2025", text: "A premium experience all around. The central AC worked perfectly even in peak summer." }
+                ].map((review, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500">
+                        {review.name[0]}
+                      </div>
+                      <div>
+                        <div className="font-bold">{review.name}</div>
+                        <div className="text-xs text-slate-500">{review.date}</div>
+                      </div>
+                    </div>
+                    <p className="text-slate-600 text-sm leading-relaxed">{review.text}</p>
                   </div>
-                  <div className="border border-slate-200 rounded-2xl p-4 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">Estimated Guests</label>
-                    <input type="number" placeholder="e.g. 500" className="w-full bg-transparent font-bold text-slate-900 outline-none" />
+                ))}
+              </div>
+              <button className="mt-6 px-6 py-3 border border-slate-900 rounded-xl font-bold hover:bg-slate-50 transition-colors">
+                Show all {venue.reviews} reviews
+              </button>
+            </div>
+
+            {/* Location Section */}
+            <div className="pb-8 border-b border-slate-200">
+              <h3 className="text-xl font-bold mb-6">Where you'll be</h3>
+              <div className="w-full h-[300px] bg-slate-100 rounded-2xl overflow-hidden relative mb-4">
+                {/* Mock Map Image */}
+                <img 
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200&auto=format&fit=crop" 
+                  alt="Map Location" 
+                  className="w-full h-full object-cover opacity-80 mix-blend-multiply"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white/50">
+                    <MapPin className="w-6 h-6" />
                   </div>
                 </div>
+              </div>
+              <h4 className="font-bold text-lg">{venue.location}</h4>
+              <p className="text-slate-500">Exact location provided after booking is confirmed.</p>
+            </div>
 
-                <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold h-14 rounded-xl text-lg mb-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
-                  Request to Book
-                </button>
-
-                <p className="text-center text-xs text-slate-400 font-medium mt-4">
-                  You won't be charged yet
-                </p>
-                
-                <div className="mt-6 pt-6 border-t border-slate-100 flex items-center gap-3">
-                  <ShieldCheck className="w-8 h-8 text-emerald-500" />
-                  <p className="text-xs font-medium text-slate-500 leading-tight">
-                    <strong className="text-slate-700">NEXUS Guarantee:</strong> Safe payments, verified venues, and 24/7 support.
-                  </p>
+            {/* Policies Section */}
+            <div>
+              <h3 className="text-xl font-bold mb-6">Things to know</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                  <h4 className="font-bold mb-3">Event Rules</h4>
+                  <ul className="text-sm text-slate-600 space-y-2">
+                    <li>Events must end by 11:30 PM (Govt rules)</li>
+                    <li>No indoor fireworks</li>
+                    <li>External catering permitted with fee</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-3">Safety & Property</h4>
+                  <ul className="text-sm text-slate-600 space-y-2">
+                    <li>Security cameras on property</li>
+                    <li>Smoke alarms installed</li>
+                    <li>Backup generators available</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-3">Cancellation Policy</h4>
+                  <ul className="text-sm text-slate-600 space-y-2">
+                    <li>Free cancellation within 48 hours of booking.</li>
+                    <li>50% refund up to 30 days before event.</li>
+                  </ul>
                 </div>
               </div>
             </div>
 
           </div>
+
+          {/* Right Column: Sticky Booking Widget */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-28 bg-white border border-slate-200 shadow-xl rounded-3xl p-6">
+              
+              <div className="flex items-end gap-1 mb-6">
+                <span className="text-2xl font-black">{formatPKR(venue.price)}</span>
+                <span className="text-slate-500 font-medium mb-1">/ {venue.unit}</span>
+              </div>
+
+              <div className="border border-slate-300 rounded-xl overflow-hidden mb-4">
+                <div className="p-3 border-b border-slate-300">
+                  <label className="block text-[10px] font-bold text-slate-800 uppercase tracking-widest mb-1">Event Date</label>
+                  <input 
+                    type="date"
+                    min={new Date().toISOString().split('T')[0]}
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="w-full text-sm font-semibold focus:outline-none text-slate-900 bg-transparent"
+                  />
+                </div>
+                <div className="p-3 bg-slate-50">
+                  <label className="block text-[10px] font-bold text-slate-800 uppercase tracking-widest mb-1">Guests</label>
+                  <div className="text-sm font-semibold text-slate-900">Up to {venue.maxGuests} attendees</div>
+                </div>
+                {venue.unit === 'guest' && (
+                  <div className="p-3 bg-slate-50 flex justify-between items-center border-t border-slate-300">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-800 uppercase tracking-widest mb-1">Select Guest Count</label>
+                      <div className="text-sm font-semibold text-slate-900">{quantity} Guests</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setQuantity(Math.max(10, quantity - 10))}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold"
+                      >-</button>
+                      <button 
+                        onClick={() => setQuantity(Math.min(venue.maxGuests || 5000, quantity + 10))}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold"
+                      >+</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button 
+                onClick={handleRequestBooking}
+                disabled={isBooking}
+                className="w-full py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-rose-500/20 disabled:opacity-70 flex justify-center"
+              >
+                {isBooking ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  'Request to Book'
+                )}
+              </button>
+              
+              <p className="text-center text-sm font-medium text-slate-500 mt-4 mb-6">
+                You won't be charged yet
+              </p>
+
+              <div className="space-y-3 pt-6 border-t border-slate-200">
+                <div className="flex justify-between font-medium text-slate-600">
+                  <span>Standard Booking Fee</span>
+                  <span>{formatPKR(venue.price)} {venue.unit === 'guest' ? 'x ' + quantity : ''}</span>
+                </div>
+                <div className="flex justify-between font-medium text-slate-600">
+                  <span>Nexus Escrow Protection</span>
+                  <span className="text-emerald-600">Free</span>
+                </div>
+                <div className="flex justify-between font-black text-slate-900 text-lg pt-3 border-t border-slate-200">
+                  <span>Total Escrow Need</span>
+                  <span>{formatPKR(venue.unit === 'guest' ? venue.price * quantity : venue.price)}</span>
+                </div>
+              </div>
+
+              <div className="mt-6 bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex gap-3 text-emerald-800 text-xs font-semibold">
+                <ShieldCheck className="w-5 h-5 shrink-0" />
+                Your funds are securely held in Nexus Escrow and released only after milestones are approved.
+              </div>
+
+            </div>
+          </div>
+
         </div>
-      </div>
-      <MegaFooter />
-    </PublicLayout>
+      </main>
+
+    </div>
   )
 }

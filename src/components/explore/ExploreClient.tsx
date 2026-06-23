@@ -9,6 +9,8 @@ import {
 } from 'lucide-react'
 import { NexusLogo } from '@/components/layout/NexusLogo'
 import { HeaderSearchCapsule } from '@/components/layout/HeaderSearchCapsule'
+import { useFavorites } from '@/contexts/FavoritesContext'
+import { FavoritesTray } from '@/components/marketplace/FavoritesTray'
 
 // Define Categories with Lucide-Icons
 interface CategoryItem {
@@ -128,6 +130,17 @@ const CATEGORIES: CategoryItem[] = [
       { id: 'royal_stages', name: 'Royal Setup' },
       { id: 'modern_stages', name: 'Modern Minimal' }
     ]
+  },
+  { 
+    id: 'rentals', 
+    name: 'Equipment Rentals', 
+    icon: '🎥',
+    subcategories: [
+      { id: 'all_rentals', name: 'All Rentals' },
+      { id: 'camera_gear', name: 'Cameras & Lenses' },
+      { id: 'lighting_gear', name: 'Lighting Kits' },
+      { id: 'audio_gear', name: 'Audio & Mics' }
+    ]
   }
 ]
 
@@ -168,6 +181,23 @@ const MOCK_LISTINGS: ExploreListing[] = [
     lng: 74.38,
     maxGuests: 1200,
     bookedDates: ["2026-06-20", "2026-06-21", "2026-06-22"]
+  },
+  {
+    id: 'l-rental-1',
+    title: "Cinematic 4K Camera Package",
+    category: "rentals",
+    location: "Gulberg III, Lahore",
+    rating: 4.95,
+    distance: "5 km away",
+    dates: "Available Today",
+    price: 15000,
+    unit: "day",
+    images: [
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=600&auto=format&fit=crop"
+    ],
+    lat: 31.52,
+    lng: 74.34
   },
   {
     id: 'l-2',
@@ -259,6 +289,25 @@ const MOCK_LISTINGS: ExploreListing[] = [
     lng: 67.07,
     maxGuests: 4,
     bookedDates: []
+  },
+  {
+    id: 'l-7',
+    title: "Mughal Heritage Fine Catering & Banquet",
+    category: "halls",
+    location: "DHA Phase 5, Lahore",
+    rating: 4.98,
+    distance: "15 km away",
+    dates: "Dec 01 – 05",
+    price: 5000,
+    unit: "guest",
+    images: [
+      "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1606214588494-dfaf448d37aa?q=80&w=600&auto=format&fit=crop"
+    ],
+    lat: 31.47,
+    lng: 74.38,
+    maxGuests: 2000,
+    bookedDates: []
   }
 ]
 
@@ -294,8 +343,9 @@ export function ExploreClient() {
   const [activeCategory, setActiveCategory] = useState<string>('halls')
   const [activeSubcategory, setActiveSubcategory] = useState<string>('all_halls')
   const [showMap, setShowMap] = useState<boolean>(false)
-  const [wishlist, setWishlist] = useState<string[]>([])
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites()
   const [imageIndices, setImageIndices] = useState<Record<string, number>>({})
+  const [selectedListing, setSelectedListing] = useState<ExploreListing | null>(null)
 
   const handleMainTabChange = (tab: 'venues' | 'vendors' | 'professionals') => {
     setActiveMainTab(tab)
@@ -343,6 +393,20 @@ export function ExploreClient() {
 // Calendar Month Navigation states
   const [currentMonthIndex, setCurrentMonthIndex] = useState(5) // June 2026 (index 5)
   const [currentYear, setCurrentYear] = useState(2026)
+  
+  const [mergedListings, setMergedListings] = useState<ExploreListing[]>(MOCK_LISTINGS)
+
+  useEffect(() => {
+    try {
+      const custom = localStorage.getItem("nexus_custom_listings")
+      if (custom) {
+        const parsed = JSON.parse(custom)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMergedListings([...parsed, ...MOCK_LISTINGS])
+        }
+      }
+    } catch (e) {}
+  }, [])
 
   const handlePrevMonth = () => {
     if (currentYear === 2026 && currentMonthIndex === 5) return
@@ -573,12 +637,19 @@ export function ExploreClient() {
   }
 
   // Toggle Favorite
-  const toggleWishlist = (e: React.MouseEvent, id: string) => {
+  const toggleWishlist = (e: React.MouseEvent, listing: ExploreListing) => {
     e.stopPropagation()
-    if (wishlist.includes(id)) {
-      setWishlist(wishlist.filter(item => item !== id))
+    if (isFavorite(listing.id)) {
+      removeFavorite(listing.id)
     } else {
-      setWishlist([...wishlist, id])
+      addFavorite({
+        id: listing.id,
+        name: listing.title,
+        category: listing.category,
+        type: 'rental', // Or gig depending on category if needed
+        price: listing.price.toString(),
+        image: listing.images[0]
+      })
     }
   }
 
@@ -609,7 +680,7 @@ export function ExploreClient() {
     return true
   }
 
-  const filteredListings = MOCK_LISTINGS.filter(item => {
+  const filteredListings = mergedListings.filter(item => {
     // Category Filter
     if (item.category !== activeCategory) return false
 
@@ -1373,12 +1444,10 @@ export function ExploreClient() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 gap-y-10">
                   {filteredListings.map((listing) => {
                     const activeIdx = imageIndices[listing.id] || 0
-                    const isWishlisted = wishlist.includes(listing.id)
-
                     return (
                       <div 
                         key={listing.id}
-                        onClick={() => router.push(getListingLink(listing))}
+                        onClick={() => setSelectedListing(listing)}
                         className="flex flex-col gap-3 group cursor-pointer relative"
                       >
                         {/* Thumbnail Image Carousel with Arrows */}
@@ -1391,10 +1460,10 @@ export function ExploreClient() {
                           
                           {/* Heart favorite icon */}
                           <button
-                            onClick={(e) => toggleWishlist(e, listing.id)}
+                            onClick={(e) => toggleWishlist(e, listing)}
                             className="absolute top-3 right-3 z-10 p-1 rounded-full bg-transparent text-white drop-shadow-md cursor-pointer"
                           >
-                            <Heart className={`w-5 h-5 transition-all active:scale-90 ${isWishlisted ? 'fill-[#FF385C] text-[#FF385C]' : 'fill-black/30 text-white'}`} />
+                            <Heart className={`w-5 h-5 transition-all active:scale-90 ${isFavorite(listing.id) ? 'fill-[#FF385C] text-[#FF385C]' : 'fill-black/30 text-white'}`} />
                           </button>
 
                           {/* Left Arrow hover */}
@@ -1464,21 +1533,19 @@ export function ExploreClient() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredListings.map((listing) => {
                     const activeIdx = imageIndices[listing.id] || 0
-                    const isWishlisted = wishlist.includes(listing.id)
-
                     return (
                       <div 
                         key={listing.id}
-                        onClick={() => router.push(getListingLink(listing))}
+                        onClick={() => setSelectedListing(listing)}
                         className="flex flex-col gap-3 group cursor-pointer relative"
                       >
                         <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 shadow-3xs">
                           <img src={listing.images[activeIdx]} className="w-full h-full object-cover" alt="" />
                           <button
-                            onClick={(e) => toggleWishlist(e, listing.id)}
+                            onClick={(e) => toggleWishlist(e, listing)}
                             className="absolute top-2.5 right-2.5 z-10 p-1"
                           >
-                            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-[#FF385C] text-[#FF385C]' : 'fill-black/30 text-white'}`} />
+                            <Heart className={`w-4 h-4 ${isFavorite(listing.id) ? 'fill-[#FF385C] text-[#FF385C]' : 'fill-black/30 text-white'}`} />
                           </button>
                         </div>
                         
@@ -1518,7 +1585,7 @@ export function ExploreClient() {
                   {filteredListings.map((listing) => (
                     <button
                       key={listing.id}
-                      onClick={() => router.push(getListingLink(listing))}
+                      onClick={() => setSelectedListing(listing)}
                       className="absolute bg-white hover:bg-[#222222] text-slate-800 hover:text-white border border-slate-300 shadow-md px-2.5 py-1.5 rounded-full font-black text-[10px] transition-all hover:scale-110 z-10 cursor-pointer"
                       style={{
                         top: `${(listing.lat - 24) * 5 + 40}%`,
@@ -1824,6 +1891,91 @@ export function ExploreClient() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Quick View Modal */}
+      <AnimatePresence>
+        {selectedListing && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedListing(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-white rounded-3xl overflow-hidden w-full max-w-3xl flex flex-col md:flex-row shadow-2xl relative"
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedListing(null)}
+                className="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-white backdrop-blur-md rounded-full shadow-sm cursor-pointer"
+              >
+                <X className="w-4 h-4 text-slate-800" />
+              </button>
+              
+              <div className="w-full md:w-1/2 h-64 md:h-auto relative bg-slate-100">
+                <img src={selectedListing.images[imageIndices[selectedListing.id] || 0]} alt={selectedListing.title} className="w-full h-full object-cover" />
+                <button
+                  onClick={(e) => toggleWishlist(e, selectedListing)}
+                  className="absolute top-4 left-4 z-10 p-2 rounded-full bg-white/60 hover:bg-white/90 backdrop-blur-md transition-colors cursor-pointer"
+                >
+                  <Heart className={`w-5 h-5 transition-all ${isFavorite(selectedListing.id) ? 'fill-[#FF385C] text-[#FF385C]' : 'fill-black/30 text-slate-800'}`} />
+                </button>
+              </div>
+
+              <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col">
+                <div className="flex-1">
+                  <div className="flex justify-between items-start gap-4 mb-2">
+                    <h2 className="text-xl md:text-2xl font-black text-slate-900 leading-tight">{selectedListing.title}</h2>
+                    <div className="flex items-center gap-1 shrink-0 bg-slate-100 px-2 py-1 rounded-lg">
+                      <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900" />
+                      <span className="text-xs font-black">{selectedListing.rating.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 mb-6">
+                    <MapPin className="w-4 h-4" />
+                    <span>{selectedListing.location} • {selectedListing.distance}</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                      <span className="text-sm font-bold text-slate-600">Availability</span>
+                      <span className="text-sm font-bold text-slate-900">{selectedListing.dates}</span>
+                    </div>
+                    {selectedListing.maxGuests && (
+                      <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                        <span className="text-sm font-bold text-slate-600">Capacity</span>
+                        <span className="text-sm font-bold text-slate-900">Up to {selectedListing.maxGuests} {selectedListing.category === 'cars' ? 'passengers' : 'guests'}</span>
+                      </div>
+                    )}
+                    <div className="pt-2">
+                      <div className="text-sm font-bold text-slate-500 mb-1">Pricing</div>
+                      <div className="text-2xl font-black text-[#FF385C]">
+                        Rs. {selectedListing.price.toLocaleString()} <span className="text-sm font-semibold text-slate-500">/ {selectedListing.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <button 
+                    onClick={() => router.push(getListingLink(selectedListing))}
+                    className="w-full py-4 rounded-xl bg-[#222222] hover:bg-black text-white font-black text-sm transition-colors shadow-lg cursor-pointer"
+                  >
+                    View Details & Book
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <FavoritesTray />
 
     </div>
   )

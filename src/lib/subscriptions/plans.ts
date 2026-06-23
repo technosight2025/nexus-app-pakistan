@@ -21,7 +21,6 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: false,
     hasPrioritySupport: false,
     hasAuditLogs: false,
-    hasAdvancedReports: false,
   },
   starter: {
     maxUsers: 5,
@@ -31,7 +30,7 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: false,
     hasPrioritySupport: false,
     hasAuditLogs: false,
-    hasAdvancedReports: false,
+
   },
   basic: {
     maxUsers: 10,
@@ -41,7 +40,6 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: false,
     hasPrioritySupport: true,
     hasAuditLogs: false,
-    hasAdvancedReports: true,
   },
   premium: {
     maxUsers: 50,
@@ -51,7 +49,7 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: true,
     hasPrioritySupport: true,
     hasAuditLogs: true,
-    hasAdvancedReports: true,
+
   },
   pro: {
     maxUsers: 25,
@@ -61,7 +59,7 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: true,
     hasPrioritySupport: true,
     hasAuditLogs: true,
-    hasAdvancedReports: true,
+
   },
   enterprise: {
     maxUsers: Infinity,
@@ -71,7 +69,7 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
     hasApiAccess: true,
     hasPrioritySupport: true,
     hasAuditLogs: true,
-    hasAdvancedReports: true,
+
   },
 }
 

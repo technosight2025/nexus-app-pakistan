@@ -97,5 +97,20 @@ export interface PlanLimits {
   hasApiAccess: boolean
   hasPrioritySupport: boolean
   hasAuditLogs: boolean
-  hasAdvancedReports: boolean
+}
+
+// ─── Contact ──────────────────────────────────────────────────────────────────
+export type ContactType = 'client_b2c' | 'corporate_b2b' | 'vendor' | 'company';
+export type ContactStatus = 'active' | 'inactive';
+
+export interface Contact {
+  id: string;
+  tenant_id: string;
+  name: string;
+  email: string | null;
+  phone_number: string;
+  contact_type: ContactType;
+  status: ContactStatus;
+  metadata: Record<string, any>;
+  created_at: string;
 }

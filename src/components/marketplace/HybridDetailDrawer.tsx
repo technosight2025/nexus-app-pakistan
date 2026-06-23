@@ -4,8 +4,11 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   X, Calendar, Users, Check, MessageSquare, ShieldCheck, 
-  Star, Award, Info, Clock, Sparkles, Sliders, DollarSign, ChevronRight
+  Star, Award, Info, Clock, Sparkles, Sliders, DollarSign, ChevronRight, Heart
 } from 'lucide-react'
+import { useFavorites } from '@/contexts/FavoritesContext'
+import { useUser } from '@clerk/nextjs'
+import { AuthWallModal } from './AuthWallModal'
 
 export interface HybridDetailItem {
   id: string
@@ -45,6 +48,10 @@ interface HybridDetailDrawerProps {
 }
 
 export function HybridDetailDrawer({ isOpen, onClose, item, onBookingSubmit }: HybridDetailDrawerProps) {
+  const { user } = useUser()
+  const isSignedIn = !!user
+  const [showAuthWall, setShowAuthWall] = useState(false)
+
   // Common States
   const [activeSubTab, setActiveSubTab] = useState<'details' | 'portfolio'>('details')
   const [checkoutStep, setCheckoutStep] = useState<'form' | 'payment'>('form')
@@ -61,6 +68,25 @@ export function HybridDetailDrawer({ isOpen, onClose, item, onBookingSubmit }: H
   const [eventVibe, setEventVibe] = useState("")
   const [guestCount, setGuestCount] = useState("100 - 300 guests")
   const [requirements, setRequirements] = useState("")
+
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites()
+  const isShortlisted = item ? isFavorite(item.id) : false
+
+  const handleShortlistToggle = () => {
+    if (!item) return
+    if (isShortlisted) {
+      removeFavorite(item.id)
+    } else {
+      addFavorite({ 
+        id: item.id, 
+        name: item.name, 
+        category: item.category, 
+        type: item.type, 
+        price: item.price, 
+        image: item.images[0] 
+      })
+    }
+  }
 
   // Calculate pricing based on item starting rate
   const baseRate = item ? parseInt(item.price.replace(/,/g, ""), 10) || 50000 : 50000
@@ -542,10 +568,27 @@ export function HybridDetailDrawer({ isOpen, onClose, item, onBookingSubmit }: H
               
               <div className="flex gap-2">
                 <button 
-                  onClick={() => alert(`Opening WhatsApp Chat with ${item.name} support!`)}
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      setShowAuthWall(true);
+                    } else {
+                      alert(`Opening WhatsApp Chat with ${item.name} support!`);
+                    }
+                  }}
                   className="px-4 py-3 border border-[#E6E2DA] hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <MessageSquare className="w-4 h-4 text-emerald-600" /> WhatsApp
+                </button>
+                <button 
+                  onClick={handleShortlistToggle}
+                  className={`px-4 py-3 border rounded-xl text-xs font-black uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 ${
+                    isShortlisted 
+                      ? 'border-rose-200 bg-rose-50 text-rose-500' 
+                      : 'border-[#E6E2DA] hover:bg-slate-100 text-slate-700'
+                  }`}
+                >
+                  <Heart className={`w-4 h-4 ${isShortlisted ? 'fill-rose-500' : ''}`} /> 
+                  {isShortlisted ? 'Saved' : 'Save'}
                 </button>
                 <button 
                   onClick={handleProceed}
@@ -575,6 +618,12 @@ export function HybridDetailDrawer({ isOpen, onClose, item, onBookingSubmit }: H
         </div>
 
       </div>
+
+      <AuthWallModal 
+        isOpen={showAuthWall}
+        onClose={() => setShowAuthWall(false)}
+        vendorCount={1}
+      />
     </div>
   )
 }

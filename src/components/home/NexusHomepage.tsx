@@ -14,6 +14,7 @@ import SuccessStories from './sections/SuccessStories';
 import WhyNexus from './sections/WhyNexus';
 import CTA from './sections/CTA';
 import Footer from './sections/Footer';
+import FeatureGrid from './FeatureGrid';
 
 export default function NexusHomepage() {
   return (
@@ -35,6 +36,9 @@ export default function NexusHomepage() {
 
       {/* Couples Attraction Portal */}
       <CouplesAttraction />
+
+      {/* Feature Grid */}
+      <FeatureGrid />
 
       {/* 5. How It Works */}
       <HowItWorks />

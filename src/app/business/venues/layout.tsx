@@ -11,7 +11,7 @@ import {
   Clock, Sparkles, Wrench, ShieldAlert, User, Coins, Tv, MonitorPlay, 
   Camera, Paintbrush, ChefHat, Music, BarChart3, PieChart, TrendingUp, 
   Star, AppWindow, Settings, Key, CreditCard, ChevronDown, ChevronLeft, Search, QrCode,
-  Menu, X, Sparkle, MessageSquareCode
+  Menu, X, Sparkle, MessageSquareCode, Globe
 } from "lucide-react"
 
 export default function VenueOSLayout({
@@ -144,7 +144,7 @@ export default function VenueOSLayout({
         { name: "Leads", href: "/business/venues/leads", icon: UserCheck },
         { name: "Customers", href: "/business/venues/leads?tab=customers", icon: Users },
         { name: "Guest Lists", href: "/business/venues/leads?tab=guests", icon: BookOpen },
-        { name: "Communication", href: "/business/venues/leads?tab=chat", icon: MessageSquare },
+        { name: "Messages", href: "/business/venues/messages", icon: MessageSquare, badge: 1 },
       ]
     },
     {
@@ -210,6 +210,7 @@ export default function VenueOSLayout({
     {
       title: "SETTINGS",
       items: [
+        { name: "Public Profile", href: "/business/venues/profile", icon: Globe },
         { name: "Settings OS", href: "/business/venues/settings", icon: Settings },
       ]
     }

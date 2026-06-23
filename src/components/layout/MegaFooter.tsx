@@ -33,11 +33,11 @@ export function MegaFooter() {
           <div>
             <h4 className="font-black text-foreground text-lg mb-6">Marketplace</h4>
             <ul className="space-y-4">
-              <li><Link href="/venues" className="text-muted-foreground font-medium hover:text-primary transition-colors">Venues</Link></li>
-              <li><Link href="/vendors" className="text-muted-foreground font-medium hover:text-primary transition-colors">Vendors</Link></li>
+              <li><Link href="/explore" className="text-muted-foreground font-medium hover:text-primary transition-colors">Venues</Link></li>
+              <li><Link href="/explore" className="text-muted-foreground font-medium hover:text-primary transition-colors">Vendors</Link></li>
               <li><Link href="/studios" className="text-muted-foreground font-medium hover:text-primary transition-colors">Studios</Link></li>
               <li><Link href="/business/workforce" className="text-muted-foreground font-medium hover:text-primary transition-colors">Workforce</Link></li>
-              <li><Link href="/marketplace" className="text-muted-foreground font-medium hover:text-primary transition-colors">Event Packages</Link></li>
+              <li><Link href="/explore" className="text-muted-foreground font-medium hover:text-primary transition-colors">Event Packages</Link></li>
             </ul>
           </div>
 

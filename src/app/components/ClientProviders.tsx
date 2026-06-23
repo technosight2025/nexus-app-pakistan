@@ -7,11 +7,12 @@ import { OrganizationProvider } from "@/app/context/OrganizationContext";
 import { PermissionProvider } from "@/app/context/PermissionContext";
 import { NexusEcosystemProvider } from "@/app/context/NexusEcosystemContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 /**
  * ClientProviders
  * Wraps the entire app with all client-side context providers.
- * Order: Clerk (outermost) → Auth → Organization → Permission → NexusEcosystem → Language
+ * Order: Clerk (outermost) → Auth → Organization → Permission → NexusEcosystem → Language → Favorites
  */
 export default function ClientProviders({ children }: { children: ReactNode }) {
   return (
@@ -26,7 +27,9 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
           <PermissionProvider>
             <NexusEcosystemProvider>
               <LanguageProvider>
-                {children}
+                <FavoritesProvider>
+                  {children}
+                </FavoritesProvider>
               </LanguageProvider>
             </NexusEcosystemProvider>
           </PermissionProvider>

@@ -74,10 +74,10 @@ export default function Footer() {
           {/* Links Column 2: Marketplace */}
           <div className="flex flex-col gap-2.5 min-w-[90px]">
             <h4 className="font-[700] text-[#1F2937] text-[13px] leading-tight mb-1.5">Marketplace</h4>
-            <Link href="/venues" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">Venues</Link>
-            <Link href="/vendors" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">Vendors</Link>
+            <Link href="/explore" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">Venues</Link>
+            <Link href="/explore" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">Vendors</Link>
             <Link href="/studios" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">Studios</Link>
-            <Link href="/marketplace" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">All Categories</Link>
+            <Link href="/explore" className="text-[12px] text-[#6B7280] font-[500] hover:text-[#0F5B3E] transition-colors">All Categories</Link>
           </div>
 
           {/* Links Column 3: Business Solutions */}

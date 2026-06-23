@@ -20,6 +20,19 @@ export function GlobalHeader() {
   const isHome = pathname === "/"
   const { isRomanUrdu, setIsRomanUrdu } = useLanguage()
 
+  const [localProfileName, setLocalProfileName] = useState<string | null>(null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem("nexus_crm_wedding_profile")
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (parsed.hostName) setLocalProfileName(parsed.hostName)
+        else if (parsed.brideName && parsed.brideName !== "You") setLocalProfileName(parsed.brideName)
+      } catch (e) {}
+    }
+  }, [])
+
   // Pages that have a dark hero section or dark top banner
   const isDarkPage = pathname === "/business"
 
@@ -135,7 +148,7 @@ export function GlobalHeader() {
                   className="w-8 h-8 rounded-full object-cover" 
                 />
                 <span className="text-sm font-semibold text-slate-800 hidden sm:block pl-1">
-                  {user?.firstName || "Zoya"}
+                  {user?.firstName || localProfileName || "Zoya"}
                 </span>
                 <ChevronDown className={`w-4 h-4 text-gray-500 hidden sm:block transition-transform pr-1 ${dropdownOpen ? "rotate-180" : ""}`} />
               </button>

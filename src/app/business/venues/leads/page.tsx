@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, Suspense } from "react"
+import React, { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { 
@@ -19,22 +19,19 @@ function CRMLeadsContent() {
   }
 
   // Kanban Pipeline states
-  const pipeline = [
+  const [pipeline, setPipeline] = useState([
     {
       id: "inquiry",
       title: "New Inquiries",
       color: "bg-blue-500",
-      cards: [
-        { id: "1", client: "Zainab Malik", type: "Valima Ceremony", date: "Dec 15, 2025", value: "Rs. 4,50,000", phone: "+92 300 1234567" },
-        { id: "2", client: "Asif Mahmood", type: "Corporate Gala", date: "Jan 10, 2026", value: "Rs. 2,80,000", phone: "+92 321 9876543" }
-      ]
+      cards: [] as any[]
     },
     {
       id: "followup",
       title: "Follow Up",
       color: "bg-amber-500",
       cards: [
-        { id: "3", client: "Kamran Shah", type: "Mehndi Night", date: "Nov 20, 2025", value: "Rs. 3,20,000", phone: "+92 333 4445556" }
+        { id: "mock-3", client: "Kamran Shah", type: "Mehndi Night", date: "Nov 20, 2025", value: "Rs. 3,20,000", phone: "+92 333 4445556", isMock: true }
       ]
     },
     {
@@ -42,7 +39,7 @@ function CRMLeadsContent() {
       title: "Visit Scheduled",
       color: "bg-purple-500",
       cards: [
-        { id: "4", client: "Hassan Ali", type: "Wedding reception", date: "Oct 25, 2025", value: "Rs. 6,80,000", phone: "+92 312 7778889" }
+        { id: "mock-4", client: "Hassan Ali", type: "Wedding reception", date: "Oct 25, 2025", value: "Rs. 6,80,000", phone: "+92 312 7778889", isMock: true }
       ]
     },
     {
@@ -50,18 +47,111 @@ function CRMLeadsContent() {
       title: "Negotiation",
       color: "bg-rose-500",
       cards: [
-        { id: "5", client: "Faisal Ghafoor", type: "Birthday Banquet", date: "Jul 15, 2025", value: "Rs. 1,50,000", phone: "+92 300 5556667" }
+        { id: "mock-5", client: "Faisal Ghafoor", type: "Birthday Banquet", date: "Jul 15, 2025", value: "Rs. 1,50,000", phone: "+92 300 5556667", isMock: true }
       ]
     },
     {
       id: "confirmed",
       title: "Won / Booked",
       color: "bg-emerald-500",
-      cards: [
-        { id: "6", client: "Ahmed & Fatima", type: "Wedding (Shadi)", date: "May 20, 2025", value: "Rs. 5,00,000", phone: "+92 315 9998887" }
-      ]
+      cards: [] as any[]
     }
-  ]
+  ])
+
+  // Load from local storage
+  useEffect(() => {
+    const loadLeads = () => {
+      const stored = localStorage.getItem("nexus_crm_hired_vendors")
+      if (stored) {
+        try {
+          const vendors = JSON.parse(stored)
+          
+          const pending = vendors.filter((v: any) => v.status === 'Pending Signature' || v.status === 'Tentative').map((v: any) => ({
+            id: v.id,
+            realVendorId: v.id,
+            client: "Nexus Host",
+            type: v.category,
+            date: v.milestones?.[1]?.dueDate || "TBD",
+            value: `Rs. ${v.contractAmount?.toLocaleString()}`,
+            phone: "+92 300 0000000",
+            isMock: false
+          }))
+
+          const confirmed = vendors.filter((v: any) => v.status === 'Confirmed' || v.status === 'Completed').map((v: any) => ({
+            id: v.id,
+            realVendorId: v.id,
+            client: "Nexus Host",
+            type: v.category,
+            date: v.milestones?.[1]?.dueDate || "TBD",
+            value: `Rs. ${v.contractAmount?.toLocaleString()}`,
+            phone: "+92 300 0000000",
+            isMock: false
+          }))
+
+          setPipeline(prev => prev.map(col => {
+            if (col.id === 'inquiry') return { ...col, cards: pending }
+            if (col.id === 'confirmed') return { ...col, cards: confirmed }
+            return col
+          }))
+        } catch (e) {}
+      }
+    }
+    
+    loadLeads()
+    
+    // Auto-refresh interval for realism in demo
+    const interval = setInterval(loadLeads, 2000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleDragStart = (e: React.DragEvent, cardId: string, sourceColId: string) => {
+    e.dataTransfer.setData("cardId", cardId)
+    e.dataTransfer.setData("sourceColId", sourceColId)
+  }
+
+  const handleDrop = (e: React.DragEvent, targetColId: string) => {
+    e.preventDefault()
+    const cardId = e.dataTransfer.getData("cardId")
+    const sourceColId = e.dataTransfer.getData("sourceColId")
+
+    if (sourceColId === targetColId) return
+
+    setPipeline(prev => {
+      const newPipeline = [...prev]
+      const sourceColIdx = newPipeline.findIndex(c => c.id === sourceColId)
+      const targetColIdx = newPipeline.findIndex(c => c.id === targetColId)
+      
+      const cardIdx = newPipeline[sourceColIdx].cards.findIndex(c => c.id === cardId)
+      const card = newPipeline[sourceColIdx].cards[cardIdx]
+      
+      // Move card in state
+      newPipeline[sourceColIdx].cards.splice(cardIdx, 1)
+      newPipeline[targetColIdx].cards.push(card)
+
+      // If dropped into "Won / Booked", update local storage so Host dashboard sees it!
+      if (targetColId === "confirmed" && !card.isMock) {
+        const stored = localStorage.getItem("nexus_crm_hired_vendors")
+        if (stored) {
+          try {
+            const vendors = JSON.parse(stored)
+            const updatedVendors = vendors.map((v: any) => {
+              if (v.id === card.realVendorId) {
+                return { ...v, status: 'Confirmed' }
+              }
+              return v
+            })
+            localStorage.setItem("nexus_crm_hired_vendors", JSON.stringify(updatedVendors))
+          } catch (e) {}
+        }
+      }
+
+      return newPipeline
+    })
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
 
   // Customers data
   const customers = [
@@ -162,16 +252,6 @@ function CRMLeadsContent() {
         >
           Guest Lists & RSVPs
         </button>
-        <button 
-          onClick={() => setTab("chat")}
-          className={`px-4 py-1.5 rounded-xl text-[11px] font-extrabold transition-all shrink-0 uppercase tracking-wider ${
-            activeTab === "chat" 
-              ? "bg-[#0F5B3E] text-white shadow-xs" 
-              : "text-gray-600 hover:bg-gray-50"
-          }`}
-        >
-          Communication & Templates
-        </button>
       </div>
 
       {/* Tab Views */}
@@ -181,7 +261,12 @@ function CRMLeadsContent() {
         <div className="overflow-x-auto overflow-y-hidden pb-4 no-scrollbar">
           <div className="flex gap-5 min-w-max h-[calc(100vh-16rem)]">
             {pipeline.map((col) => (
-              <div key={col.id} className="w-72 bg-[#FAF8F5]/80 border border-[#ECE7DF]/60 rounded-[20px] flex flex-col p-3 shadow-xs">
+              <div 
+                key={col.id} 
+                className="w-72 bg-[#FAF8F5]/80 border border-[#ECE7DF]/60 rounded-[20px] flex flex-col p-3 shadow-xs"
+                onDrop={(e) => handleDrop(e, col.id)}
+                onDragOver={handleDragOver}
+              >
                 
                 {/* Column header */}
                 <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3 pl-1 shrink-0 select-none">
@@ -202,7 +287,9 @@ function CRMLeadsContent() {
                   {col.cards.map((card) => (
                     <div 
                       key={card.id} 
-                      className="bg-white p-3.5 border border-[#ECE7DF] rounded-[16px] shadow-sm hover:border-[#0F5B3E]/40 hover:shadow-md transition-all group relative cursor-grab"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, card.id, col.id)}
+                      className="bg-white p-3.5 border border-[#ECE7DF] rounded-[16px] shadow-sm hover:border-[#0F5B3E]/40 hover:shadow-md transition-all group relative cursor-grab active:cursor-grabbing"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-[9.5px] font-extrabold text-[#0F5B3E] bg-[#E6F0EC] px-2 py-0.5 rounded-md">
@@ -338,45 +425,6 @@ function CRMLeadsContent() {
         </Card>
       )}
 
-      {/* Tab 4: Communication & WhatsApp Templates */}
-      {activeTab === "chat" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {communicationTemplates.map((template, idx) => (
-            <Card key={idx} className="p-5 border border-gray-100 bg-[#FAF8F5]/80 rounded-[20px] shadow-sm flex flex-col justify-between h-[230px] text-left">
-              <div>
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <h3 className="text-[12px] font-black text-gray-900">{template.title}</h3>
-                  <span className="text-[9px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md">
-                    {template.channel}
-                  </span>
-                </div>
-                
-                <p className="text-[11.5px] text-gray-500 mt-3.5 leading-relaxed font-semibold line-clamp-4">
-                  "{template.text}"
-                </p>
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-[9.5px] text-gray-400 font-bold">Length: {template.text.length} chars</span>
-                <button 
-                  onClick={() => handleCopyText(template.text, idx)}
-                  className="px-3.5 py-1 bg-[#0F5B3E] hover:bg-[#0A3B2A] text-white text-[10px] font-bold rounded-lg transition-all flex items-center gap-1"
-                >
-                  {copiedIndex === idx ? (
-                    <>
-                      <Check className="w-3.5 h-3.5" /> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" /> Copy WhatsApp text
-                    </>
-                  )}
-                </button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
 
     </div>
   )

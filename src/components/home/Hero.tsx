@@ -42,7 +42,7 @@ export function Hero() {
             variant="emeraldSolid"
             className="w-full sm:w-auto min-h-[48px] px-8 text-sm flex items-center justify-center gap-2"
           >
-            <Link href="/search">
+            <Link href="/explore">
               <span>🎉 Start Exploring</span>
               <ArrowRight className="w-4 h-4" />
             </Link>

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Briefcase, Camera, Users, ArrowRight, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 const PILLARS = [
   {
@@ -19,7 +20,8 @@ const PILLARS = [
       'Verified Portfolios & Reviews',
       'Real-time Availability Calendars',
       'Secure Direct Payments'
-    ]
+    ],
+    href: '/explore'
   },
   {
     id: 'business',
@@ -35,7 +37,8 @@ const PILLARS = [
       'CRM & Client Communication',
       'Automated Invoicing & Revenue Audits',
       'Real-time Project Timelines'
-    ]
+    ],
+    href: '/business'
   },
   {
     id: 'memories',
@@ -51,7 +54,8 @@ const PILLARS = [
       'Live Guest Upload Streams',
       'AI-Powered Facial Grouping & Albums',
       'Shared Collaborative Event Galleries'
-    ]
+    ],
+    href: '/memories'
   },
   {
     id: 'network',
@@ -67,12 +71,14 @@ const PILLARS = [
       'Lead Sharing & Subcontracting',
       'Equipment & Wardrobe Rental Lists',
       'Creative Community Forums & Events'
-    ]
+    ],
+    href: '/explore'
   }
 ];
 
 export default function WhatIsNexus() {
-  const [activePillar, setActivePillar] = useState(PILLARS[0]);
+  const [activePillarId, setActivePillarId] = useState(PILLARS[0].id);
+  const activePillar = PILLARS.find(p => p.id === activePillarId) || PILLARS[0];
 
   return (
     <section className="py-24 bg-white border-y border-[#E6E2DA] relative overflow-hidden">
@@ -101,16 +107,16 @@ export default function WhatIsNexus() {
             const Icon = pillar.icon;
             const isActive = activePillar.id === pillar.id;
             return (
-              <motion.div
-                key={pillar.id}
-                onClick={() => setActivePillar(pillar)}
-                whileHover={{ y: -6 }}
-                className={`p-6.5 rounded-3xl border cursor-pointer transition-all duration-300 relative overflow-hidden flex flex-col justify-between h-56 ${
-                  isActive 
-                    ? 'border-[#1E1B4B] bg-slate-50/80 shadow-md' 
-                    : 'border-[#E6E2DA] bg-white hover:border-slate-400 hover:shadow-xs'
-                }`}
-              >
+              <Link href={pillar.href} key={pillar.id} className="block group/card">
+                <motion.div
+                  onMouseEnter={() => setActivePillarId(pillar.id)}
+                  whileHover={{ y: -6 }}
+                  className={`p-6.5 rounded-3xl border cursor-pointer transition-all duration-300 relative overflow-hidden flex flex-col justify-between h-56 ${
+                    isActive 
+                      ? 'border-[#1E1B4B] bg-slate-50/80 shadow-md' 
+                      : 'border-[#E6E2DA] bg-white hover:border-slate-400 hover:shadow-xs'
+                  }`}
+                >
                 {/* Accent Top Bar */}
                 {isActive && (
                   <div 
@@ -129,11 +135,12 @@ export default function WhatIsNexus() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#1E1B4B]/40 group pt-4">
+                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#1E1B4B]/80 group-hover/card:text-[#047857] group pt-4 mt-auto">
                   <span>Explore system</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/card:translate-x-1" />
                 </div>
               </motion.div>
+            </Link>
             );
           })}
         </div>
@@ -179,6 +186,12 @@ export default function WhatIsNexus() {
                       <span className="text-xs md:text-sm font-semibold text-[#1E1B4B]/85">{feature}</span>
                     </div>
                   ))}
+                </div>
+
+                <div className="pt-4">
+                  <Link href={activePillar.href} className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-bold text-sm transition-all shadow-sm hover:shadow-md ${activePillar.bg.replace('bg-', 'bg-').replace('50', '600')}`} style={{ backgroundColor: activePillar.accentColor }}>
+                    Explore {activePillar.title} <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
               </div>
 

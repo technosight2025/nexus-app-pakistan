@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Star, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 
@@ -84,45 +85,46 @@ export default function BuiltForCreatives() {
         {/* Industry Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {INDUSTRIES.map((industry) => (
-            <motion.div
-              key={industry.name}
-              whileHover={{ y: -6 }}
-              className="group border border-[#E6E2DA] rounded-[2rem] overflow-hidden bg-[#FAF9F6] flex flex-col justify-between h-[390px] shadow-xs"
-            >
-              {/* Image Header with Badge */}
-              <div className="relative h-44 overflow-hidden border-b border-[#E6E2DA]/50 bg-slate-100">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${industry.image})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
-                <span className="absolute bottom-3 left-4 text-[9px] font-mono font-bold uppercase tracking-wider bg-white/25 backdrop-blur-md text-white border border-white/20 px-2 py-0.5 rounded-full">
-                  {industry.badge}
-                </span>
-              </div>
-
-              {/* Text Body */}
-              <div className="p-6 flex-1 flex flex-col justify-between text-left">
-                <div className="space-y-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#047857]">
-                    {industry.subtitle}
+            <Link href="/explore" key={industry.name} className="block group">
+              <motion.div
+                whileHover={{ y: -6 }}
+                className="border border-[#E6E2DA] rounded-[2rem] overflow-hidden bg-[#FAF9F6] flex flex-col justify-between h-[390px] shadow-xs cursor-pointer"
+              >
+                {/* Image Header with Badge */}
+                <div className="relative h-44 overflow-hidden border-b border-[#E6E2DA]/50 bg-slate-100">
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                    style={{ backgroundImage: `url(${industry.image})` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-[9px] font-mono font-bold uppercase tracking-wider bg-white/25 backdrop-blur-md text-white border border-white/20 px-2 py-0.5 rounded-full">
+                    {industry.badge}
                   </span>
-                  <h3 className="text-lg font-bold text-[#1E1B4B] font-heading">
-                    {industry.name}
-                  </h3>
-                  <p className="text-[#1E1B4B]/70 text-xs md:text-sm font-medium leading-relaxed line-clamp-3">
-                    {industry.description}
-                  </p>
                 </div>
 
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[#1E1B4B] border-t border-[#E6E2DA] pt-4 mt-3 flex items-center justify-between group-hover:text-[#047857] transition-colors">
-                  <span>Learn more</span>
-                  <div className="w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#1E1B4B]/50 group-hover:text-white group-hover:bg-[#047857] group-hover:border-[#047857] transition-all">
-                    →
+                {/* Text Body */}
+                <div className="p-6 flex-1 flex flex-col justify-between text-left">
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#047857]">
+                      {industry.subtitle}
+                    </span>
+                    <h3 className="text-lg font-bold text-[#1E1B4B] font-heading">
+                      {industry.name}
+                    </h3>
+                    <p className="text-[#1E1B4B]/70 text-xs md:text-sm font-medium leading-relaxed line-clamp-3">
+                      {industry.description}
+                    </p>
+                  </div>
+
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#1E1B4B] border-t border-[#E6E2DA] pt-4 mt-3 flex items-center justify-between group-hover:text-[#047857] transition-colors">
+                    <span>Learn more</span>
+                    <div className="w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#1E1B4B]/50 group-hover:text-white group-hover:bg-[#047857] group-hover:border-[#047857] transition-all">
+                      →
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
 

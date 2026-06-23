@@ -120,7 +120,7 @@ export function BentoHomeLayout() {
                     <Bot className="w-5 h-5 mr-2 animate-pulse" /> Plan with AI
                   </Button>
                 </Link>
-                <Link href="/search">
+                <Link href="/explore">
                   <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold rounded-2xl border-2 hover:bg-slate-50 transition-all hover:-translate-y-1">
                     Explore Market
                   </Button>

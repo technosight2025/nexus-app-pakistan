@@ -1,137 +1,129 @@
-"use client"
+'use client';
 
-import React, { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { 
-  BarChart3, PieChart, TrendingUp, Star, Calendar, 
-  ChevronDown, DollarSign, Users, Award, Percent
-} from "lucide-react"
+import React, { useState } from 'react';
+import { BarChart3, TrendingUp, DollarSign, Calendar, ArrowUpRight, Download, SlidersHorizontal, Layers } from 'lucide-react';
 
-export default function VenueAnalyticsPage() {
-  const [filterPeriod, setFilterPeriod] = useState("This Year")
+export default function VenueAnalyticsDashboard() {
+  const [selectedSeason, setSelectedSeason] = useState<string>('Peak Wedding Season (Nov-Feb)');
+  
+  // Simulated operational ledger states matching Pakistani wedding market economics
+  const financialMetrics = {
+    totalGrossRevenue: 4850000,
+    outstandingReceivables: 1250000,
+    averageContractValue: 450000,
+    completedBookingsCount: 12,
+  };
 
-  // Mock analytics stats
-  const metrics = [
-    { label: "Total Booked revenue", value: "Rs. 2,450,000", change: "↑ 18%", desc: "vs last year" },
-    { label: "Average Booking value", value: "Rs. 480,000", change: "↑ 8%", desc: "from last quarter" },
-    { label: "Lead Conversion Rate", value: "32.4%", change: "↑ 4.2%", desc: "conversion efficiency" },
-    { label: "Customer Satisfaction", value: "4.9 / 5.0", change: "↑ 2%", desc: "based on 182 reviews" },
-  ]
-
-  const packages = [
-    { rank: 1, name: "Premium Single Dish Wedding", bookings: 42, share: "45% of total" },
-    { rank: 2, name: "Executive Corporate Banquet", bookings: 24, share: "26% of total" },
-    { rank: 3, name: "Gold Stage Reception (Dec Peak)", bookings: 18, share: "19% of total" },
-  ]
+  const monthlyBreakdown = [
+    { month: 'November', bookings: 4, yield: 1800000, status: 'Settled' },
+    { month: 'December', bookings: 5, yield: 2250000, status: 'Settled' },
+    { month: 'January', bookings: 2, yield: 900000, status: 'Partially Paid' },
+    { month: 'February', bookings: 1, yield: 450000, status: 'Pending Deposit' },
+  ];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="text-left">
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-[#0F5B3E]" /> Analytics Desk & Reports
-          </h1>
-          <p className="text-gray-500 mt-1 text-[13px] font-medium">
-            Monitor venue booking volumes, occupancy trends, average contract sizes, and lead conversion rates.
-          </p>
+    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 pb-12 antialiased">
+      {/* Upper Analytics HUD Header */}
+      <header className="border-b border-[#C5A880]/20 bg-white sticky top-0 z-40 px-6 py-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div>
+          <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">B2B Enterprise Tier</span>
+          <h1 className="text-xl font-serif font-black text-slate-950 tracking-tight">Financial Yield Matrix</h1>
         </div>
+        <div className="flex items-center gap-2">
+          <button className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 transition-all inline-flex items-center gap-1.5 shadow-sm">
+            <Download className="w-3.5 h-3.5 text-[#0F5B3E]" /> Export CSV
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 mt-8 space-y-6">
         
-        <div className="relative">
-          <select 
-            value={filterPeriod}
-            onChange={(e) => setFilterPeriod(e.target.value)}
-            className="appearance-none pl-3.5 pr-8 py-2 bg-white border border-[#ECE7DF] rounded-xl text-[12px] font-bold text-gray-700 focus:outline-none"
-          >
-            <option value="This Year">This Year (2025)</option>
-            <option value="Last 6 Months">Last 6 Months</option>
-            <option value="Last 30 Days">Last 30 Days</option>
-          </select>
-          <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        {/* Core Metric Cards Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-2">
+            <div className="flex justify-between items-center text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-wider">Gross Contract Value</span>
+              <DollarSign className="w-4 h-4 text-[#0F5B3E]" />
+            </div>
+            <p className="text-xl font-serif font-black text-slate-950">PKR {financialMetrics.totalGrossRevenue.toLocaleString()}</p>
+            <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+              <ArrowUpRight className="w-3 h-3" /> +18% from last fiscal year
+            </span>
+          </div>
+
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-2">
+            <div className="flex justify-between items-center text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-wider">Outstanding Payoffs</span>
+              <Layers className="w-4 h-4 text-amber-600" />
+            </div>
+            <p className="text-xl font-serif font-black text-slate-950">PKR {financialMetrics.outstandingReceivables.toLocaleString()}</p>
+            <span className="text-[10px] text-slate-400 font-medium">Awaiting contract completions</span>
+          </div>
+
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-2">
+            <div className="flex justify-between items-center text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-wider">Average Marquee Yield</span>
+              <TrendingUp className="w-4 h-4 text-[#0F5B3E]" />
+            </div>
+            <p className="text-xl font-serif font-black text-slate-950">PKR {financialMetrics.averageContractValue.toLocaleString()}</p>
+            <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+              Premium premium layout tier standard
+            </span>
+          </div>
+
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-2">
+            <div className="flex justify-between items-center text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-wider">Confirmed Allocations</span>
+              <Calendar className="w-4 h-4 text-slate-500" />
+            </div>
+            <p className="text-xl font-serif font-black text-slate-950">{financialMetrics.completedBookingsCount} Events</p>
+            <span className="text-[10px] text-slate-400 font-medium">100% capacity utilization rate</span>
+          </div>
         </div>
-      </div>
 
-      {/* Roster list */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-        {metrics.map((m, idx) => (
-          <Card key={idx} className="p-5 border border-gray-100 bg-white rounded-[24px] shadow-sm flex flex-col justify-between h-[130px]">
-            <div>
-              <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider block leading-none">{m.label}</span>
-              <h3 className="text-[20px] font-black text-gray-900 mt-3.5 leading-none">{m.value}</h3>
-            </div>
-            <div className="text-[10px] font-bold text-emerald-600 flex items-center gap-1 leading-none mt-1">
-              <span>{m.change}</span>
-              <span className="text-gray-400 font-semibold">{m.desc}</span>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Occupancy and Popular Packages Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
-        {/* Package Popularity list */}
-        <Card className="lg:col-span-2 p-5 border border-gray-100 bg-white rounded-[24px] shadow-sm flex flex-col justify-between min-h-[300px]">
-          <div>
-            <h3 className="text-[13.5px] font-black text-gray-900 uppercase tracking-wider mb-4">Popular Package conversion</h3>
-            <div className="space-y-4">
-              {packages.map((pkg) => (
-                <div key={pkg.rank} className="flex justify-between items-center text-[11.5px] font-semibold text-gray-700">
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-lg bg-[#E6F0EC] text-[#0F5B3E] flex items-center justify-center font-black text-[11px]">
-                      {pkg.rank}
-                    </span>
-                    <span className="text-gray-900 font-bold">{pkg.name}</span>
-                  </div>
-                  <div className="flex items-center gap-4 text-right">
-                    <span>{pkg.bookings} Bookings</span>
-                    <span className="text-emerald-600 font-bold">{pkg.share}</span>
-                  </div>
-                </div>
-              ))}
+        {/* Spreadsheet Data Entry Layout Grid */}
+        <div className="bg-white border border-[#C5A880]/20 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-1.5">
+              <BarChart3 className="w-4 h-4 text-[#0F5B3E]" /> Seasonal Performance Spreadsheet Breakdown
+            </h3>
+            <div className="flex items-center gap-1 text-xs text-slate-500 font-bold">
+              <SlidersHorizontal className="w-3.5 h-3.5" /> Filter Matrix
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-50 flex justify-between items-center text-[10px] text-gray-400 font-bold">
-            <span>Data synced: Real-time</span>
-            <button className="text-[#0F5B3E] hover:underline">Download package PDF report</button>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50 text-slate-400 font-black uppercase tracking-wider border-b border-slate-100">
+                  <th className="py-3 px-6">Operational Month</th>
+                  <th className="py-3 px-6">Slots Utilized</th>
+                  <th className="py-3 px-6 text-right">Gross Statement Yield</th>
+                  <th className="py-3 px-6 text-center">Settlement Workflow State</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                {monthlyBreakdown.map((row, index) => (
+                  <tr key={index} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-4 px-6 font-bold text-slate-900">{row.month}</td>
+                    <td className="py-4 px-6">{row.bookings} Booking Slots</td>
+                    <td className="py-4 px-6 text-right font-bold text-slate-950">PKR {row.yield.toLocaleString()}</td>
+                    <td className="py-4 px-6 text-center">
+                      <span className={`inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${
+                        row.status === 'Settled' ? 'bg-emerald-50 text-emerald-700' :
+                        row.status === 'Partially Paid' ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700'
+                      }`}>
+                        {row.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </Card>
+        </div>
 
-        {/* Occupancy Mini summary */}
-        <Card className="p-5 border border-gray-100 bg-white rounded-[24px] shadow-sm flex flex-col justify-between min-h-[300px]">
-          <div>
-            <h3 className="text-[13.5px] font-black text-gray-900 uppercase tracking-wider mb-4">Peak Seasonal Utilisation</h3>
-            
-            <div className="space-y-3.5 text-[11.5px] font-semibold text-gray-600">
-              <div className="flex justify-between items-center">
-                <span>Winter Season (Nov - Feb)</span>
-                <span className="text-gray-950 font-bold">96% Occupancy</span>
-              </div>
-              <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-rose-500 rounded-full" style={{ width: '96%' }} />
-              </div>
-
-              <div className="flex justify-between items-center pt-2">
-                <span>Spring Season (Mar - Apr)</span>
-                <span className="text-gray-950 font-bold">78% Occupancy</span>
-              </div>
-              <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-[#0F5B3E] rounded-full" style={{ width: '78%' }} />
-              </div>
-
-              <div className="flex justify-between items-center pt-2">
-                <span>Summer Season (May - Aug)</span>
-                <span className="text-gray-950 font-bold">42% Occupancy</span>
-              </div>
-              <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-500 rounded-full" style={{ width: '42%' }} />
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
+      </main>
     </div>
-  )
+  );
 }

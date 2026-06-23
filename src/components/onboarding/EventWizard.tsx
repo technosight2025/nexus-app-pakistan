@@ -72,7 +72,7 @@ export function EventWizard() {
           <LayoutDashboard className="w-5 h-5" />
           Go To Dashboard
         </Link>
-        <Link href="/marketplace" className="flex-1 py-4 bg-white border border-[#E6E2DA] text-[#1D1C17] rounded-full font-bold text-lg hover:bg-[#F2EFE9] transition-colors flex items-center justify-center gap-2">
+        <Link href="/explore" className="flex-1 py-4 bg-white border border-[#E6E2DA] text-[#1D1C17] rounded-full font-bold text-lg hover:bg-[#F2EFE9] transition-colors flex items-center justify-center gap-2">
           <Search className="w-5 h-5" />
           Explore Vendors
         </Link>

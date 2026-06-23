@@ -189,7 +189,7 @@ export default function LaunchJourneyPage() {
           <span className="text-[10px] font-bold">Home</span>
         </Link>
         <Link 
-          href="/marketplace"
+          href="/explore"
           className="flex flex-col items-center justify-center text-primary bg-primary-container rounded-full px-5 py-1.5 transition-colors"
         >
           <Compass className="w-5 h-5 mb-0.5" />

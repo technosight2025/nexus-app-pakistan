@@ -241,7 +241,7 @@ export default function AITryOnStudioClient() {
         
         {/* Header */}
         <div className="p-6 border-b border-white/10 sticky top-0 bg-[#111]/90 backdrop-blur-md z-20 flex items-center gap-4">
-          <Link href="/marketplace" className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+          <Link href="/explore" className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div>

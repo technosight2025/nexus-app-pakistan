@@ -1,539 +1,682 @@
-import React from "react"
-import { PublicLayout } from "@/components/layout/PublicLayout"
-import { MegaFooter } from "@/components/layout/MegaFooter"
-import Image from "next/image"
-import Link from "next/link"
-import { MapPin, Star, Award, ShieldCheck, CheckCircle2, MessageSquare, ChevronRight, Users, Clock, Truck, Shield, Sparkles, User, ArrowRight, Heart, Share2 } from "lucide-react"
-import { createClient } from "@supabase/supabase-js"
-import crypto from 'crypto'
-import { VendorStorefront } from "@/components/venues/VendorStorefront"
-import { VendorInteractiveSections } from "@/components/venues/VendorInteractiveSections"
+'use client';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import React, { useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { 
+  Star, ShieldCheck, MapPin, ArrowLeft, Image as ImageIcon, 
+  Sparkles, Calendar, Calculator, MessageSquare, Check, AlertCircle, Users
+} from 'lucide-react';
 
-function clerkToUuid(clerkId: string) {
-  const hash = crypto.createHash('md5').update(clerkId).digest('hex');
-  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-${hash.slice(12, 16)}-${hash.slice(16, 20)}-${hash.slice(20, 32)}`;
-}
+export default function AdvancedPublicVendorProfile() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  // We use params?.id here to match the existing Next.js [id] dynamic routing folder
+  const vendorId = params?.id as string;
+  const originBooking = searchParams.get('originBooking');
 
-const MOCK_PROFILES: Record<string, any> = {
-  "prof-lehnga": {
-    name: "Zardozi Lehnga Boutique",
-    category: "Lehnga Rental",
-    location: "Gulberg, Lahore",
-    rating: 4.9,
-    reviews: 142,
-    startingPrice: 15000,
-    about: "Zardozi Lehnga Boutique offers an exclusive collection of premium bridal and party wear lehngas for rent. Our curated wardrobe features top-tier designer outfits, meticulously maintained and custom-fitted, allowing you to wear your dream dress without the exorbitant price tag.",
-    features: ["Designer Bridal Wear", "Party Wear", "Custom Fittings", "Dry Cleaning Included", "Matching Jewelry Available"],
-    packages: [
-      { name: "Party Wear Rental", price: 15000, desc: "3-day rental for premium party wear outfits. Includes basic alterations and dry cleaning." },
-      { name: "Bridal Signature", price: 65000, desc: "4-day rental for heavy bridal lehngas. Includes complete custom fitting, premium packaging, and dual-dupatta settings." },
-      { name: "Royal Bridal Package", price: 120000, desc: "5-day rental for top-tier designer bridal wear. Includes complimentary jewelry rental and VIP fitting sessions." }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1596450514735-111a2faefa25?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop",
-    ]
-  },
-  "prof-1": {
-    name: "Usman Ali Photography",
-    category: "Photography & Cinematography",
-    location: "DHA Phase 6, Lahore",
-    rating: 4.9,
-    reviews: 420,
-    startingPrice: 150000,
-    about: "Award-winning photography and cinematography studio specializing in luxury Pakistani weddings. We capture your most precious moments with a blend of photojournalism and fine-art portraiture.",
-    features: ["Cinematography", "Drone", "Photo Album", "Same Day Edit", "Female Photographers"],
-    packages: [
-      { name: "Silver Package", price: 150000, desc: "1 Photographer, 1 Videographer, 100 Print Album, Edited Highlights" },
-      { name: "Gold Package", price: 250000, desc: "2 Photographers, 2 Videographers, Drone Coverage, 200 Print Album, Full Feature Film" },
-      { name: "Diamond Package", price: 400000, desc: "3 Photographers, 3 Videographers, Crane, Drone, Cinematic Film, Premium Albums" }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1537151608804-ea2f1fa8c020?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1601506521937-0121a7fc2a6b?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-    ]
-  }
-}
+  // --- Core Domain Registries ---
+  const profilesRegistry: Record<string, any> = {
+    'v_royal_palm': { name: 'The Royal Palm Marquee', type: 'Venue', city: 'Islamabad', basePrice: 450000, rating: '4.9', reviewsCount: 42, bio: 'Nestled beautifully in the heart of E-11, The Royal Palm offers exquisite pillarless luxury layout designs, custom high-end statement lighting rigging, and full internal temperature climate control frameworks for premium Pakistani bridal matrices.', stats: ['600 Guest Cap', 'Valet Framework Active', 'In-House Catering Array'], images: ['https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600', 'https://images.unsplash.com/photo-1549417229-aa67d3263c09?q=80&w=600'], blackedOutDates: ['2026-11-14', '2026-12-25', '2026-12-26'] },
+    's_bukhari_studio': { name: 'Bukhari Fine-Art Studios', type: 'Artisan Studio', city: 'Islamabad', basePrice: 220000, rating: '5.0', reviewsCount: 68, bio: 'Bukhari Studios is an elite squad of high-end visual documentarians capturing heritage weddings across Pakistan. Specializing in cinematic 4K master grading, candid wedding editorial frames, and secure digital archival asset custody loops.', stats: ['Dual Master Shooters', 'Next-Day Teaser Delivery', 'Raw Log Storage Access'], images: ['https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600', 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=600'], blackedOutDates: ['2026-10-10', '2026-11-20'] }
+  };
 
-export default async function VendorProfilePage({ 
-  params,
-  searchParams
-}: { 
-  params: Promise<{ id: string }>,
-  searchParams: Promise<{ theme?: string }>
-}) {
-  const resolvedParams = await params
-  const resolvedSearchParams = await searchParams
-  const vendorId = resolvedParams.id
+  const currentProfile = profilesRegistry[vendorId] || {
+    name: 'Premium Registered Specialist', type: 'Nexus Vetted Partner', city: 'Pakistan', basePrice: 300000, rating: '4.8', reviewsCount: 14, bio: 'An elite curated partner under active evaluation inside the Nexus system framework parameters.', stats: ['Vetted Security Clearing', 'Dedicated Support Wire'], images: ['https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=600'], blackedOutDates: []
+  };
+
+  // --- Advanced State Primitives ---
+  const [targetDate, setTargetDate] = useState<string>('');
+  const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'available' | 'booked'>('idle');
+  const [guestCount, setGuestCount] = useState<number>(300);
+  const [menuTier, setMenuTier] = useState<'standard' | 'premium' | 'luxury'>('standard');
+  const [reviews, setReviews] = useState<Array<{author: string, rating: number, text: string}>>([
+    { author: 'Zainab Ahmed', rating: 5, text: 'Absolutely spectacular service. The lighting and ambiance met our elite corporate expectations flawlessly.' },
+    { author: 'Kamran Malik', rating: 4, text: 'Very professional operations management. Highly recommended for high-capacity events.' }
+  ]);
+  const [newReviewText, setNewReviewText] = useState<string>('');
+  const [newRating, setNewRating] = useState<number>(5);
+  const [selectedLayout, setSelectedLayout] = useState<'traditional' | 'runway' | 'banquet'>('traditional');
+  const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState<boolean>(false);
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState<boolean>(false);
+  const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
+
+  const [addOnsSelection, setAddOnsSelection] = useState({
+    importedFlorals: false,
+    concertAcoustics: false,
+    coldFireProtocol: false
+  });
+
+  const addOnPrices = {
+    importedFlorals: 120000, // Imported Orchids & Exotic Stage Floral Rigging
+    concertAcoustics: 85000,  // Concert-Grade Acoustic Sub-system array
+    coldFireProtocol: 45000   // Indoor Cold-fireworks & Dry Ice Entrance Protocol
+  };
+
+  // --- Business Calculation Pipelines ---
+  const menuPerHeadCost = { standard: 1500, premium: 2500, luxury: 4500 }[menuTier];
+  const calculatedTotalEstimate = 
+    currentProfile.basePrice + 
+    (guestCount * menuPerHeadCost) +
+    (addOnsSelection.importedFlorals ? addOnPrices.importedFlorals : 0) +
+    (addOnsSelection.concertAcoustics ? addOnPrices.concertAcoustics : 0) +
+    (addOnsSelection.coldFireProtocol ? addOnPrices.coldFireProtocol : 0);
+
+  const handleBroadcastEstimateWhatsApp = () => {
+    const currentMenuName = menuTier === 'standard' ? 'One-Dish Essential' : menuTier === 'premium' ? 'Premium 3-Course' : 'Elite Imperial Multi';
+    
+    // Format the text string with clean, high-converting Pakistani wedding event descriptors
+    const messageString = 
+  `Assalam-o-Alaikum! 🌟
   
-  // Check if vendorId is already a valid UUID format
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(vendorId)
-  const vendorUuid = isUuid ? vendorId : clerkToUuid(vendorId)
-
-  // Fetch real data from Supabase
-  const { data: realVendor } = await supabase
-    .from("vendors")
-    .select("*")
-    .eq("id", vendorUuid)
-    .single()
-
-  // Use mock data ONLY if it's not a real UUID or explicitly demo
-  const isDemo = vendorId === "demo" || !isUuid
-  const baseMock = isDemo ? (MOCK_PROFILES["prof-lehnga"] || {}) : {}
+  We are reviewing a custom luxury package layout on Nexus Heritage Pakistan:
+  🏛️ Venue: ${currentProfile.name} (${currentProfile.city})
+  👥 Guest Scale: ${guestCount} Persons
+  🍽️ Culinary Menu: ${currentMenuName} (PKR ${menuPerHeadCost.toLocaleString()}/head)
   
-  const VENDOR = {
-    name: realVendor?.business_name || baseMock.name || "Untitled Studio",
-    category: realVendor?.category || baseMock.category || "Uncategorized",
-    phone: realVendor?.phone || baseMock.phone || null,
-    email: realVendor?.email || baseMock.email || null,
-    location: realVendor?.location || realVendor?.city || baseMock.location || "Location not set",
-    about: realVendor?.about || baseMock.about || "Welcome to our studio.",
-    features: realVendor?.features?.length > 0 ? realVendor.features : (baseMock.features || []),
-    packages: realVendor?.packages?.length > 0 ? realVendor.packages : (baseMock.packages || []),
-    images: realVendor?.images?.length > 0 ? realVendor.images : (baseMock.images || []),
-    startingPrice: realVendor?.starting_price || baseMock.startingPrice || 0,
-    rating: realVendor?.rating || baseMock.rating || 0,
-    reviews: realVendor?.reviews_count || baseMock.reviews || 0,
-  }
+  ✨ Premium Add-ons Appended:
+  ${addOnsSelection.importedFlorals ? '• Exotic Imported Florals (Orchids & Stage Garlands) 🌸\n' : ''}${addOnsSelection.concertAcoustics ? '• Concert-Grade Line Acoustics 🎵\n' : ''}${addOnsSelection.coldFireProtocol ? '• Cold-Fire & Dry Ice Entrance Protocol 💨\n' : ''}${!addOnsSelection.importedFlorals && !addOnsSelection.concertAcoustics && !addOnsSelection.coldFireProtocol ? '• Standard Setup Basics\n' : ''}
+  💰 Total Projected Calculation: PKR ${calculatedTotalEstimate.toLocaleString()}
+  
+  🔗 Explore the interactive layout and verify dates here:
+  https://nexus-app-pakistan.vercel.app/vendors/${vendorId}${originBooking ? `?originBooking=${originBooking}` : ''}`;
+  
+    // Encode text characters securely for public browser wire redirection mapping
+    const encodedMessage = encodeURIComponent(messageString);
+    window.open(`https://api.whatsapp.com/send?text=${encodedMessage}`, '_blank');
+  };
 
-  // Fetch Outfits
-  const { data: outfits } = await supabase
-    .from("rental_outfits")
-    .select("*")
-    .eq("vendor_id", vendorUuid)
-    .eq("status", "Available")
-    .order("created_at", { ascending: false });
+  const handleExecuteSecureHire = async () => {
+    if (!originBooking) {
+      alert("Please navigate to this vendor profile from your active Client Portal to bind this contract.");
+      return;
+    }
+    
+    setIsSubmittingBooking(true);
+    try {
+      // 1. Patch the main booking entry to officialize the appointment link
+      const fieldToUpdate = currentProfile.type === 'Venue' ? { venue_id: vendorId } : { studio_id: vendorId };
+      const linkRes = await fetch(`/api/bookings/link-vendor?bookingId=${originBooking}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fieldToUpdate)
+      });
+
+      if (!linkRes.ok) throw new Error('Failed to lock venue slot allocation.');
+
+      // 2. Adjust the total gross cost matrix dynamically inside event_payments_matrix
+      const matrixUpdateRes = await fetch(`/api/bookings/link-vendor?bookingId=${originBooking}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ total_contract_amount: calculatedTotalEstimate })
+      });
+
+      setBookingSuccess(true);
+      alert(`Masha'Allah! ${currentProfile.name} has been successfully booked and linked to your contract ledger.`);
+    } catch (err) {
+      console.error('Secure booking settlement failure:', err);
+    } finally {
+      setIsSubmittingBooking(false);
+    }
+  };
+
+  const checkLiveAvailability = () => {
+    if (!targetDate) return;
+    const isBooked = currentProfile.blackedOutDates.includes(targetDate);
+    setAvailabilityStatus(isBooked ? 'booked' : 'available');
+  };
+
+  const handlePostReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newReviewText.trim()) return;
+    setReviews([{ author: 'Verified Client Account', rating: newRating, text: newReviewText }, ...reviews]);
+    setNewReviewText('');
+  };
 
   return (
-    <PublicLayout>
-      <div className="bg-[#FDF8F0] min-h-screen pb-32 font-sans selection:bg-[#0F5B3E] selection:text-white">
-        
-        {/* 🌟 Cinematic Cover Banner 🌟 */}
-        <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden bg-stone-900">
-          {VENDOR.images && VENDOR.images.length > 0 ? (
-            <Image src={VENDOR.images[0]} alt="Cover" fill className="object-cover opacity-75" priority />
-          ) : (
-            <div className="w-full h-full bg-stone-850" />
+    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 pb-20 antialiased font-sans">
+      
+      {/* Editorial Profile Banner Header */}
+      <div className="relative h-64 sm:h-80 w-full bg-slate-900 overflow-hidden">
+        <img src={currentProfile.images[0]} alt={currentProfile.name} className="w-full h-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7] via-transparent to-black/50" />
+        <div className="absolute top-6 left-6 max-w-7xl mx-auto w-full px-4">
+          {originBooking && (
+            <a href={`/portal/${originBooking}`} className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm border border-slate-200 px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-[#0F5B3E] shadow-sm hover:bg-white transition-all">
+              <ArrowLeft className="w-3.5 h-3.5" /> Back To Client Portal Dashboard
+            </a>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-          
-          <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col justify-end">
-            <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div className="text-white space-y-4 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[10px] font-bold tracking-widest uppercase text-[#D4AF37]">
-                  <Award className="w-3.5 h-3.5" /> Verified Nexus Partner
+        </div>
+      </div>
+
+      <main className="max-w-6xl mx-auto px-4 -mt-24 relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* LEFT COLUMN: Main Portfolio Content Overview */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white border border-[#C5A880]/20 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 border-b border-slate-100 pb-6">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="bg-emerald-50 border border-emerald-100 text-[#0F5B3E] text-[9px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">{currentProfile.type}</span>
+                  <span className="text-slate-400 text-xs font-bold inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[#C5A880]" /> {currentProfile.city}</span>
                 </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white p-1 shadow-xl shrink-0">
-                    <div className="w-full h-full rounded-xl bg-[#0F5B3E] flex items-center justify-center font-heading font-black text-white text-xl md:text-2xl tracking-tighter">
-                      {VENDOR.name.split(" ").map((n: string) => n[0]).join("")}
-                    </div>
-                  </div>
+                <h1 className="font-serif text-xl sm:text-2xl font-black text-slate-950 tracking-tight">{currentProfile.name}</h1>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200/60 p-3 rounded-xl flex items-center gap-4 shrink-0">
+                <div className="text-center">
+                  <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest block">Base Rate Configuration</span>
+                  <span className="text-sm font-black text-slate-950">PKR {currentProfile.basePrice.toLocaleString()}</span>
+                </div>
+                <div className="border-l border-slate-200 pl-3 flex items-center gap-1">
+                  <Star className="w-4 h-4 text-amber-500 fill-current" />
                   <div>
-                    <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-none font-heading text-[#FDF8F0]">
-                      {VENDOR.name}
-                    </h1>
-                    <p className="text-stone-300 text-xs md:text-sm font-semibold tracking-wider uppercase mt-1.5">{VENDOR.category} • Est. 2018</p>
+                    <span className="text-xs font-black block text-slate-950">{currentProfile.rating}</span>
+                    <span className="text-[8px] text-slate-400 font-bold block uppercase">{currentProfile.reviewsCount + reviews.length - 2} Reviews</span>
                   </div>
-                </div>
-                
-                <div className="flex flex-wrap items-center gap-6 text-xs md:text-sm font-medium text-stone-300">
-                  <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-[#C2A378]" /> {VENDOR.location}</div>
-                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400 fill-amber-400" /> <span className="font-bold text-white">{VENDOR.rating}</span> ({VENDOR.reviews} reviews)</div>
-                  <div className="flex items-center gap-1.5"><Users className="w-4 h-4 text-[#C2A378]" /> Nationwide Delivery</div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* 🌟 Key Stats Banner 🌟 */}
-        <div className="bg-[#FAF6F0] border-b border-stone-200/50 py-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-              {[
-                { value: `${outfits?.length || 18}+`, label: "Dresses Available" },
-                { value: "1,200+", label: "Rentals Completed" },
-                { value: "4.9", label: "Customer Rating" },
-                { value: "< 1 hour", label: "Response Time" },
-                { value: "Nationwide", label: "Delivery Coverage" }
-              ].map((stat, i) => (
-                <div key={i} className="space-y-1">
-                  <p className="text-xl md:text-2xl font-black text-[#1A1A1A] font-heading">{stat.value}</p>
-                  <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{stat.label}</p>
+            <div className="space-y-2">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">Professional Bio & Strategy</h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-medium">{currentProfile.bio}</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              {currentProfile.stats.map((stat: string, i: number) => (
+                <div key={i} className="bg-slate-50/60 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold text-slate-800 flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#0F5B3E] shrink-0" /> {stat}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* --- Exquisite Curation Portfolio UI Segment --- */}
+          <div className="bg-white border border-[#C5A880]/20 rounded-2xl p-6 shadow-sm space-y-6">
+            <div>
+              <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">Exquisite Curation Portfolio</span>
+              <h3 className="font-serif text-base font-black text-slate-950">Menus, Services & Special Allocations</h3>
+              <p className="text-xs text-slate-400">Vetted culinary combinations and baseline event support options.</p>
+            </div>
+
+            {/* 1. Dynamic Interactive Tiered Menu Catalog */}
+            <div className="space-y-3">
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                🍽️ Signature Menu Tier Breakdown
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                {/* Standard / One-Dish Option */}
+                <div className="border border-slate-100 rounded-xl p-4 bg-slate-50/40 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-xs text-slate-900">One-Dish Essential</span>
+                    <span className="text-[11px] font-black text-[#0F5B3E]">PKR 1,500/hd</span>
+                  </div>
+                  <ul className="text-[11px] text-slate-500 space-y-1.5 font-medium list-disc list-inside">
+                    <li>Premium Chicken Biryani / Pulao</li>
+                    <li>Traditional Roghni Naan Array</li>
+                    <li>Fresh Salad & Mint Raita</li>
+                    <li>Shahi Kheer Dessert Primitive</li>
+                  </ul>
+                </div>
+
+                {/* Premium Option */}
+                <div className="border border-[#C5A880]/30 rounded-xl p-4 bg-[#FAF5EC]/30 space-y-3 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 bg-[#C5A880] text-white text-[7px] font-black uppercase tracking-wider px-2 py-0.5 rounded-bl-md">
+                    Popular Selection
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-xs text-slate-900">Premium 3-Course</span>
+                    <span className="text-[11px] font-black text-[#0F5B3E]">PKR 2,500/hd</span>
+                  </div>
+                  <ul className="text-[11px] text-slate-500 space-y-1.5 font-medium list-disc list-inside">
+                    <li>Mutton Qorma / Chicken Karahi</li>
+                    <li>Reshmi Kebab & Tikka Live BBQ</li>
+                    <li>Assorted Naan & Kulcha Basket</li>
+                    <li>Hot Gulab Jamun with Ice Cream</li>
+                  </ul>
+                </div>
+
+                {/* Luxury Option */}
+                <div className="border border-slate-100 rounded-xl p-4 bg-slate-50/40 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-xs text-slate-900">Elite Imperial Multi</span>
+                    <span className="text-[11px] font-black text-[#0F5B3E]">PKR 4,500/hd</span>
+                  </div>
+                  <ul className="text-[11px] text-slate-500 space-y-1.5 font-medium list-disc list-inside">
+                    <li>Mutton Champ & Mughlai Handi</li>
+                    <li>Full Live Charcoal BBQ Station</li>
+                    <li>Seafood Tempura Appetizers</li>
+                    <li>Zafrani Kulfi & Premium Pastries</li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+
+            {/* 2. Core Operational Services Offered */}
+            <div className="space-y-3 pt-2">
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                💼 Core Structural Services Included
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 border border-slate-100 rounded-xl flex items-start gap-2.5">
+                  <span className="p-1 bg-emerald-50 text-[#0F5B3E] rounded-md text-[10px] font-black">✓</span>
+                  <div>
+                    <p className="font-bold text-slate-900">Climate Control Logistics</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">High-tonnage HVAC systems maintaining optimal interior layout ambient atmosphere parameters.</p>
+                  </div>
+                </div>
+                <div className="p-3 border border-slate-100 rounded-xl flex items-start gap-2.5">
+                  <span className="p-1 bg-emerald-50 text-[#0F5B3E] rounded-md text-[10px] font-black">✓</span>
+                  <div>
+                    <p className="font-bold text-slate-900">Valet & Parking Security Rig</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Fully staffed dedicated valet coordination lane tracking up to 250 vehicles synchronously.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Exclusive Special Services / Heritage Add-ons */}
+            <div className="space-y-3 pt-2">
+              <h4 className="text-[10px] font-black text-[#C5A880] uppercase tracking-widest flex items-center gap-1.5">
+                ✨ Exclusive Premium Special Services
+              </h4>
+              <div className="bg-gradient-to-br from-[#FAF5EC] to-[#F3EAD8] border border-[#C5A880]/30 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <span className="bg-[#0F5B3E] text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded tracking-wider">
+                    Nexus Signature Only
+                  </span>
+                  <h5 className="font-serif font-bold text-xs text-slate-950">Live Family Broadcasting Sync</h5>
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
+                    Secure, low-latency live video streaming uplink directly mapped to your overseas relatives' private portal links viewframes.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <span className="bg-[#0F5B3E] text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded tracking-wider">
+                    Asset Protection
+                  </span>
+                  <h5 className="font-serif font-bold text-xs text-slate-950">Bespoke Dowry (Jahaiz) Vault Allocation</h5>
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
+                    Access to an on-site, restricted-access inventory room with secure barcode scanning tracking to coordinate wedding registry drops.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Interactive Dynamic Portfolio Media Grid */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-1"><ImageIcon className="w-4 h-4 text-[#C5A880]" /> Media Showcase Array</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {currentProfile.images.map((img: string, i: number) => (
+                <div key={i} className="bg-white border border-[#C5A880]/15 rounded-2xl overflow-hidden shadow-sm h-44 group">
+                  <img src={img} alt="Showcase layout profile" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Nexus Spatial Planner - Layout Visualizer */}
+          <div className="bg-white border border-[#C5A880]/20 rounded-2xl p-6 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">Nexus Spatial Planner</span>
+                <h3 className="font-serif text-base font-black text-slate-950">Interactive Floor Plan Layout</h3>
+                <p className="text-xs text-slate-400">Toggle setup configurations to preview capacity mapping guidelines.</p>
+              </div>
+
+              {/* Layout Selection Pillars */}
+              <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-[9px] font-black uppercase tracking-wider">
+                {(['traditional', 'runway', 'banquet'] as const).map((layout) => (
+                  <button
+                    key={layout}
+                    type="button"
+                    onClick={() => setSelectedLayout(layout)}
+                    className={`px-2.5 py-1.5 rounded-lg transition-all ${
+                      selectedLayout === layout ? 'bg-white text-[#0F5B3E] shadow-sm' : 'text-slate-400 hover:text-slate-700'
+                    }`}
+                  >
+                    {layout === 'traditional' ? 'Baraat Stage' : layout === 'runway' ? 'Bridal Walkway' : 'Corporate Banquet'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Interactive Plan Canvas Matrix Grid */}
+            <div className="bg-slate-950 rounded-xl p-6 relative aspect-[16/10] sm:aspect-[16/8] flex flex-col justify-between border border-slate-800 overflow-hidden shadow-inner">
+              
+              {/* Stage Area */}
+              <div className="w-full flex justify-center">
+                <div className={`transition-all duration-300 bg-gradient-to-b from-[#FAF5EC] to-[#C5A880]/40 border border-[#C5A880] text-slate-950 text-[10px] font-black uppercase tracking-widest text-center py-2.5 rounded-lg shadow-md ${
+                  selectedLayout === 'traditional' ? 'w-1/2' : selectedLayout === 'runway' ? 'w-1/3' : 'w-2/3'
+                }`}>
+                  {selectedLayout === 'banquet' ? 'Main Presentation Stage' : 'Grand Heritage Bridal Stage'}
+                </div>
+              </div>
+
+              {/* Center Dynamic Area (Runway or Main Floor Space) */}
+              <div className="flex-1 flex items-center justify-center my-4 relative">
+                {selectedLayout === 'runway' && (
+                  <div className="w-12 h-full bg-gradient-to-r from-[#FAF5EC]/90 to-[#C5A880]/30 border-x border-dashed border-[#C5A880] flex items-center justify-center shadow-lg animate-fade-in">
+                    <span className="text-[8px] text-slate-950 font-black uppercase tracking-widest [writing-mode:vertical-lr] text-center">
+                      Premium Runway Walkway
+                    </span>
+                  </div>
+                )}
+
+                {/* Guest Table Distribution Representation Mapping */}
+                <div className={`w-full grid gap-4 transition-all duration-300 ${
+                  selectedLayout === 'runway' ? 'grid-cols-4 px-12' : 'grid-cols-6'
+                }`}>
+                  {Array.from({ length: selectedLayout === 'runway' ? 12 : 18 }).map((_, idx) => (
+                    <div key={idx} className="flex flex-col items-center justify-center space-y-1">
+                      <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all shadow-sm ${
+                        selectedLayout === 'banquet' 
+                          ? 'bg-slate-900 border-slate-700 text-slate-400' 
+                          : 'bg-[#0F5B3E]/10 border-[#0F5B3E]/30 text-[#0F5B3E]'
+                      }`}>
+                        <span className="text-[8px] font-black">{idx + 1}</span>
+                      </div>
+                      <span className="text-[7px] text-slate-500 font-bold uppercase tracking-tighter">
+                        {selectedLayout === 'banquet' ? 'Pax 10' : 'Pax 8'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grand Entrance Node */}
+              <div className="w-full flex justify-center border-t border-dashed border-slate-800 pt-3">
+                <span className="bg-slate-900 border border-slate-800 text-slate-400 text-[8px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
+                  {selectedLayout === 'traditional' ? '🚪 Royal Baraat Entry Protocol Gate' : '🚪 Standard Main Foyer Entrance'}
+                </span>
+              </div>
+            </div>
+
+            {/* Informational Plan Specs Notice */}
+            <div className="bg-slate-50 border border-slate-200/60 p-3.5 rounded-xl text-[11px] text-slate-500 leading-relaxed font-medium flex items-center gap-2">
+              <span className="p-1 bg-[#0F5B3E] text-white rounded text-[9px] font-black">i</span>
+              {selectedLayout === 'traditional' && "Traditional arrangement optimized for maximum luxury sofa layouts flanking the central staging cluster."}
+              {selectedLayout === 'runway' && "Walkway configuration partitions guest matrix blocks to create a dramatic center path ideal for cinema tracking."}
+              {selectedLayout === 'banquet' && "Round-table arrangement ideal for wide-angle visibility, corporate configurations, or multi-course wedding menus."}
+            </div>
+          </div>
+
+          {/* Live Customer Feedback Engine */}
+          <div className="bg-white border border-[#C5A880]/20 rounded-2xl p-6 shadow-sm space-y-6">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><MessageSquare className="w-4 h-4 text-[#0F5B3E]" /> Client Review Matrix</h3>
+            
+            <form onSubmit={handlePostReview} className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+              <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider block">Write a Verified Review</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input type="text" placeholder="Share your experience..." value={newReviewText} onChange={(e) => setNewReviewText(e.target.value)} className="sm:col-span-2 bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#0F5B3E]" />
+                <select value={newRating} onChange={(e) => setNewRating(Number(e.target.value))} className="bg-white border border-slate-200 text-xs rounded-xl px-2 py-2 text-slate-700">
+                  <option value={5}>⭐⭐⭐⭐⭐ (5/5)</option>
+                  <option value={4}>⭐⭐⭐⭐ (4/5)</option>
+                  <option value={3}>⭐⭐⭐ (3/5)</option>
+                </select>
+              </div>
+              <button type="submit" className="w-full bg-[#0F5B3E] hover:bg-[#0A3F2B] text-white font-black text-[10px] uppercase tracking-widest py-2 rounded-xl transition-all shadow-sm">Submit Review</button>
+            </form>
+
+            <div className="space-y-3 divide-y divide-slate-100">
+              {reviews.map((rev, idx) => (
+                <div key={idx} className={`pt-3 ${idx === 0 ? 'pt-0' : ''} space-y-1`}>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="font-bold text-slate-900">{rev.author}</span>
+                    <span className="text-amber-500 font-black">{'★'.repeat(rev.rating)}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{rev.text}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* 🌟 Main Content Section 🌟 */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
-            {/* Left Detail Column */}
-            <div className="lg:col-span-7 xl:col-span-8 space-y-16">
-              
-              {/* About "The Story" */}
-              <section className="bg-white rounded-[2rem] border border-stone-200/60 p-8 md:p-12 shadow-sm space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> The Story
-                </h2>
-                <p className="text-base md:text-lg text-stone-600 leading-relaxed font-medium">
-                  {VENDOR.about}
-                </p>
-              </section>
-
-              {/* Why Choose Us Feature Cards */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Why Choose Us
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { title: "Designer Collection", desc: "Curated premium bridal and formal wear from leading luxury designer catalogs." },
-                    { title: "Premium Condition Guaranteed", desc: "All outfits are dry-cleaned, sanitized, and detailed by dressmakers after each rental cycle." },
-                    { title: "Professional Custom Fitting", desc: "Our in-house tailors alter your chosen outfits to fit your exact measurements." },
-                    { title: "Nationwide Secure Shipping", desc: "Insured home delivery and returns dispatch across all major cities in Pakistan." }
-                  ].map((item, idx) => (
-                    <div key={idx} className="bg-white border border-stone-200/60 p-6 rounded-2xl shadow-sm hover:border-[#C2A378] transition-all">
-                      <h4 className="text-base font-extrabold text-[#1A1A1A] mb-1.5 font-heading">{item.title}</h4>
-                      <p className="text-stone-500 text-xs md:text-sm leading-relaxed font-medium">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Curated Portfolio Collage */}
-              {VENDOR.images && VENDOR.images.length > 1 && (
-                <section className="space-y-6">
-                  <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                    <span className="w-6 h-0.5 bg-[#C2A378]" /> Curated Portfolio
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {VENDOR.images.slice(1, 4).map((img: string, i: number) => (
-                      <div key={i} className="relative aspect-square rounded-2xl overflow-hidden group border border-stone-200 bg-stone-100">
-                        <Image 
-                          src={img} 
-                          alt="Portfolio item" 
-                          fill 
-                          className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Signature Services badges */}
-              {VENDOR.features && VENDOR.features.length > 0 && (
-                <section className="space-y-6">
-                  <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                    <span className="w-6 h-0.5 bg-[#C2A378]" /> Signature Services
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {VENDOR.features.map((feat: string) => (
-                      <div key={feat} className="group relative bg-white border border-stone-200/60 p-6 rounded-2xl hover:border-[#C2A378] hover:shadow-md transition-all duration-300">
-                        <div className="flex items-center gap-3">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#0F5B3E] group-hover:scale-125 transition-transform" />
-                          <span className="font-bold text-[#1A1A1A] text-base">{feat}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Curated Packages / Bundles */}
-              {VENDOR.packages && VENDOR.packages.length > 0 && (
-                <section className="space-y-6">
-                  <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                    <span className="w-6 h-0.5 bg-[#C2A378]" /> Curated Offerings
-                  </h2>
-                  <div className="space-y-4">
-                    {VENDOR.packages.map((pkg: any, idx: number) => (
-                      <div 
-                        key={idx} 
-                        className="group relative bg-white border border-stone-200/60 rounded-[2rem] p-8 md:p-10 hover:border-[#C2A378] hover:shadow-xl transition-all duration-500 overflow-hidden"
-                      >
-                        <div className="absolute top-4 right-8 text-8xl font-black text-stone-100/70 select-none font-heading group-hover:text-stone-200/50 transition-colors">
-                          {String(idx + 1).padStart(2, '0')}
-                        </div>
-                        
-                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                          <div className="max-w-xl space-y-2">
-                            <h4 className="text-xl md:text-2xl font-black text-[#1A1A1A] group-hover:text-[#0F5B3E] transition-colors">{pkg.name}</h4>
-                            <p className="text-stone-500 text-sm md:text-base font-medium leading-relaxed">{pkg.desc}</p>
-                          </div>
-                          <div className="flex flex-col md:items-end justify-center shrink-0">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Total Price</span>
-                            <span className="text-3xl font-black text-[#1A1A1A] mb-4">₨ {Number(pkg.price).toLocaleString()}</span>
-                            <button className="w-full md:w-auto px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest bg-[#1A1A1A] text-white hover:bg-[#0F5B3E] transition-colors shadow-sm">
-                              Select Package
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Interactive Try-On, Calendar, & Sticky Bar Client Sections */}
-              <VendorInteractiveSections 
-                vendorId={vendorUuid}
-                vendorName={VENDOR.name}
-                startingPrice={VENDOR.startingPrice}
-                phone={VENDOR.phone}
+        {/* RIGHT COLUMN: Interactive Widgets (Calendar & Calculator Panel) */}
+        <div className="space-y-6">
+          
+          {/* Widget 1: Real-Time Date Availability Validator */}
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-4">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+              <Calendar className="w-4 h-4 text-[#0F5B3E]" /> Live Availability Lookup
+            </h3>
+            <div className="space-y-2">
+              <input 
+                type="date" 
+                value={targetDate} 
+                onChange={(e) => setTargetDate(e.target.value)} 
+                className="w-full bg-slate-50 border border-slate-200 text-xs px-3 py-2.5 rounded-xl text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0F5B3E]" 
               />
-
-              {/* Wardrobe Collection Storefront Grid */}
-              <VendorStorefront vendorId={vendorUuid} outfits={outfits || []} />
-
-              {/* Rental Process Timeline */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Rental Process
-                </h2>
-                <div className="bg-white rounded-[2rem] border border-stone-200/60 p-8 md:p-10 shadow-sm">
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 relative">
-                    {[
-                      { step: "01", title: "Select Dress", desc: "Browse the digital wardrobe catalog and pick your designer outfit." },
-                      { step: "02", title: "Book Alterations", desc: "Schedule custom fitting session with our tailoring masters." },
-                      { step: "03", title: "Celebrate", desc: "Wear your dream dress on your special day." },
-                      { step: "04", title: "Free Pick-up", desc: "Return the dress using our prepaid home pickup service." }
-                    ].map((proc, i) => (
-                      <div key={i} className="space-y-3 relative group">
-                        <div className="text-2xl font-black font-heading text-[#C2A378]">{proc.step}</div>
-                        <h4 className="text-base font-extrabold text-[#1A1A1A] font-heading">{proc.title}</h4>
-                        <p className="text-stone-500 text-xs leading-relaxed font-medium">{proc.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Customer Reviews & Breakdown */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Verified Customer Reviews
-                </h2>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-stone-200/60 rounded-[2rem] p-6 text-center">
-                  <div className="py-4 border-b sm:border-b-0 sm:border-r border-stone-200/60">
-                    <span className="text-4xl font-extrabold text-[#1A1A1A] font-heading">4.9</span>
-                    <span className="text-[10px] font-bold text-stone-400 block uppercase tracking-widest mt-1">Average Rating</span>
-                  </div>
-                  <div className="py-4 border-b sm:border-b-0 sm:border-r border-stone-200/60">
-                    <span className="text-4xl font-extrabold text-[#0F5B3E] font-heading">99%</span>
-                    <span className="text-[10px] font-bold text-stone-400 block uppercase tracking-widest mt-1">Outfit Quality Match</span>
-                  </div>
-                  <div className="py-4">
-                    <span className="text-4xl font-extrabold text-[#C2A378] font-heading">100%</span>
-                    <span className="text-[10px] font-bold text-stone-400 block uppercase tracking-widest mt-1">On-Time Logistics</span>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {[
-                    { name: "Ayesha Ahmed", rating: 5, date: "May 2026", feedback: "The outfit was in absolute pristine condition, altered perfectly to my size. Highly recommend their bridal rental collections!" },
-                    { name: "Bilal Hassan", rating: 5, date: "April 2026", feedback: "Rented a Prince Coat for my brother's wedding. Excellent customer service and response time. Alterations were spotless." }
-                  ].map((rev, idx) => (
-                    <div key={idx} className="bg-white border border-stone-200/60 p-6 rounded-2xl space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-sm font-extrabold text-[#1A1A1A] font-heading">{rev.name}</h4>
-                          <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">{rev.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: rev.rating }).map((_, i) => (
-                            <Star key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-stone-600 text-xs md:text-sm leading-relaxed font-medium">{rev.feedback}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Real Event Gallery */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Real Event Gallery
-                </h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=400",
-                    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=400",
-                  ].map((img, i) => (
-                    <div key={i} className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm border border-stone-200 bg-stone-100 group">
-                      <Image src={img} alt="Real Event Showcase" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors" />
-                      <span className="absolute bottom-3 left-3 text-[10px] font-bold uppercase tracking-widest text-white">Client Showcase</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Store Policies */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Store Policies
-                </h2>
-                <div className="bg-white rounded-[2rem] border border-stone-200/60 p-8 md:p-10 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-extrabold text-[#1A1A1A] uppercase tracking-widest border-b border-stone-100 pb-2">Rental & Returns</h4>
-                    <ul className="space-y-2 text-xs text-stone-500 font-medium">
-                      <li>• Standard rental durations are 3, 5, or 7 days.</li>
-                      <li>• 20% refundable security deposit is required at booking.</li>
-                      <li>• Cancellations are free up to 14 days before the event.</li>
-                    </ul>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-extrabold text-[#1A1A1A] uppercase tracking-widest border-b border-stone-100 pb-2">Damage Policy</h4>
-                    <ul className="space-y-2 text-xs text-stone-500 font-medium">
-                      <li>• Minor stains and light fabric wear are covered.</li>
-                      <li>• Major tears or structural loss requires a restoration fee.</li>
-                      <li>• Dry cleaning is strictly handled by our professional facility.</li>
-                    </ul>
-                  </div>
-                </div>
-              </section>
-
-              {/* Consultants & Team */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Meet the Consultants
-                </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {[
-                    { name: "Zainab Malik", role: "Creative Director" },
-                    { name: "Fiza Ali", role: "Bridal Stylist" },
-                    { name: "M. Saleem", role: "Master Tailoring Specialist" }
-                  ].map((member, i) => (
-                    <div key={i} className="bg-white border border-stone-200/60 p-5 rounded-2xl text-center shadow-sm">
-                      <div className="w-12 h-12 rounded-full bg-stone-50 flex items-center justify-center mx-auto mb-3 border border-stone-200">
-                        <User className="w-5 h-5 text-stone-400" />
-                      </div>
-                      <h4 className="text-sm font-extrabold text-[#1A1A1A] font-heading">{member.name}</h4>
-                      <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-0.5">{member.role}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Related Services Cross-Sells */}
-              <section className="space-y-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#1A1A1A] font-heading flex items-center gap-3">
-                  <span className="w-6 h-0.5 bg-[#C2A378]" /> Explore Vendors
-                </h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <Link href="/makeup-artists" className="flex items-center justify-between p-5 rounded-2xl bg-white border border-stone-200/60 hover:border-[#0F5B3E] hover:shadow-md transition-all group">
-                    <span className="text-sm font-bold text-[#1A1A1A] group-hover:text-[#0F5B3E] transition-colors">Makeup Artists</span>
-                    <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-[#0F5B3E] transition-colors" />
-                  </Link>
-                  <Link href="/photographers" className="flex items-center justify-between p-5 rounded-2xl bg-white border border-stone-200/60 hover:border-[#0F5B3E] hover:shadow-md transition-all group">
-                    <span className="text-sm font-bold text-[#1A1A1A] group-hover:text-[#0F5B3E] transition-colors">Photographers</span>
-                    <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-[#0F5B3E] transition-colors" />
-                  </Link>
-                </div>
-              </section>
-
+              <button 
+                type="button" 
+                onClick={checkLiveAvailability} 
+                className="w-full bg-slate-950 hover:bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest py-2.5 rounded-xl transition-all"
+              >
+                Verify Target Date
+              </button>
             </div>
 
-            {/* Right Booking Column */}
-            <div className="lg:col-span-5 xl:col-span-4 space-y-8">
+            {/* Dynamic Conditional Redirection Actions */}
+            {availabilityStatus === 'available' && (
+              <div className="space-y-3 pt-1">
+                <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-xl p-3 text-[11px] font-bold flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Slot Available! Calendar frame is open.
+                </div>
+                
+                {/* 🚀 REDIRECTION TARGET ACTION: Launches Checkout Booking System Drawer */}
+                <button
+                  type="button"
+                  onClick={() => setIsBookingDrawerOpen(true)}
+                  className="w-full bg-[#0F5B3E] hover:bg-[#0A3F2B] text-white font-black text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-[#D4AF37]" /> Instantly Book & Secure Slot
+                </button>
+              </div>
+            )}
+            {availabilityStatus === 'booked' && (
+              <div className="bg-rose-50 border border-rose-100 text-rose-800 rounded-xl p-3 text-[11px] font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600" /> Slot Closed. This specific date is fully reserved.
+              </div>
+            )}
+          </div>
+
+          {/* Widget 2: Event Cost Estimator Calculator */}
+          <div className="bg-white border border-[#C5A880]/20 p-5 rounded-2xl shadow-sm space-y-4">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><Calculator className="w-4 h-4 text-[#0F5B3E]" /> Event Cost Estimator</h3>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black text-slate-400 tracking-wider flex items-center gap-1"><Users className="w-3 h-3" /> Guest Count: {guestCount}</label>
+                <input 
+                  type="range" 
+                  min="50" max="1000" step="50" 
+                  value={guestCount} 
+                  onChange={(e) => setGuestCount(Number(e.target.value))} 
+                  className="w-full accent-[#0F5B3E]" 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Catering Tier</label>
+                <select 
+                  value={menuTier} 
+                  onChange={(e) => setMenuTier(e.target.value as any)} 
+                  className="w-full bg-slate-50 border border-slate-200 text-xs px-3 py-2 rounded-xl text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0F5B3E]"
+                >
+                  <option value="standard">Standard (PKR 1,500 / head)</option>
+                  <option value="premium">Premium (PKR 2,500 / head)</option>
+                  <option value="luxury">Luxury (PKR 4,500 / head)</option>
+                </select>
+              </div>
+
+              {/* Premium Accoutrements & Add-ons */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Premium Accoutrements & Add-ons</label>
+                <div className="space-y-2">
+                  
+                  <label className="flex items-center justify-between p-2.5 border border-slate-100 bg-slate-50/50 rounded-xl cursor-pointer hover:bg-slate-50 transition-all text-xs font-medium">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        checked={addOnsSelection.importedFlorals} 
+                        onChange={(e) => setAddOnsSelection({...addOnsSelection, importedFlorals: e.target.checked})}
+                        className="rounded text-[#0F5B3E] focus:ring-[#0F5B3E] w-4 h-4 accent-[#0F5B3E]" 
+                      />
+                      <div>
+                        <p className="font-bold text-slate-900">Exotic Imported Florals</p>
+                        <p className="text-[10px] text-slate-400">White Orchids & Fresh Stage Garland Arrangements</p>
+                      </div>
+                    </div>
+                    <span className="font-bold text-slate-900 text-[11px] shrink-0">+PKR {addOnPrices.importedFlorals.toLocaleString()}</span>
+                  </label>
+
+                  <label className="flex items-center justify-between p-2.5 border border-slate-100 bg-slate-50/50 rounded-xl cursor-pointer hover:bg-slate-50 transition-all text-xs font-medium">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        checked={addOnsSelection.concertAcoustics} 
+                        onChange={(e) => setAddOnsSelection({...addOnsSelection, concertAcoustics: e.target.checked})}
+                        className="rounded text-[#0F5B3E] focus:ring-[#0F5B3E] w-4 h-4 accent-[#0F5B3E]" 
+                      />
+                      <div>
+                        <p className="font-bold text-slate-900">Concert-Grade Line Acoustics</p>
+                        <p className="text-[10px] text-slate-400">High-Fidelity Audio Engineering Setups for Folk Live Music</p>
+                      </div>
+                    </div>
+                    <span className="font-bold text-slate-900 text-[11px] shrink-0">+PKR {addOnPrices.concertAcoustics.toLocaleString()}</span>
+                  </label>
+
+                  <label className="flex items-center justify-between p-2.5 border border-slate-100 bg-slate-50/50 rounded-xl cursor-pointer hover:bg-slate-50 transition-all text-xs font-medium">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        checked={addOnsSelection.coldFireProtocol} 
+                        onChange={(e) => setAddOnsSelection({...addOnsSelection, coldFireProtocol: e.target.checked})}
+                        className="rounded text-[#0F5B3E] focus:ring-[#0F5B3E] w-4 h-4 accent-[#0F5B3E]" 
+                      />
+                      <div>
+                        <p className="font-bold text-slate-900">Cold-Fire Entrance Protocol</p>
+                        <p className="text-[10px] text-slate-400">Indoor Sparklers & Heavy Cloud Dry-Ice Atmosphere Sync</p>
+                      </div>
+                    </div>
+                    <span className="font-bold text-slate-900 text-[11px] shrink-0">+PKR {addOnPrices.coldFireProtocol.toLocaleString()}</span>
+                  </label>
+
+                </div>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-3.5 space-y-2 pt-3">
+                <div className="flex justify-between text-[11px] font-medium text-slate-500"><span>Base Setup Charge:</span><span className="font-bold text-slate-900">PKR {currentProfile.basePrice.toLocaleString()}</span></div>
+                <div className="flex justify-between text-[11px] font-medium text-slate-500"><span>Catering Array ({guestCount} x {menuPerHeadCost}):</span><span className="font-bold text-slate-900">PKR {(guestCount * menuPerHeadCost).toLocaleString()}</span></div>
+                
+                {/* Conditional Add-on Statement Lines */}
+                {addOnsSelection.importedFlorals && <div className="flex justify-between text-[11px] font-medium text-slate-500 text-emerald-700"><span>+ Premium Floral Overlay:</span><span className="font-bold">PKR {addOnPrices.importedFlorals.toLocaleString()}</span></div>}
+                {addOnsSelection.concertAcoustics && <div className="flex justify-between text-[11px] font-medium text-slate-500 text-emerald-700"><span>+ Concert Audio Suite:</span><span className="font-bold">PKR {addOnPrices.concertAcoustics.toLocaleString()}</span></div>}
+                {addOnsSelection.coldFireProtocol && <div className="flex justify-between text-[11px] font-medium text-slate-500 text-emerald-700"><span>+ Entrance Protocol Pack:</span><span className="font-bold">PKR {addOnPrices.coldFireProtocol.toLocaleString()}</span></div>}
+                
+                <div className="border-t border-dashed border-slate-200 pt-2 flex justify-between items-center"><span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Calculation:</span><span className="text-sm font-black text-[#0F5B3E]">PKR {calculatedTotalEstimate.toLocaleString()}</span></div>
+              </div>
               
-              {/* Concierge Sticky Booking Card */}
-              <div className="sticky top-28 space-y-8">
-                <div className="backdrop-blur-xl bg-white/85 border border-white/60 shadow-[0_24px_50px_-12px_rgba(15,91,62,0.08)] rounded-[2.5rem] p-8 overflow-hidden relative">
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#C2A378] to-transparent opacity-60" />
-                  
-                  <div className="mb-8">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1 block">Starting Investment</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold tracking-tight text-[#0F5B3E] font-heading">
-                        ₨ {Number(VENDOR.startingPrice).toLocaleString()}
-                      </span>
-                      <span className="text-stone-400 text-xs font-semibold"> / event</span>
-                    </div>
-                  </div>
+              <button
+                type="button"
+                onClick={handleBroadcastEstimateWhatsApp}
+                className="w-full mt-2 bg-white hover:bg-slate-50 text-emerald-700 border border-emerald-200 font-black text-[10px] uppercase tracking-widest py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                💬 Share Quote Summary via WhatsApp
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </main>
 
-                  <div className="space-y-4 mb-8">
-                    <div className="bg-stone-50/50 rounded-2xl border border-stone-200/60 overflow-hidden">
-                      <div className="p-4 border-b border-stone-200/60 focus-within:bg-white transition-colors">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-[#C2A378] mb-1 block">Selected Event Date</label>
-                        <input type="date" className="w-full bg-transparent font-bold text-[#1A1A1A] outline-none cursor-pointer text-sm" />
-                      </div>
-                      <div className="p-4 focus-within:bg-white transition-colors">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-[#C2A378] mb-1 block">Celebration Type</label>
-                        <input type="text" placeholder="Mehndi, Barat, Valima..." className="w-full bg-transparent font-bold text-[#1A1A1A] outline-none placeholder:text-stone-300 text-sm" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button className="w-full h-14 rounded-xl text-xs font-bold uppercase tracking-widest bg-[#0F5B3E] text-white shadow-lg shadow-[#0F5B3E]/10 hover:bg-[#0c4a32] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mb-3">
-                    Request Quotation <ChevronRight className="w-4 h-4" />
-                  </button>
-                  
-                  <button className="w-full h-14 rounded-xl text-xs font-bold uppercase tracking-widest bg-white border border-stone-200 text-[#1A1A1A] hover:bg-stone-50 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-[#C2A378]" /> Contact Representative
-                  </button>
-
-                  <div className="mt-8 pt-6 border-t border-stone-200/60 flex items-start gap-4">
-                    <ShieldCheck className="w-8 h-8 shrink-0 text-[#0F5B3E] opacity-70" />
-                    <div className="text-xs font-medium text-stone-500 leading-relaxed">
-                      <span className="text-[#1A1A1A] font-bold block mb-0.5">Nexus Elite Verified</span>
-                      Every detail, portfolio sample, and pricing sheet has been vetted by our customer quality division.
-                    </div>
-                  </div>
+      {isBookingDrawerOpen && (
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300">
+          <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-slide-in font-sans">
+            <div className="space-y-6">
+              <div className="flex justify-between items-start border-b border-slate-100 pb-4">
+                <div>
+                  <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">Nexus Checkout Node</span>
+                  <h2 className="font-serif text-base font-black text-slate-950">Secure Your Slot Allocation</h2>
                 </div>
+                <button 
+                  onClick={() => setIsBookingDrawerOpen(false)} 
+                  className="text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-lg"
+                >
+                  Close
+                </button>
+              </div>
 
-                {/* Store Location & Hours */}
-                <div className="bg-white border border-stone-200/60 rounded-[2.5rem] p-8 space-y-6">
-                  <h4 className="text-sm font-extrabold text-[#1A1A1A] uppercase tracking-widest pb-2 border-b border-stone-100 font-heading">Store Hours & Location</h4>
-                  
-                  <div className="space-y-3 text-xs text-stone-500 font-medium">
-                    <div className="flex justify-between">
-                      <span>Monday – Saturday</span>
-                      <span className="font-bold text-[#1A1A1A]">11:00 AM – 8:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Sunday</span>
-                      <span className="font-bold text-[#1A1A1A]">Closed</span>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Store Address</p>
-                    <p className="text-xs text-stone-650 font-semibold leading-relaxed">
-                      {VENDOR.location}
-                    </p>
-                  </div>
-                  
-                  <button className="w-full py-3.5 bg-stone-100 hover:bg-stone-200 text-[#1A1A1A] text-[10px] font-bold uppercase tracking-widest rounded-xl transition-colors flex items-center justify-center gap-2 border border-stone-200">
-                    Get Directions
-                  </button>
+              {/* Selected Specifications Block */}
+              <div className="space-y-3 bg-slate-50 border border-slate-200/60 rounded-xl p-4">
+                <div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Appointed Professional</span>
+                  <span className="text-xs font-bold text-slate-900">{currentProfile.name}</span>
                 </div>
+                <div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Locked Date Coordinates</span>
+                  <span className="text-xs font-bold text-[#0F5B3E]">{targetDate}</span>
+                </div>
+                <div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Configured Configuration Tier</span>
+                  <span className="text-xs font-bold text-slate-900 capitalize">{menuTier} Catering Menu ({guestCount} Guests)</span>
+                </div>
+              </div>
 
+              {/* Itemized Financial Summary Ledger */}
+              <div className="space-y-2 border-t border-slate-100 pt-4">
+                <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider block">Statement Summary</span>
+                <div className="flex justify-between text-xs font-medium text-slate-500">
+                  <span>Base Setup Fee:</span>
+                  <span>PKR {currentProfile.basePrice.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-xs font-medium text-slate-500">
+                  <span>Catering & Guest Services:</span>
+                  <span>PKR {(guestCount * menuPerHeadCost).toLocaleString()}</span>
+                </div>
+                <div className="border-t border-dashed border-slate-200 pt-3 flex justify-between items-center text-slate-950">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-400">Total Due Gross:</span>
+                  <span className="text-base font-black text-[#0F5B3E]">PKR {calculatedTotalEstimate.toLocaleString()}</span>
+                </div>
               </div>
             </div>
 
+            {/* Action Submissions Core Footer Buttons */}
+            <div className="pt-6 border-t border-slate-100 space-y-2">
+              {bookingSuccess ? (
+                <div className="space-y-3">
+                  <div className="bg-emerald-50 text-emerald-800 p-4 border border-emerald-200 rounded-xl text-center text-xs font-bold">
+                    🎉 Masha'Allah! Your booking layout is confirmed and safely bound to your contract profile.
+                  </div>
+                  <a 
+                    href={`/portal/${originBooking}`}
+                    className="w-full bg-slate-950 text-white text-center font-black text-xs py-3.5 rounded-xl block transition-all"
+                  >
+                    Return To Your Dashboard
+                  </a>
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    disabled={isSubmittingBooking}
+                    onClick={handleExecuteSecureHire}
+                    className="w-full bg-[#0F5B3E] hover:bg-[#0A3F2B] disabled:bg-slate-300 text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl transition-all shadow-md"
+                  >
+                    {isSubmittingBooking ? 'Securing Matrix Placement...' : 'Confirm Appointment & Sign Ledger'}
+                  </button>
+                  <p className="text-[9px] text-slate-400 text-center leading-relaxed font-medium">
+                    By confirming, this platform dynamically logs your placeholder inside the vendor schedule and updates your client portal statement receipt.
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <MegaFooter />
-    </PublicLayout>
-  )
+      )}
+    </div>
+  );
 }
