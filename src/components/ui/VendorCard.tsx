@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Star, MessageSquare } from "lucide-react"
+import { Star, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -9,7 +9,8 @@ export interface VendorCardProps extends React.HTMLAttributes<HTMLDivElement> {
   price: string
   rating: number
   reviewsCount?: number
-  image: string
+  image?: string
+  images?: string[]
   whatsapp: string
 }
 
@@ -20,10 +21,26 @@ export function VendorCard({
   rating,
   reviewsCount = 42,
   image,
+  images,
   whatsapp,
   className,
   ...props
 }: VendorCardProps) {
+  const [currentImg, setCurrentImg] = React.useState(0)
+  const displayImages = images || (image ? [image] : [])
+
+  const nextImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))
+  }
+
+  const prevImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))
+  }
+
   // Format WhatsApp Link
   const waLink = `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Hi%20${encodeURIComponent(name)},%20I%20found%20you%20on%20Nexus%20and%20would%20love%20to%20inquire%20about%20your%20services!`
 
@@ -37,13 +54,41 @@ export function VendorCard({
     >
       {/* 4:5 Aspect Ratio Image Container */}
       <div className="relative w-full pb-[125%] overflow-hidden bg-slate-100 shrink-0">
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <span className="absolute top-3.5 left-3.5 bg-[#0F5B3E] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+        {displayImages.length > 0 && (
+          <img
+            src={displayImages[currentImg]}
+            alt={name}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        )}
+
+        {displayImages.length > 1 && (
+          <>
+            <button 
+              onClick={prevImg}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-10"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={nextImg}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-10"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {displayImages.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`h-1.5 rounded-full transition-all ${idx === currentImg ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        <span className="absolute top-3.5 left-3.5 bg-[#0F5B3E] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm z-10">
           {category}
         </span>
       </div>

@@ -42,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} ${playfair.variable} ${montserrat.variable}`}>
-      <body suppressHydrationWarning className="bg-[#FDF8F0] text-[#1A1A1A] antialiased selection:bg-[#0F5B3E] selection:text-white">
+      <body suppressHydrationWarning className="antialiased selection:bg-[#C5A880]/30 selection:text-[#FAF5EC]">
         <ClientProviders>
           {children}
         </ClientProviders>

@@ -170,7 +170,8 @@
   }
   body {
     font-family: var(--font-montserrat), sans-serif;
-    @apply bg-background text-foreground;
+    background: radial-gradient(circle at top right, #16382B, #0F1A15, #1F070B);
+    color: #FAF5EC;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-playfair), serif;
@@ -185,4 +186,19 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* Luxury Metallic Shimmer Animation for critical elements */
+@keyframes goldShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gold-text {
+  background: linear-gradient(90deg, #F0D3A2, #D4AF37, #FAF5EC, #C5A880);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 8s ease infinite;
 }

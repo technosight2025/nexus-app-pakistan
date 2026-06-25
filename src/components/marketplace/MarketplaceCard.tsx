@@ -1,8 +1,8 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { Star, MapPin, ArrowLeftRight, Calendar, Heart } from 'lucide-react'
+import { Star, MapPin, ArrowLeftRight, Calendar, Heart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useFavorites } from '@/contexts/FavoritesContext'
 
 export interface MarketplaceCardProps {
@@ -31,6 +31,20 @@ export function MarketplaceCard({
   id, type, category, name, location, rating, reviews, price, images, avatar, compareList, setCompareList, features, bookedDates, onSelect
 }: MarketplaceCardProps) {
   
+  const [currentImg, setCurrentImg] = useState(0)
+
+  const nextImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }
+
+  const prevImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }
+
   const getCategorySlug = (vendorType: string, vendorCategory: string) => {
     if (vendorType === 'venue') return 'marriage-halls'
     if (vendorType === 'photographer') return 'photographers'
@@ -54,7 +68,7 @@ export function MarketplaceCard({
     }
   }
 
-  const mainImage = images[0] || "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=800"
+  const mainImage = images[currentImg] || images[0] || "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=800"
 
   return (
     <div className="bg-white rounded-xl border border-[#E6E2DA] p-3 flex flex-col gap-3 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow">
@@ -89,10 +103,36 @@ export function MarketplaceCard({
         onClick={() => onSelect && onSelect()}
         className="relative w-full aspect-[16/9] rounded-lg overflow-hidden group bg-slate-100 cursor-pointer"
       >
-        <img src={mainImage} alt={name} className="w-full h-full object-cover" />
+        <img src={mainImage} alt={name} className="w-full h-full object-cover transition-transform duration-700" />
+        
+        {images.length > 1 && (
+          <>
+            <button 
+              onClick={prevImg}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-10"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={nextImg}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-10"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+              {images.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={\`h-1 rounded-full transition-all \${idx === currentImg ? 'w-3 bg-white' : 'w-1 bg-white/50'}\`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         {/* Preview Overlay */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <button className="bg-black/80 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg hover:scale-105 transition-transform cursor-pointer">
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+          <button className="bg-black/80 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg transition-transform pointer-events-auto hover:scale-105">
             Quick View
           </button>
         </div>

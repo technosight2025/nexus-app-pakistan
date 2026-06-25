@@ -1,14 +1,14 @@
 "use client"
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { MapPin, Users, Star, Heart, ArrowRight } from "lucide-react"
+import { MapPin, Users, Star, Heart, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Image from "next/image"
 
 const VENUES = [
-  { id: 1, name: "The Royal Palm", location: "Lahore", capacity: 800, price: 500000, rating: "4.9", reviews: 128, image: "/images/pakistani_wedding_venue.png" },
-  { id: 2, name: "Serena Hotel", location: "Islamabad", capacity: 1200, price: 800000, rating: "5.0", reviews: 342, image: "/images/pakistani_wedding_venue.png" },
+  { id: 1, name: "The Royal Palm", location: "Lahore", capacity: 800, price: 500000, rating: "4.9", reviews: 128, image: "/images/pakistani_wedding_venue.png", images: ["/images/pakistani_wedding_venue.png", "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800"] },
+  { id: 2, name: "Serena Hotel", location: "Islamabad", capacity: 1200, price: 800000, rating: "5.0", reviews: 342, image: "/images/pakistani_wedding_venue.png", images: ["/images/pakistani_wedding_venue.png", "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800"] },
   { id: 3, name: "Pearl Continental", location: "Karachi", capacity: 2000, price: 1200000, rating: "4.8", reviews: 256, image: "/images/pakistani_wedding_venue.png" },
   { id: 4, name: "Bagh-e-Jinnah", location: "Lahore", capacity: 500, price: 300000, rating: "4.7", reviews: 89, image: "/images/pakistani_wedding_venue.png" }
 ]
@@ -16,6 +16,21 @@ const VENUES = [
 // Sub-component for interactive Venue Card
 function FeaturedVenueCard({ venue }: { venue: any }) {
   const [isSaved, setIsSaved] = useState(false)
+  const [currentImg, setCurrentImg] = useState(0)
+
+  const displayImages = venue.images || (venue.image ? [venue.image] : [])
+
+  const nextImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))
+  }
+
+  const prevImg = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImg((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))
+  }
 
   const toggleSave = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -30,16 +45,44 @@ function FeaturedVenueCard({ venue }: { venue: any }) {
     >
       {/* Image Container */}
       <div className="relative h-64 w-full overflow-hidden">
-        <Image src={venue.image} alt={venue.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority={venue.id <= 2} className="object-cover group-hover:scale-110 transition-transform duration-700" />
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-black text-foreground flex items-center gap-1 shadow-sm">
+        {displayImages.length > 0 && (
+          <Image src={displayImages[currentImg]} alt={venue.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority={venue.id <= 2} className="object-cover group-hover:scale-110 transition-transform duration-700" />
+        )}
+        
+        {displayImages.length > 1 && (
+          <>
+            <button 
+              onClick={prevImg}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-20"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={nextImg}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110 transition-all text-slate-700 shadow-sm z-20"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+              {displayImages.map((_: any, idx: number) => (
+                <div 
+                  key={idx} 
+                  className={\`h-1.5 rounded-full transition-all \${idx === currentImg ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}\`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-black text-foreground flex items-center gap-1 shadow-sm z-10">
           <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
           {venue.rating} ({venue.reviews})
         </div>
         <button 
           onClick={toggleSave}
-          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-sm z-10"
+          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-sm z-20"
         >
-          <Heart className={`w-5 h-5 transition-colors ${isSaved ? 'fill-pink-500 text-pink-500' : 'text-muted-foreground hover:text-pink-500'}`} />
+          <Heart className={\`w-5 h-5 transition-colors \${isSaved ? 'fill-pink-500 text-pink-500' : 'text-muted-foreground hover:text-pink-500'}\`} />
         </button>
       </div>
 
