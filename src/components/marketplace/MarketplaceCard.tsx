@@ -123,7 +123,7 @@ export function MarketplaceCard({
               {images.map((_, idx) => (
                 <div 
                   key={idx} 
-                  className={\`h-1 rounded-full transition-all \${idx === currentImg ? 'w-3 bg-white' : 'w-1 bg-white/50'}\`}
+                  className={`h-1 rounded-full transition-all ${idx === currentImg ? 'w-3 bg-white' : 'w-1 bg-white/50'}`}
                 />
               ))}
             </div>

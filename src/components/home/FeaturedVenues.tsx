@@ -67,7 +67,7 @@ function FeaturedVenueCard({ venue }: { venue: any }) {
               {displayImages.map((_: any, idx: number) => (
                 <div 
                   key={idx} 
-                  className={\`h-1.5 rounded-full transition-all \${idx === currentImg ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}\`}
+                  className={`h-1.5 rounded-full transition-all ${idx === currentImg ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`}
                 />
               ))}
             </div>
@@ -82,7 +82,7 @@ function FeaturedVenueCard({ venue }: { venue: any }) {
           onClick={toggleSave}
           className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-sm z-20"
         >
-          <Heart className={\`w-5 h-5 transition-colors \${isSaved ? 'fill-pink-500 text-pink-500' : 'text-muted-foreground hover:text-pink-500'}\`} />
+          <Heart className={`w-5 h-5 transition-colors ${isSaved ? 'fill-pink-500 text-pink-500' : 'text-muted-foreground hover:text-pink-500'}`} />
         </button>
       </div>
 
