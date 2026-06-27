@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PlanYourEventSection } from '@/components/home/PlanYourEventSection';
 import { HomeEntryCards } from '@/components/home/HomeEntryCards';
+import { HomeCategoryChips } from '@/components/home/HomeCategoryChips';
 
 const AnimatedDropdown = ({ options, placeholder, value, onChange, isSleek }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -305,6 +306,9 @@ export default function HomePage() {
 
       {/* 3. QUICK ENTRY CARDS */}
       <HomeEntryCards />
+
+      {/* 3.5. CATEGORY CHIPS */}
+      <HomeCategoryChips />
 
       {/* 4. BUSINESS & ARTISAN GATEWAYS */}
       <div className="max-w-[1400px] mx-auto px-6 mb-20 mt-0 relative z-40">
