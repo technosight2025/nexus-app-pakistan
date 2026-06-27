@@ -21,126 +21,94 @@ interface CategoryItem {
 }
 
 const CATEGORIES: CategoryItem[] = [
+  // VENUES
   { 
-    id: 'halls', 
-    name: 'Banquet Halls', 
-    icon: '🏛️',
-    subcategories: [
-      { id: 'all_halls', name: 'All Halls' },
-      { id: 'luxury_halls', name: 'Luxury' },
-      { id: 'budget_halls', name: 'Budget-Friendly' },
-      { id: 'indoor_halls', name: 'Indoor Only' }
-    ]
+    id: 'halls', name: 'Banquet Halls', icon: '🏛️',
+    subcategories: [{ id: 'all_halls', name: 'All Halls' }, { id: 'luxury_halls', name: 'Luxury' }, { id: 'budget_halls', name: 'Budget-Friendly' }, { id: 'indoor_halls', name: 'Indoor Only' }]
   },
   { 
-    id: 'marquees', 
-    name: 'Marquees', 
-    icon: '⛺',
-    subcategories: [
-      { id: 'all_marquees', name: 'All Marquees' },
-      { id: 'ac_marquees', name: 'Air Conditioned' },
-      { id: 'glass_marquees', name: 'Glass Marquees' },
-      { id: 'outdoor_marquees', name: 'Open Air' }
-    ]
+    id: 'marquees', name: 'Marquees', icon: '⛺',
+    subcategories: [{ id: 'all_marquees', name: 'All Marquees' }, { id: 'ac_marquees', name: 'Air Conditioned' }, { id: 'glass_marquees', name: 'Glass Marquees' }, { id: 'outdoor_marquees', name: 'Open Air' }]
   },
   { 
-    id: 'farmhouses', 
-    name: 'Farmhouses', 
-    icon: '🏡',
-    subcategories: [
-      { id: 'all_farmhouses', name: 'All Farmhouses' },
-      { id: 'pool_farmhouses', name: 'With Pool' },
-      { id: 'stay_farmhouses', name: 'Overnight Stay' },
-      { id: 'event_farmhouses', name: 'Large Events' }
-    ]
+    id: 'farmhouses', name: 'Farmhouses', icon: '🏡',
+    subcategories: [{ id: 'all_farmhouses', name: 'All Farmhouses' }, { id: 'pool_farmhouses', name: 'With Pool' }, { id: 'stay_farmhouses', name: 'Overnight Stay' }, { id: 'event_farmhouses', name: 'Large Events' }]
   },
   { 
-    id: 'lawns', 
-    name: 'Outdoor Lawns', 
-    icon: '🌳',
-    subcategories: [
-      { id: 'all_lawns', name: 'All Lawns' },
-      { id: 'garden_lawns', name: 'Botanical Gardens' },
-      { id: 'lake_lawns', name: 'Lake View' },
-      { id: 'hotel_lawns', name: 'Hotel Lawns' }
-    ]
+    id: 'lawns', name: 'Outdoor Lawns', icon: '🌳',
+    subcategories: [{ id: 'all_lawns', name: 'All Lawns' }, { id: 'garden_lawns', name: 'Botanical Gardens' }, { id: 'lake_lawns', name: 'Lake View' }, { id: 'hotel_lawns', name: 'Hotel Lawns' }]
   },
   { 
-    id: 'studios', 
-    name: 'Photo Studios', 
-    icon: '📸',
-    subcategories: [
-      { id: 'all_studios', name: 'All Studios' },
-      { id: 'indoor_studios', name: 'Indoor Sets' },
-      { id: 'outdoor_studios', name: 'Outdoor Locations' },
-      { id: 'cinematography', name: 'Cinematography' }
-    ]
+    id: 'restaurants', name: 'Restaurants', icon: '🍽️',
+    subcategories: [{ id: 'all_restaurants', name: 'All Restaurants' }, { id: 'fine_dining', name: 'Fine Dining' }, { id: 'rooftop', name: 'Rooftop' }, { id: 'private_rooms', name: 'Private Rooms' }]
   },
   { 
-    id: 'salons', 
-    name: 'Bridal Salons', 
-    icon: '💄',
-    subcategories: [
-      { id: 'all_salons', name: 'All Salons' },
-      { id: 'makeup_salons', name: 'Bridal Makeup' },
-      { id: 'hair_salons', name: 'Hair Styling' },
-      { id: 'spa_salons', name: 'Spa & Relax' }
-    ]
+    id: 'historical', name: 'Heritage Sites', icon: '🕌',
+    subcategories: [{ id: 'all_historical', name: 'All Sites' }, { id: 'forts', name: 'Forts' }, { id: 'havelis', name: 'Havelis' }, { id: 'museums', name: 'Museums' }]
+  },
+
+  // VENDORS
+  { 
+    id: 'catering', name: 'Catering', icon: '🍲',
+    subcategories: [{ id: 'all_catering', name: 'All Catering' }, { id: 'desi_catering', name: 'Desi Traditional' }, { id: 'continental_catering', name: 'Continental' }, { id: 'live_cooking', name: 'Live Stations' }]
   },
   { 
-    id: 'suits', 
-    name: 'Lehnga & Suits', 
-    icon: '👗',
-    subcategories: [
-      { id: 'all_suits', name: 'All Attire' },
-      { id: 'bridal_suits', name: 'Bridal Lehngas' },
-      { id: 'groom_suits', name: 'Sherwanis' },
-      { id: 'party_suits', name: 'Party Wear' }
-    ]
+    id: 'decor', name: 'Event Decor', icon: '✨',
+    subcategories: [{ id: 'all_decor', name: 'All Decorators' }, { id: 'floral', name: 'Floral Arrangements' }, { id: 'lighting', name: 'Lighting & AV' }, { id: 'thematic', name: 'Thematic Setup' }]
   },
   { 
-    id: 'cars', 
-    name: 'Luxury Cars', 
-    icon: '🚗',
-    subcategories: [
-      { id: 'all_cars', name: 'All Cars' },
-      { id: 'vintage_cars', name: 'Vintage Classics' },
-      { id: 'suv_cars', name: 'Premium SUVs' },
-      { id: 'limo_cars', name: 'Limousines' }
-    ]
+    id: 'suits', name: 'Apparel', icon: '👗',
+    subcategories: [{ id: 'all_suits', name: 'All Attire' }, { id: 'bridal_suits', name: 'Bridal Lehngas' }, { id: 'groom_suits', name: 'Sherwanis' }, { id: 'party_suits', name: 'Party Wear' }]
   },
   { 
-    id: 'catering', 
-    name: 'Kitchens', 
-    icon: '🍲',
-    subcategories: [
-      { id: 'all_catering', name: 'All Catering' },
-      { id: 'desi_catering', name: 'Desi Traditional' },
-      { id: 'continental_catering', name: 'Continental' },
-      { id: 'live_cooking', name: 'Live Stations' }
-    ]
+    id: 'jewelry', name: 'Jewelry', icon: '💎',
+    subcategories: [{ id: 'all_jewelry', name: 'All Jewelry' }, { id: 'bridal_sets', name: 'Bridal Sets' }, { id: 'artificial', name: 'Artificial & Imitation' }, { id: 'gold', name: 'Gold & Diamond' }]
   },
   { 
-    id: 'stages', 
-    name: 'Traditional Stages', 
-    icon: '👑',
-    subcategories: [
-      { id: 'all_stages', name: 'All Stages' },
-      { id: 'floral_stages', name: 'Floral Décor' },
-      { id: 'royal_stages', name: 'Royal Setup' },
-      { id: 'modern_stages', name: 'Modern Minimal' }
-    ]
+    id: 'invitations', name: 'Invitations', icon: '💌',
+    subcategories: [{ id: 'all_invites', name: 'All Invites' }, { id: 'digital', name: 'Digital & Video' }, { id: 'traditional', name: 'Traditional Cards' }, { id: 'luxury_boxes', name: 'Luxury Boxes' }]
   },
   { 
-    id: 'rentals', 
-    name: 'Equipment Rentals', 
-    icon: '🎥',
-    subcategories: [
-      { id: 'all_rentals', name: 'All Rentals' },
-      { id: 'camera_gear', name: 'Cameras & Lenses' },
-      { id: 'lighting_gear', name: 'Lighting Kits' },
-      { id: 'audio_gear', name: 'Audio & Mics' }
-    ]
+    id: 'cars', name: 'Transport', icon: '🚗',
+    subcategories: [{ id: 'all_cars', name: 'All Transport' }, { id: 'vintage_cars', name: 'Vintage Classics' }, { id: 'suv_cars', name: 'Premium SUVs' }, { id: 'limo_cars', name: 'Limousines' }]
+  },
+  { 
+    id: 'gifts', name: 'Gifts & Favors', icon: '🎁',
+    subcategories: [{ id: 'all_gifts', name: 'All Gifts' }, { id: 'bidh', name: 'Bidh Boxes' }, { id: 'giveaways', name: 'Giveaways' }, { id: 'mithai', name: 'Mithai Packaging' }]
+  },
+
+  // PROFESSIONALS
+  { 
+    id: 'photographers', name: 'Photography', icon: '📸',
+    subcategories: [{ id: 'all_photo', name: 'All Studios' }, { id: 'wedding_photo', name: 'Wedding Photography' }, { id: 'cinematography', name: 'Cinematography' }, { id: 'drone', name: 'Drone Coverage' }]
+  },
+  { 
+    id: 'salons', name: 'Bridal Salons', icon: '💄',
+    subcategories: [{ id: 'all_salons', name: 'All Salons' }, { id: 'makeup_salons', name: 'Bridal Makeup' }, { id: 'hair_salons', name: 'Hair Styling' }, { id: 'spa_salons', name: 'Spa & Relax' }]
+  },
+  { 
+    id: 'planners', name: 'Event Planners', icon: '📋',
+    subcategories: [{ id: 'all_planners', name: 'All Planners' }, { id: 'full_service', name: 'Full Service' }, { id: 'day_of', name: 'Day-of Coordination' }, { id: 'destination', name: 'Destination Weddings' }]
+  },
+  { 
+    id: 'mehendi', name: 'Mehendi Artists', icon: '🌿',
+    subcategories: [{ id: 'all_mehendi', name: 'All Artists' }, { id: 'bridal_mehendi', name: 'Bridal Mehendi' }, { id: 'party_mehendi', name: 'Party Mehendi' }, { id: 'arabic', name: 'Arabic Designs' }]
+  },
+  { 
+    id: 'djs', name: 'DJs & Music', icon: '🎵',
+    subcategories: [{ id: 'all_djs', name: 'All Entertainment' }, { id: 'djs', name: 'Club DJs' }, { id: 'live_bands', name: 'Live Bands' }, { id: 'qawwali', name: 'Qawwali Nights' }]
+  },
+  { 
+    id: 'choreographers', name: 'Choreographers', icon: '💃',
+    subcategories: [{ id: 'all_choreo', name: 'All Choreographers' }, { id: 'mehndi_dances', name: 'Mehndi Dances' }, { id: 'couple_dance', name: 'Couple First Dance' }, { id: 'flash_mobs', name: 'Flash Mobs' }]
+  },
+  { 
+    id: 'stages', name: 'Stages & Sets', icon: '👑',
+    subcategories: [{ id: 'all_stages', name: 'All Stages' }, { id: 'floral_stages', name: 'Floral Décor' }, { id: 'royal_stages', name: 'Royal Setup' }, { id: 'modern_stages', name: 'Modern Minimal' }]
+  },
+  { 
+    id: 'rentals', name: 'Equipment Rentals', icon: '🎥',
+    subcategories: [{ id: 'all_rentals', name: 'All Rentals' }, { id: 'camera_gear', name: 'Cameras & Lenses' }, { id: 'lighting_gear', name: 'Lighting Kits' }, { id: 'audio_gear', name: 'Audio & Mics' }]
   }
 ]
 
@@ -1409,11 +1377,11 @@ export function ExploreClient() {
           <div className="flex items-center gap-8 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-1">
             {CATEGORIES.filter(cat => {
               if (activeMainTab === 'venues') {
-                return ['halls', 'marquees', 'farmhouses', 'lawns', 'stages'].includes(cat.id)
+                return ['halls', 'marquees', 'farmhouses', 'lawns', 'restaurants', 'historical'].includes(cat.id)
               } else if (activeMainTab === 'vendors') {
-                return ['suits', 'cars', 'catering'].includes(cat.id)
+                return ['catering', 'decor', 'suits', 'jewelry', 'invitations', 'cars', 'gifts'].includes(cat.id)
               } else {
-                return ['studios', 'salons'].includes(cat.id)
+                return ['photographers', 'salons', 'planners', 'mehendi', 'djs', 'choreographers', 'stages', 'rentals'].includes(cat.id)
               }
             }).map((cat) => {
               const isActive = activeCategory === cat.id
