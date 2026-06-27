@@ -1369,6 +1369,13 @@ export function ExploreClient() {
         </div>
       </header>
 
+      {/* Intro Heading */}
+      <div className="bg-white pt-8 pb-2 px-6 md:px-10 lg:px-20 max-w-[1440px] mx-auto">
+        <h1 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight">
+          What are you looking for today?
+        </h1>
+      </div>
+
       {/* 2. HORIZONTAL CATEGORY SELECTOR SLIDER (Airbnb style) */}
       <section className="bg-white border-b border-slate-100 sticky top-[72px] z-30 shadow-xs transition-all duration-300">
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pt-4 pb-2 flex items-center justify-between gap-6 overflow-hidden">
