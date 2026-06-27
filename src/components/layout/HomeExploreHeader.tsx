@@ -3,32 +3,22 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Globe, Menu, User, LayoutDashboard, LogOut, Languages, Search } from 'lucide-react'
+import { Globe, Menu, User, LayoutDashboard, LogOut, Search, X } from 'lucide-react'
 import { useUser, useClerk } from "@clerk/nextjs"
 import { useLanguage } from '@/contexts/LanguageContext'
 import { NexusLogo } from '@/components/layout/NexusLogo'
-import { HeaderSearchCapsule } from '@/components/layout/HeaderSearchCapsule'
 import { useRouter } from 'next/navigation'
 
 export function HomeExploreHeader() {
   const router = useRouter()
   const { isSignedIn, user } = useUser()
   const { signOut } = useClerk()
-  const { isRomanUrdu, setIsRomanUrdu } = useLanguage()
+  const { isRomanUrdu } = useLanguage()
   
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
+  const [isSearchDrawerOpen, setIsSearchDrawerOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const accountMenuRef = useRef<HTMLDivElement>(null)
-
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [activeMainTab, setActiveMainTab] = useState<'venues' | 'vendors' | 'professionals'>('venues')
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -41,168 +31,106 @@ export function HomeExploreHeader() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const handleSearchSubmit = () => {
-    router.push(`/explore?tab=${activeMainTab}`)
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/explore?q=${encodeURIComponent(searchQuery)}`)
+      setIsSearchDrawerOpen(false)
+    }
   }
 
   return (
-    <header className={`bg-white border-b border-slate-200 sticky top-0 z-[100] transition-all duration-300 ${isScrolled ? 'py-3 shadow-sm h-[80px] flex items-center' : 'pb-6 pt-6'}`}>
-      <div className={`max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 flex flex-col transition-all duration-300 w-full ${!isScrolled ? 'gap-6' : 'gap-0'}`}>
-        
-        {/* Top Row: Logo, Tabs/Capsule, Actions */}
-        <div className="flex items-center justify-between relative z-[60] w-full">
+    <>
+      <header className="w-full bg-white/80 backdrop-blur-md border-b border-neutral-100 fixed top-0 left-0 right-0 z-50 h-16 flex items-center transition-all duration-300">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 flex items-center justify-between w-full h-full">
           
           {/* Left: Logo */}
-          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push("/")}>
-            <NexusLogo iconSize={40} iconColor="text-slate-900" textColor="text-slate-900" />
+          <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => router.push("/")}>
+            <NexusLogo iconSize={36} iconColor="text-neutral-900" textColor="text-neutral-900 font-serif" />
           </div>
 
-          {/* Center: Main Tabs or Search Capsule */}
-          <div className="hidden md:flex items-center justify-center flex-1 max-w-2xl px-4">
-            <AnimatePresence mode="wait">
-              {!isScrolled ? (
-                <motion.div 
-                  key="tabs"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex gap-10 text-[16px] font-bold text-slate-500 items-center"
-                >
-                  {/* Venues Tab */}
-                  <button 
-                    onClick={() => setActiveMainTab('venues')}
-                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
-                      activeMainTab === 'venues' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>Venues</span>
-                    {activeMainTab === 'venues' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
-                    )}
-                  </button>
-
-                  {/* Vendors Tab */}
-                  <button 
-                    onClick={() => setActiveMainTab('vendors')}
-                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
-                      activeMainTab === 'vendors' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>Vendors</span>
-                    {activeMainTab === 'vendors' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
-                    )}
-                  </button>
-
-                  {/* Professionals Tab */}
-                  <button 
-                    onClick={() => setActiveMainTab('professionals')}
-                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
-                      activeMainTab === 'professionals' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>Professionals</span>
-                    {activeMainTab === 'professionals' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
-                    )}
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.div 
-                  key="capsule"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <HeaderSearchCapsule 
-                    onClick={(field) => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Right: Actions and account menu */}
-          <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-750 mt-1">
-            <Link 
-              href="/explore" 
-              className="hidden lg:block hover:bg-slate-100 px-4 py-2.5 rounded-full cursor-pointer transition-colors text-sm font-semibold text-slate-800"
-            >
-              {isRomanUrdu ? 'Talash' : 'Explore'}
+          {/* Center: Minimalist text links (Editorial Swiss Style) */}
+          <nav className="hidden md:flex items-center gap-8 text-[13px] font-black uppercase tracking-wider text-neutral-500">
+            <Link href="/explore" className="hover:text-neutral-900 transition-colors">
+              {isRomanUrdu ? 'Explore' : 'Explore Marketplace'}
             </Link>
-
-            <Link 
-              href="/business" 
-              className="hidden lg:block hover:bg-slate-100 px-4 py-2.5 rounded-full cursor-pointer transition-colors text-sm font-semibold text-slate-800"
-            >
-              {isRomanUrdu ? 'Host Banein' : 'Become a Host'}
+            <Link href="/create-event" className="hover:text-neutral-900 transition-colors">
+              {isRomanUrdu ? 'Planner' : 'AI Event Planner'}
             </Link>
+            <Link href="/business" className="hover:text-neutral-900 transition-colors">
+              {isRomanUrdu ? 'Host Partner' : 'Become a Partner'}
+            </Link>
+          </nav>
 
-            <button className="p-2.5 hover:bg-slate-100 rounded-full cursor-pointer transition-colors">
-              <Globe className="w-4 h-4 text-slate-800" />
+          {/* Right: Actions */}
+          <div className="flex items-center gap-3 shrink-0">
+            {/* Search Trigger Button */}
+            <button 
+              onClick={() => setIsSearchDrawerOpen(true)}
+              className="p-2 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors text-neutral-800"
+              title="Search"
+            >
+              <Search className="w-4 h-4" />
             </button>
 
-            {/* Hamburger Account menu */}
+            {/* Language Toggle */}
+            <button className="p-2 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors text-neutral-800">
+              <Globe className="w-4 h-4" />
+            </button>
+
+            {/* Profile Dropdown */}
             <div 
               ref={accountMenuRef}
               onClick={(e) => {
                 e.stopPropagation()
                 setIsAccountMenuOpen(!isAccountMenuOpen)
               }}
-              className="flex items-center gap-3 border border-slate-300 rounded-full py-1.5 px-2 hover:shadow-md transition-shadow cursor-pointer bg-white relative ml-2"
+              className="flex items-center gap-2 border border-neutral-200 rounded-full p-1 hover:border-neutral-900 hover:shadow-2xs transition-all cursor-pointer bg-white relative"
             >
-              <Menu className="w-4 h-4 text-slate-600 ml-2" />
-              <div className="w-8 h-8 rounded-full bg-slate-500 text-white flex items-center justify-center overflow-hidden">
+              <div className="w-7 h-7 rounded-full bg-neutral-800 text-white flex items-center justify-center overflow-hidden">
                 {isSignedIn && user?.imageUrl ? (
                   <img src={user.imageUrl} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <User className="w-5 h-5 text-white" />
+                  <User className="w-4 h-4 text-white" />
                 )}
               </div>
+              <Menu className="w-3.5 h-3.5 text-neutral-600 mr-1.5" />
 
               {/* Dropdown Menu Panel */}
               <AnimatePresence>
                 {isAccountMenuOpen && (
                   <motion.div 
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
                     transition={{ duration: 0.15 }}
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute right-0 top-12 w-[280px] bg-white border border-slate-200 shadow-2xl rounded-2xl py-2 z-50 cursor-default text-left flex flex-col"
+                    className="absolute right-0 top-10 w-[240px] bg-white border border-neutral-100 shadow-xl rounded-xl py-1.5 z-50 cursor-default text-left flex flex-col"
                   >
                     {isSignedIn ? (
                       <>
-                        <Link href="/dashboard" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-semibold text-sm text-slate-700 flex items-center gap-3">
-                          <LayoutDashboard className="w-4 h-4 text-slate-500" />
+                        <Link href="/dashboard" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-neutral-700 flex items-center gap-2">
+                          <LayoutDashboard className="w-3.5 h-3.5" />
                           <span>Dashboard</span>
                         </Link>
-                        <div className="h-[1px] bg-slate-100 my-1" />
-                        <div onClick={() => { setIsAccountMenuOpen(false); signOut(); }} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-semibold text-sm text-red-600 flex items-center gap-3">
-                          <LogOut className="w-4 h-4 text-red-500" />
+                        <div className="h-[1px] bg-neutral-100 my-1" />
+                        <div onClick={() => { setIsAccountMenuOpen(false); signOut(); }} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-red-650 text-red-650 flex items-center gap-2">
+                          <LogOut className="w-3.5 h-3.5 text-red-500" />
                           <span>Log out</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <Link href="/sign-up" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-black text-sm text-slate-900">
+                        <Link href="/sign-up" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-black text-xs uppercase tracking-wider text-neutral-900">
                           Sign up
                         </Link>
-                        <Link href="/login" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-semibold text-sm text-slate-700">
+                        <Link href="/login" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-neutral-700">
                           Log in
                         </Link>
-                        <div className="h-[1px] bg-slate-100 my-1" />
-                        <Link href="/business" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-semibold text-sm text-slate-700">
+                        <div className="h-[1px] bg-neutral-100 my-1" />
+                        <Link href="/business" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-neutral-700">
                           Become a Host
                         </Link>
-                        <div onClick={() => { alert("Opening Help Center"); setIsAccountMenuOpen(false); }} className="hover:bg-slate-50 px-4 py-3 cursor-pointer transition-colors font-semibold text-sm text-slate-700 flex items-center gap-3">
-                          <Globe className="w-4 h-4 text-slate-500" />
-                          <span>Help Center</span>
-                        </div>
                       </>
                     )}
                   </motion.div>
@@ -210,59 +138,52 @@ export function HomeExploreHeader() {
               </AnimatePresence>
             </div>
           </div>
+
         </div>
+      </header>
 
-        {/* Expanded Search Bar (Only visible when NOT scrolled) */}
-        <AnimatePresence>
-          {!isScrolled && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-[850px] mx-auto z-50 origin-top overflow-hidden"
+      {/* Floating Search Drawer Overlay */}
+      <AnimatePresence>
+        {isSearchDrawerOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-neutral-900/30 backdrop-blur-xs z-[110] flex flex-col justify-start"
+            onClick={() => setIsSearchDrawerOpen(false)}
+          >
+            <motion.div 
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              exit={{ y: -50 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="bg-white border-b border-neutral-100 py-6 px-6 md:px-10 lg:px-20 w-full shadow-lg"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-slate-50/80 border border-slate-200 rounded-full shadow-lg shadow-slate-200/50 flex items-center mt-2 relative">
+              <div className="max-w-[1440px] mx-auto flex items-center justify-between w-full">
+                <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center mr-6">
+                  <Search className="w-5 h-5 text-neutral-400 mr-3 shrink-0" />
+                  <input 
+                    type="text"
+                    autoFocus
+                    placeholder="Search venues, decorators, photographers, caterers..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-transparent border-none outline-none text-lg text-neutral-900 placeholder-neutral-400 font-medium"
+                  />
+                </form>
                 
-                {/* Where */}
-                <div onClick={() => router.push(`/explore?focus=where`)} className="flex-1 px-8 py-3.5 hover:bg-slate-100/80 rounded-full cursor-pointer transition-colors group">
-                  <div className="text-xs font-extrabold text-slate-800">Where</div>
-                  <div className="text-sm font-medium text-slate-400 group-hover:text-slate-500 mt-0.5">Search destinations</div>
-                </div>
-
-                <div className="w-[1px] h-8 bg-slate-200" />
-
-                {/* When */}
-                <div onClick={() => router.push(`/explore?focus=when`)} className="flex-1 px-6 py-3.5 hover:bg-slate-100/80 rounded-full cursor-pointer transition-colors group">
-                  <div className="text-xs font-extrabold text-slate-800">When</div>
-                  <div className="text-sm font-medium text-slate-400 group-hover:text-slate-500 mt-0.5">Add dates</div>
-                </div>
-
-                <div className="w-[1px] h-8 bg-slate-200" />
-
-                {/* Who */}
-                <div onClick={() => router.push(`/explore?focus=who`)} className="flex-1 px-6 py-3.5 hover:bg-slate-100/80 rounded-full cursor-pointer transition-colors flex items-center justify-between group">
-                  <div>
-                    <div className="text-xs font-extrabold text-slate-800">Who</div>
-                    <div className="text-sm font-medium text-slate-600 mt-0.5">1 couple</div>
-                  </div>
-                  
-                  {/* Search Button */}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleSearchSubmit(); }}
-                    className="ml-2 px-6 py-3 rounded-full bg-[#FF385C] hover:bg-[#e62248] text-white font-extrabold text-sm flex items-center gap-2 shadow-md transition-colors"
-                  >
-                    <Search className="w-4 h-4 stroke-[3]" />
-                    <span>Search</span>
-                  </button>
-                </div>
-
+                <button 
+                  onClick={() => setIsSearchDrawerOpen(false)}
+                  className="p-2 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors text-neutral-500"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-      </div>
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
