@@ -130,7 +130,8 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
       sender_type: senderType,
       sender_name: senderName,
       message: textOrDataUrl,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      status: 'sending'
     };
 
     const currentMessages = Array.isArray(messages) ? messages : [];
@@ -145,15 +146,25 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
       
       if (savedMsg) {
         // Replace optimistic msg with real one from DB (to get correct UUID)
-        setMessages((prev) => 
-          prev.map((m) => m.id === optimisticMsg.id ? savedMsg : m)
-        );
+        setMessages((prev) => {
+          const newArray = prev.map((m) => m.id === optimisticMsg.id ? { ...savedMsg, status: 'sent' } : m);
+          localStorage.setItem(storageKey, JSON.stringify(newArray));
+          return newArray;
+        });
       } else {
-        // Fallback to local storage if DB fails
-        localStorage.setItem(storageKey, JSON.stringify(updated));
+        // Database failed, show error state
+        setMessages((prev) => {
+          const newArray = prev.map((m) => m.id === optimisticMsg.id ? { ...m, status: 'error' } : m);
+          localStorage.setItem(storageKey, JSON.stringify(newArray));
+          return newArray;
+        });
       }
     } catch (err) {
-      localStorage.setItem(storageKey, JSON.stringify(updated));
+      setMessages((prev) => {
+        const newArray = prev.map((m) => m.id === optimisticMsg.id ? { ...m, status: 'error' } : m);
+        localStorage.setItem(storageKey, JSON.stringify(newArray));
+        return newArray;
+      });
     }
   };
 
@@ -280,7 +291,7 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
               </span>
               <div className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs font-medium shadow-sm leading-relaxed ${
                 isMe 
-                  ? 'bg-[#0F5B3E] text-white rounded-tr-none' 
+                  ? msg.status === 'error' ? 'bg-red-500 text-white rounded-tr-none' : 'bg-[#0F5B3E] text-white rounded-tr-none' 
                   : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none'
               }`}>
                 {isAudio ? (
@@ -289,6 +300,16 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
                   messageText
                 )}
               </div>
+              {isMe && msg.status === 'error' && (
+                <span className="text-[9px] text-red-500 font-bold mt-1 px-1">
+                  Failed to send - Check Database Connection
+                </span>
+              )}
+              {isMe && msg.status === 'sending' && (
+                <span className="text-[9px] text-slate-400 font-medium mt-1 px-1 flex items-center gap-1">
+                  <Loader2 className="w-2 h-2 animate-spin" /> Sending...
+                </span>
+              )}
             </div>
           );
         })}
