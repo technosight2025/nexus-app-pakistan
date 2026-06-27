@@ -13,12 +13,22 @@ export function HomeExploreHeader() {
   const router = useRouter()
   const { isSignedIn, user } = useUser()
   const { signOut } = useClerk()
-  const { isRomanUrdu } = useLanguage()
+  const { isRomanUrdu, setIsRomanUrdu } = useLanguage()
   
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
   const [isSearchDrawerOpen, setIsSearchDrawerOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isScrolled, setIsScrolled] = useState(false)
   const accountMenuRef = useRef<HTMLDivElement>(null)
+
+  // Scroll listener for dynamic translucency & border effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -41,41 +51,59 @@ export function HomeExploreHeader() {
 
   return (
     <>
-      <header className="w-full bg-white/80 backdrop-blur-md border-b border-neutral-100 fixed top-0 left-0 right-0 z-50 h-16 flex items-center transition-all duration-300">
+      <header className={`w-full fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/75 backdrop-blur-md border-b border-neutral-100 shadow-[0_2px_20px_rgba(0,0,0,0.02)]' 
+          : 'bg-transparent border-b border-transparent'
+      }`}>
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 flex items-center justify-between w-full h-full">
           
           {/* Left: Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => router.push("/")}>
-            <NexusLogo iconSize={36} iconColor="text-neutral-900" textColor="text-neutral-900 font-serif" />
+            <NexusLogo iconSize={42} iconColor="text-neutral-900" textColor="text-neutral-900 font-serif" />
           </div>
 
           {/* Center: Minimalist text links (Editorial Swiss Style) */}
-          <nav className="hidden md:flex items-center gap-8 text-[13px] font-black uppercase tracking-wider text-neutral-500">
-            <Link href="/explore" className="hover:text-neutral-900 transition-colors">
-              {isRomanUrdu ? 'Explore' : 'Explore Marketplace'}
+          <nav className="hidden md:flex items-center gap-10 text-[12px] font-black uppercase tracking-widest text-neutral-500">
+            <Link href="/explore" className="relative py-2 hover:text-neutral-950 transition-colors duration-300 group">
+              <span>{isRomanUrdu ? 'Explore' : 'Explore Marketplace'}</span>
+              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#C5A880] transition-all duration-300 group-hover:w-full" />
             </Link>
-            <Link href="/create-event" className="hover:text-neutral-900 transition-colors">
-              {isRomanUrdu ? 'Planner' : 'AI Event Planner'}
+            <Link href="/create-event" className="relative py-2 hover:text-neutral-950 transition-colors duration-300 group">
+              <span>{isRomanUrdu ? 'Planner' : 'AI Event Planner'}</span>
+              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#C5A880] transition-all duration-300 group-hover:w-full" />
             </Link>
-            <Link href="/business" className="hover:text-neutral-900 transition-colors">
-              {isRomanUrdu ? 'Host Partner' : 'Become a Partner'}
+            <Link href="/business" className="relative py-2 hover:text-neutral-950 transition-colors duration-300 group">
+              <span>{isRomanUrdu ? 'Host Partner' : 'Become a Partner'}</span>
+              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#C5A880] transition-all duration-300 group-hover:w-full" />
             </Link>
           </nav>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
+            {/* Distinct Primary CTA */}
+            <Link href="/create-event" className="hidden lg:block">
+              <span className="px-5 py-2 text-[10px] font-black uppercase tracking-widest bg-neutral-950 text-white rounded-full hover:bg-[#C5A880] hover:shadow-[0_4px_12px_rgba(197,168,128,0.2)] transition-all duration-300 cursor-pointer">
+                Start Planning
+              </span>
+            </Link>
+
             {/* Search Trigger Button */}
             <button 
               onClick={() => setIsSearchDrawerOpen(true)}
-              className="p-2 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors text-neutral-800"
+              className="p-2.5 hover:bg-neutral-100 rounded-full cursor-pointer transition-colors text-neutral-850"
               title="Search"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4.5 h-4.5" />
             </button>
 
             {/* Language Toggle */}
-            <button className="p-2 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors text-neutral-800">
-              <Globe className="w-4 h-4" />
+            <button 
+              onClick={() => setIsRomanUrdu(!isRomanUrdu)}
+              className="p-2.5 hover:bg-neutral-100 rounded-full cursor-pointer transition-colors text-neutral-850"
+              title={isRomanUrdu ? "English" : "Urdu"}
+            >
+              <Globe className="w-4.5 h-4.5" />
             </button>
 
             {/* Profile Dropdown */}
@@ -114,17 +142,17 @@ export function HomeExploreHeader() {
                           <span>Dashboard</span>
                         </Link>
                         <div className="h-[1px] bg-neutral-100 my-1" />
-                        <div onClick={() => { setIsAccountMenuOpen(false); signOut(); }} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-red-650 text-red-650 flex items-center gap-2">
+                        <div onClick={() => { setIsAccountMenuOpen(false); signOut(); }} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-red-650 flex items-center gap-2">
                           <LogOut className="w-3.5 h-3.5 text-red-500" />
                           <span>Log out</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <Link href="/sign-up" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-black text-xs uppercase tracking-wider text-neutral-900">
+                        <Link href="/register" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-black text-xs uppercase tracking-wider text-neutral-900">
                           Sign up
                         </Link>
-                        <Link href="/login" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-neutral-700">
+                        <Link href="/sign-in" onClick={() => setIsAccountMenuOpen(false)} className="hover:bg-neutral-50 px-4 py-2.5 cursor-pointer transition-colors font-bold text-xs uppercase tracking-wider text-neutral-700">
                           Log in
                         </Link>
                         <div className="h-[1px] bg-neutral-100 my-1" />

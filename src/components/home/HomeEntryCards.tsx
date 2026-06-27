@@ -79,38 +79,39 @@ export function HomeEntryCards() {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="flex flex-col bg-white border border-neutral-100 rounded-3xl overflow-hidden hover:border-neutral-900 transition-all duration-300 hover:shadow-xs"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="group flex flex-col bg-white border border-neutral-100/60 rounded-[28px] overflow-hidden hover:border-[#C5A880]/40 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(197,168,128,0.12)] hover:-translate-y-2"
             >
               {/* Image at top */}
-              <div className="relative h-44 overflow-hidden bg-neutral-50 shrink-0">
+              <div className="relative h-48 overflow-hidden bg-neutral-50 shrink-0">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent z-10" />
                 <img 
                   src={card.image} 
                   alt={card.titleEN} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
                 />
               </div>
               
               {/* Content */}
-              <div className="p-6 flex flex-col flex-1 justify-between">
+              <div className="p-6 flex flex-col flex-1 justify-between text-left">
                 <div>
-                  <span className="font-mono text-[10px] tracking-widest text-neutral-400 uppercase block mb-1.5">
+                  <span className="font-mono text-[9px] tracking-[0.2em] text-[#C5A880] uppercase block mb-2 font-bold">
                     {card.id.replace('-', ' ')}
                   </span>
-                  <h3 className="text-xl font-bold text-neutral-900 mb-2 leading-tight">
+                  <h3 className="text-lg font-black font-serif text-neutral-900 mb-2 leading-tight">
                     {isRomanUrdu ? card.titleRU : card.titleEN}
                   </h3>
-                  <p className="text-xs text-neutral-500 font-normal leading-relaxed mb-6">
+                  <p className="text-xs text-slate-500 font-normal leading-relaxed mb-6">
                     {isRomanUrdu ? card.descRU : card.descEN}
                   </p>
                 </div>
                 
                 <Link 
                   href={card.href} 
-                  className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-neutral-950 hover:underline mt-auto"
+                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-neutral-950 mt-auto hover:text-[#C5A880] transition-colors"
                 >
                   {isRomanUrdu ? card.ctaRU : card.ctaEN} 
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </motion.div>
