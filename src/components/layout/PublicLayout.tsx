@@ -15,6 +15,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
     pathname?.startsWith('/admin') ||
     pathname?.startsWith('/onboarding') ||
     pathname?.startsWith('/business/storefront') ||
+    pathname?.startsWith('/explore') ||
     pathname?.startsWith('/site')
 
   const isVenueProfile = pathname?.startsWith('/venues/')

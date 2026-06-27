@@ -46,7 +46,7 @@ export default function VenueOSLayout({
     OVERVIEW: true,
     BOOKINGS: true,
     EVENTS: true,
-    "CUSTOMERS (CRM)": false,
+    "CONTACTS (CRM)": false,
     SALES: false,
     "VENUE MANAGEMENT": false,
     OPERATIONS: false,
@@ -82,9 +82,23 @@ export default function VenueOSLayout({
     }
     window.addEventListener("nexus_venue_apps_changed", handleStorageChange)
     window.addEventListener("storage", handleStorageChange)
+
+    // Global shortcut Ctrl+K / ⌘K to focus search input
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        const input = document.getElementById("venue-global-search")
+        if (input) {
+          input.focus()
+        }
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+
     return () => {
       window.removeEventListener("nexus_venue_apps_changed", handleStorageChange)
       window.removeEventListener("storage", handleStorageChange)
+      window.removeEventListener("keydown", handleKeyDown)
     }
   }, [])
 
@@ -114,7 +128,7 @@ export default function VenueOSLayout({
     {
       title: "OVERVIEW",
       items: [
-        { name: "Dashboard", href: "/business/venues", icon: LayoutDashboard },
+        { name: "Dashboard", href: "/business/venues/dashboard", icon: LayoutDashboard },
         { name: "Activity Feed", href: "/business/venues/activity", icon: Activity },
         { name: "Notifications", href: "/business/venues/notifications", icon: Bell, badge: 6 },
       ]
@@ -139,10 +153,10 @@ export default function VenueOSLayout({
       ]
     },
     {
-      title: "CUSTOMERS (CRM)",
+      title: "CONTACTS (CRM)",
       items: [
         { name: "Leads", href: "/business/venues/leads", icon: UserCheck },
-        { name: "Customers", href: "/business/venues/leads?tab=customers", icon: Users },
+        { name: "Contacts", href: "/business/venues/leads?tab=contacts", icon: Users },
         { name: "Guest Lists", href: "/business/venues/leads?tab=guests", icon: BookOpen },
         { name: "Messages", href: "/business/venues/messages", icon: MessageSquare, badge: 1 },
       ]
@@ -280,7 +294,7 @@ export default function VenueOSLayout({
       }`}>
         {/* Brand header */}
         <div className="p-6 pb-4 flex items-center justify-between shrink-0">
-          <Link href="/business/venues" className="flex items-center gap-2">
+          <Link href="/business/venues/dashboard" className="flex items-center gap-2">
             <svg viewBox="0 0 24 24" className="w-[30px] h-[30px] text-[#0F5B3E]" fill="currentColor">
               <path d="M12 2L2 22h20L12 2zm0 3.8l6.9 13.8H5.1L12 5.8z" />
             </svg>
@@ -500,6 +514,7 @@ export default function VenueOSLayout({
             <div className="relative w-64 hidden lg:block">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
+                id="venue-global-search"
                 type="text" 
                 placeholder="Search events, bookings, customers..." 
                 className="w-full pl-9 pr-8 py-1.5 bg-[#FAF7F2] border border-[#ECE7DF] rounded-xl text-[11px] font-bold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#0F5B3E] focus:ring-1 focus:ring-[#0F5B3E]/30"
@@ -618,7 +633,7 @@ export default function VenueOSLayout({
 
       {/* 4. Mobile Sticky Bottom Navigation (Phone UI) */}
       <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-[#ECE7DF] z-40 flex md:hidden justify-around items-center px-2 shadow-lg">
-        <Link href="/business/venues" className={`flex flex-col items-center gap-0.5 text-[9.5px] font-bold ${checkActive("/business/venues") ? "text-[#0F5B3E]" : "text-gray-400"}`}>
+        <Link href="/business/venues/dashboard" className={`flex flex-col items-center gap-0.5 text-[9.5px] font-bold ${checkActive("/business/venues/dashboard") ? "text-[#0F5B3E]" : "text-gray-400"}`}>
           <LayoutDashboard className="w-5 h-5" />
           <span>Dashboard</span>
         </Link>

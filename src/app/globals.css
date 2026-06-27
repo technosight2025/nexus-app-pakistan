@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-montserrat);
@@ -51,10 +51,12 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  --color-nexus-charcoal: #1A1A1A;
-  --color-nexus-emerald: #0F5B3E;
-  --color-nexus-gold: #D4AF37;
-  --color-nexus-creme: #FDF8F0;
+  --color-nexus-charcoal: var(--foreground);
+  --color-nexus-emerald: var(--brand-emerald);
+  --color-nexus-gold: var(--brand-gold);
+  --color-nexus-creme: var(--card);
+  --color-brand-emerald: var(--brand-emerald);
+  --color-brand-gold: var(--brand-gold);
 
   --animate-shimmer: shimmer 2s infinite;
   --animate-wave-slow: wave-dance 1.2s ease-in-out infinite;
@@ -88,80 +90,130 @@
 }
 
 :root {
-  --background: #EBDDB9;
-  --foreground: #050505;
+  /* Heritage Ivory (Primary Light Utility Mode) */
+  --background: #FAF5EC; /* Soft Cream Invitation Backdrop */
+  --foreground: #111C15; /* Deep Emerald-Black */
   
-  --primary: #C5A059;
-  --primary-foreground: #050505;
-  --primary-container: #f7f1e3;
+  --primary: #0F2E1E;
+  --primary-foreground: #FAF9F6;
+  --primary-container: #F5F2EB;
   
-  --secondary: #050505;
-  --secondary-foreground: #EBDDB9;
-  --secondary-container: #1b1b1b;
+  --secondary: #4A4E4B; /* Warm charcoal slate */
+  --secondary-foreground: #FAF9F6;
+  --secondary-container: #EAE6DF;
   
-  --surface: #ffffff;
-  --surface-container: #EBDDB9;
-  --on-surface: #050505;
-  --on-surface-variant: #5c533f;
+  --surface: #F5F2EB; /* Warm off-white surface */
+  --surface-container: #FAF9F6;
+  --on-surface: #0F2E1E;
+  --on-surface-variant: #4A4E4B;
   
-  --outline: #d9cdad;
-  --error: #ef4444;
+  --outline: #EAE6DF; /* Soft sage/cream border */
+  --error: #991B1B; /* Deep Crimson */
 
-  --card: #FAF6ED;
-  --card-foreground: #050505;
+  --card: #F5F2EB;
+  --card-foreground: #0F2E1E;
   
-  --popover: #FAF6ED;
-  --popover-foreground: #050505;
+  --popover: #F5F2EB;
+  --popover-foreground: #0F2E1E;
   
-  --muted: #e5d8b3;
-  --muted-foreground: #5c533f;
+  --muted: #EAE6DF;
+  --muted-foreground: #4A4E4B;
   
-  --accent: #C5A059;
-  --accent-foreground: #050505;
+  --accent: #E5BA73; /* Brushed Metallic Gold */
+  --accent-foreground: #0F2E1E;
   --orange: #F97316;
   
-  --border: rgba(5, 5, 5, 0.1);
-  --input: rgba(5, 5, 5, 0.1);
-  --ring: #C5A059;
+  --border: #EAE6DF;
+  --input: #EAE6DF;
+  --ring: #10B981; /* Rich Sovereign Emerald */
+  
+  --brand-emerald: #10B981;
+  --brand-gold: #E5BA73;
   
   --radius: 1.25rem;
 }
 
-.dark {
-  --background: #050505;
-  --foreground: #ffffff;
-  
-  --primary: #C5A059;
-  --primary-foreground: #050505;
-  --primary-container: #1b160e;
-  
-  --secondary: #ffffff;
-  --secondary-foreground: #050505;
-  --secondary-container: #2c2c2c;
-  
-  --surface: #0f0f0f;
-  --surface-container: #050505;
-  --on-surface: #ffffff;
-  --on-surface-variant: #b0a58e;
-  
-  --outline: #222222;
-  --error: #f87171;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0B120E; /* Gilded Obsidian Base */
+    --foreground: #FAF5EC;
+    
+    --primary: #F5F5F3;
+    --primary-foreground: #121614;
+    --primary-container: #1C2420;
+    
+    --secondary: #9AA39F;
+    --secondary-foreground: #121614;
+    --secondary-container: #2D3531;
+    
+    --surface: #1C2420;
+    --surface-container: #121614;
+    --on-surface: #F5F5F3;
+    --on-surface-variant: #9AA39F;
+    
+    --outline: #2D3531;
+    --error: #991B1B;
 
-  --card: #0c0c0c;
-  --card-foreground: #ffffff;
+    --card: #1C2420;
+    --card-foreground: #F5F5F3;
+    
+    --popover: #1C2420;
+    --popover-foreground: #F5F5F3;
+    
+    --muted: #2D3531;
+    --muted-foreground: #9AA39F;
+    
+    --accent: #E5BA73;
+    --accent-foreground: #121614;
+    
+    --border: #2D3531;
+    --input: #2D3531;
+    --ring: #E5BA73;
+    
+    --brand-emerald: #10B981;
+    --brand-gold: #E5BA73;
+  }
+}
+
+.dark {
+  /* Sovereign Obsidian (Premium Heritage Dark Mode) */
+  --background: #0B120E; /* Gilded Obsidian Base */
+  --foreground: #FAF5EC;
   
-  --popover: #0c0c0c;
-  --popover-foreground: #ffffff;
+  --primary: #F5F5F3;
+  --primary-foreground: #121614;
+  --primary-container: #1C2420;
   
-  --muted: #1a1a1a;
-  --muted-foreground: #b0a58e;
+  --secondary: #9AA39F; /* Pale sage-gray */
+  --secondary-foreground: #121614;
+  --secondary-container: #2D3531;
   
-  --accent: #C5A059;
-  --accent-foreground: #050505;
+  --surface: #1C2420; /* Deep forest obsidian surface */
+  --surface-container: #121614;
+  --on-surface: #F5F5F3;
+  --on-surface-variant: #9AA39F;
   
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #C5A059;
+  --outline: #2D3531; /* Muted brass-gold border */
+  --error: #991B1B;
+
+  --card: #1C2420;
+  --card-foreground: #F5F5F3;
+  
+  --popover: #1C2420;
+  --popover-foreground: #F5F5F3;
+  
+  --muted: #2D3531;
+  --muted-foreground: #9AA39F;
+  
+  --accent: #E5BA73;
+  --accent-foreground: #121614;
+  
+  --border: #2D3531;
+  --input: #2D3531;
+  --ring: #E5BA73;
+  
+  --brand-emerald: #10B981;
+  --brand-gold: #E5BA73;
 }
 
 @layer base {
@@ -169,9 +221,9 @@
     border-color: var(--border);
   }
   body {
-    font-family: var(--font-montserrat), sans-serif;
-    background: radial-gradient(circle at top right, #16382B, #0F1A15, #1F070B);
-    color: #FAF5EC;
+    font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-playfair), serif;
@@ -201,4 +253,26 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: goldShimmer 8s ease infinite;
+}
+
+/* Luxury Metallic Shimmer Effect */
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #f3e5ab 25%,
+    #d4af37 50%,
+    #f3e5ab 75%,
+    #d4af37 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer-bg 4s linear infinite;
+}
+
+@keyframes gold-shimmer-bg {
+  to {
+    background-position: 200% center;
+  }
 }

@@ -1,23 +1,42 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Building2, MapPin, Users, DollarSign, Search, SlidersHorizontal, Loader2, ChevronLeft, Star } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
+import { Building2, MapPin, Users, Loader2, ChevronLeft, Star } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { VenueHero } from '@/components/venues/VenueHero';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const getVenueImage = (venueName: string = '', id: string = '') => {
+  const name = venueName.toLowerCase();
+  if (name.includes('palm') || id.includes('1')) {
+    return "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop";
+  }
+  if (name.includes('monal') || id.includes('2')) {
+    return "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop";
+  }
+  if (name.includes('meadow') || id.includes('3')) {
+    return "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
+  }
+  return "https://images.unsplash.com/photo-1519225495810-7512c696af05?q=80&w=800&auto=format&fit=crop";
+};
 
 export default function NexusVenueDiscoveryDirectory() {
   const [venues, setVenues] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCity, setSelectedCity] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All Types');
   const [loading, setLoading] = useState(true);
 
   // Hydrate available venues directly from the Supabase B2B data tier
   useEffect(() => {
     async function streamVenues() {
+      // Guard: skip if Supabase is not configured in this environment
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.warn('Supabase env vars not set — venue list will be empty in local dev.');
+        setLoading(false);
+        return;
+      }
       try {
+        const supabase = createClient();
         const { data, error } = await supabase
           .from('venues')
           .select('*')
@@ -34,11 +53,31 @@ export default function NexusVenueDiscoveryDirectory() {
     streamVenues();
   }, []);
 
-  // Filter items matching search queries safely
-  const filteredVenues = venues.filter(venue => 
-    venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    venue.location?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+
+  // Filter items matching search, city, and category queries safely
+  const filteredVenues = venues.filter(venue => {
+    const matchesSearch = 
+      !searchQuery || 
+      venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      venue.location?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    const matchesCity = 
+      selectedCity === "All" || 
+      !venue.location || 
+      venue.location.toLowerCase().includes(selectedCity.toLowerCase());
+
+    const matchesCategory = 
+      selectedCategory === "All Types" || 
+      !venue.type || 
+      venue.type.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      (selectedCategory === "Marquees" && (venue.type.toLowerCase().includes("marquee") || venue.name?.toLowerCase().includes("marquee"))) ||
+      (selectedCategory === "Banquet Halls" && (venue.type.toLowerCase().includes("hall") || venue.type.toLowerCase().includes("banquet") || venue.name?.toLowerCase().includes("ballroom"))) ||
+      (selectedCategory === "Farmhouses" && (venue.type.toLowerCase().includes("farmhouse") || venue.name?.toLowerCase().includes("farmhouse"))) ||
+      (selectedCategory === "Hotels" && (venue.type.toLowerCase().includes("hotel") || venue.name?.toLowerCase().includes("hotel"))) ||
+      (selectedCategory === "Restaurants" && (venue.type.toLowerCase().includes("restaurant") || venue.name?.toLowerCase().includes("restaurant")));
+
+    return matchesSearch && matchesCity && matchesCategory;
+  });
 
   if (loading) {
     return (
@@ -54,7 +93,7 @@ export default function NexusVenueDiscoveryDirectory() {
       
       {/* Search Header Navigation Core */}
       <header className="sticky top-0 z-50 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#C5A880]/20 p-4 shadow-sm">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <a href="/" className="p-1.5 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
               <ChevronLeft className="w-4 h-4" />
@@ -65,24 +104,23 @@ export default function NexusVenueDiscoveryDirectory() {
             </div>
           </div>
 
-          {/* Search Inputs Bar Control */}
-          <div className="flex gap-2 max-w-md w-full sm:w-72">
-            <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by venue name or city..."
-                className="w-full bg-white border border-[#C5A880]/30 rounded-xl pl-10 pr-4 py-2.5 text-xs font-medium focus:outline-none focus:border-[#0F5B3E] transition-all"
-              />
-            </div>
-            <button type="button" className="p-2.5 border border-[#C5A880]/30 rounded-xl bg-white text-slate-600 hover:text-[#0F5B3E] shadow-sm transition-all">
-              <SlidersHorizontal className="w-4 h-4" />
-            </button>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono px-3 py-1 bg-[#0F5B3E]/10 text-[#0F5B3E] font-bold rounded-full">
+              {filteredVenues.length} {filteredVenues.length === 1 ? 'Venue' : 'Venues'}
+            </span>
           </div>
         </div>
       </header>
+
+      {/* Hero Section */}
+      <VenueHero
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
 
       {/* Main Grid View */}
       <main className="max-w-4xl mx-auto px-4 mt-8">
@@ -93,11 +131,19 @@ export default function NexusVenueDiscoveryDirectory() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVenues.map((venue) => (
-              <div key={venue.id} className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm hover:border-[#0F5B3E]/30 transition-all flex flex-col group">
+              <a 
+                href={`/venues/${venue.id}`}
+                key={venue.id} 
+                className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm hover:border-[#0F5B3E]/30 transition-all flex flex-col group cursor-pointer hover:shadow-md"
+              >
                 
-                {/* Visual Imagery Asset Placeholder */}
-                <div className="relative bg-gradient-to-br from-[#FAF5EC] to-[#F3EAD8] aspect-[4/3] flex items-center justify-center border-b border-slate-100">
-                  <Building2 className="w-10 h-10 text-[#0F5B3E]/40 group-hover:scale-105 transition-transform duration-300" />
+                {/* Visual Imagery Asset */}
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-slate-100 bg-[#FAF5EC]">
+                  <img 
+                    src={getVenueImage(venue.name, venue.id)} 
+                    alt={venue.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-[#C5A880]/20 text-[10px] font-black text-slate-700 flex items-center gap-1 shadow-sm">
                     <Star className="w-3 h-3 text-amber-500 fill-current" /> 4.9
                   </div>
@@ -106,7 +152,9 @@ export default function NexusVenueDiscoveryDirectory() {
                 {/* Meta Description Copy Block */}
                 <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-1">
-                    <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">Exclusive Marquee</span>
+                    <span className="text-[9px] uppercase font-black tracking-widest text-[#C5A880]">
+                      {venue.type || 'Exclusive Venue'}
+                    </span>
                     <h3 className="font-serif text-sm font-black text-slate-900 group-hover:text-[#0F5B3E] transition-colors">{venue.name}</h3>
                     <p className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
                       <MapPin className="w-3.5 h-3.5 text-[#0F5B3E]" /> {venue.location || 'Pakistan'}
@@ -124,7 +172,7 @@ export default function NexusVenueDiscoveryDirectory() {
                   </div>
                 </div>
 
-              </div>
+              </a>
             ))}
           </div>
         )}

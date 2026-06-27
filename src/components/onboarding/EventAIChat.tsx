@@ -59,6 +59,85 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
 
+  // Bilingual initial message synchronization
+  useEffect(() => {
+    if (step === 1 && messages.length === 1 && messages[0].role === 'ai') {
+      setMessages([
+        {
+          id: '1',
+          role: 'ai',
+          content: isRomanUrdu 
+            ? "Salam! Main aapka Nexus AI Architect hoon. Aayein aapke event ka perfect workspace banate hain. Shuru karne ke liye, batayein hum kis qism ka event plan kar rahe hain?"
+            : "Hi! I'm your Nexus AI Architect. Let's build your perfect event workspace together. To start, what kind of event are we planning?",
+          options: isRomanUrdu
+            ? ['Shadi', 'Mangni', 'Mehndi', 'Barat', 'Walima', 'Saalgirah', 'Anniversary', 'Corporate Event']
+            : ['Wedding', 'Engagement', 'Mehndi', 'Barat', 'Walima', 'Birthday', 'Anniversary', 'Corporate Event']
+        }
+      ]);
+    }
+  }, [isRomanUrdu]);
+
+  // Handle prefilled query parameters from homepage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const queryType = params.get('type');
+      const queryGuests = params.get('guests');
+      const queryBudget = params.get('budget');
+      const queryCity = params.get('city');
+
+      if (queryType || queryGuests || queryBudget || queryCity) {
+        const typeLabel = queryType ? (queryType.charAt(0).toUpperCase() + queryType.slice(1)) : '';
+        
+        setExtractedData(prev => ({
+          ...prev,
+          type: typeLabel,
+          name: typeLabel ? `${typeLabel} Celebration` : prev.name,
+          city: queryCity || prev.city,
+          guests: queryGuests || prev.guests,
+          budget: queryBudget || prev.budget
+        }));
+
+        if (typeLabel) {
+          const welcomeText = isRomanUrdu
+            ? "Salam! Main aapka Nexus AI Architect hoon. Aayein aapke event ka perfect workspace banate hain."
+            : "Hi! I'm your Nexus AI Architect. Let's build your perfect event workspace together.";
+            
+          const userPrefillMsg = isRomanUrdu
+            ? `Main ek ${typeLabel} plan kar raha hoon.`
+            : `I am planning a ${typeLabel}.`;
+            
+          const nextQuestionText = isRomanUrdu
+            ? `${typeLabel} ka plan, bohat khoob! 🎊 Yeh event kab hoga?`
+            : `A ${typeLabel}, how exciting! 🎊 When will this take place?`;
+
+          setMessages([
+            {
+              id: 'welcome',
+              role: 'ai',
+              content: welcomeText
+            },
+            {
+              id: 'prefill-type',
+              role: 'user',
+              content: userPrefillMsg
+            },
+            {
+              id: 'prefill-ask-date',
+              role: 'ai',
+              content: nextQuestionText,
+              options: isRomanUrdu 
+                ? ['Is Mahinay', 'Aglay Mahinay', '6 Mahinay Baad'] 
+                : ['This Month', 'Next Month', 'In 6 Months']
+            }
+          ]);
+          setStep(2);
+        }
+      }
+    }
+  }, [isRomanUrdu]);
+
+
   // Load browser fallback voices
   useEffect(() => {
     const loadVoices = () => {
@@ -169,13 +248,13 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
 
       if (step === 1) {
         // Looking for Event Type
-        if (lowerText.includes('wedding') || lowerText.includes('shadi')) newData.type = 'Wedding';
+        if (lowerText.includes('wedding') || lowerText.includes('shadi') || lowerText.includes('shaadi')) newData.type = 'Wedding';
         else if (lowerText.includes('engagement') || lowerText.includes('mangni')) newData.type = 'Engagement';
         else if (lowerText.includes('mehndi') || lowerText.includes('rasm')) newData.type = 'Mehndi';
         else if (lowerText.includes('barat')) newData.type = 'Barat';
         else if (lowerText.includes('walima')) newData.type = 'Walima';
-        else if (lowerText.includes('birthday') || lowerText.includes('saalgirah')) newData.type = 'Birthday';
-        else if (lowerText.includes('anniversary') || lowerText.includes('saalgira')) newData.type = 'Anniversary';
+        else if (lowerText.includes('birthday') || lowerText.includes('saalgirah') || lowerText.includes('saalgira')) newData.type = 'Birthday';
+        else if (lowerText.includes('anniversary')) newData.type = 'Anniversary';
         else if (lowerText.includes('corporate')) newData.type = 'Corporate Event';
         else newData.type = userText || 'Custom Event';
         
@@ -191,6 +270,7 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
         // Looking for Date
         if (lowerText.includes('this') || lowerText.includes('is mahinay')) newData.date = 'November 2026';
         else if (lowerText.includes('next') || lowerText.includes('aglay')) newData.date = 'December 2026';
+        else if (lowerText.includes('6 month') || lowerText.includes('baad')) newData.date = 'December 2026';
         else newData.date = userText || 'TBD';
 
         aiResponse = isUrdu 
@@ -201,7 +281,16 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
       }
       else if (step === 3) {
         // Looking for City
-        newData.city = userText || 'TBD Location';
+        let detectedCity = userText || 'TBD Location';
+        if (lowerText.includes('lahore')) detectedCity = 'Lahore';
+        else if (lowerText.includes('karachi')) detectedCity = 'Karachi';
+        else if (lowerText.includes('islamabad')) detectedCity = 'Islamabad';
+        else if (lowerText.includes('pindi') || lowerText.includes('rawalpindi')) detectedCity = 'Rawalpindi';
+        else if (lowerText.includes('faisalabad')) detectedCity = 'Faisalabad';
+        else if (lowerText.includes('multan')) detectedCity = 'Multan';
+        else if (lowerText.includes('peshawar')) detectedCity = 'Peshawar';
+
+        newData.city = detectedCity;
 
         aiResponse = isUrdu
           ? `${newData.city} bohat acha intikhab hai! Taqreeban kitne mehman mutawaqqa hain?`
@@ -211,7 +300,16 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
       }
       else if (step === 4) {
         // Looking for Guests
-        newData.guests = userText;
+        const numMatch = userText.match(/\d+/);
+        if (numMatch) {
+          const val = parseInt(numMatch[0]);
+          if (val < 100) newData.guests = `Micro (< 100)`;
+          else if (val <= 250) newData.guests = `Medium (100-250)`;
+          else if (val <= 500) newData.guests = `Large (250-500)`;
+          else newData.guests = `Grand (500+)`;
+        } else {
+          newData.guests = userText;
+        }
 
         aiResponse = isUrdu
           ? `Theek hai. Aur is event ka andazan budget kitna hoga?`
@@ -221,7 +319,23 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
       }
       else if (step === 5) {
         // Looking for Budget
-        newData.budget = userText;
+        const budgetNumMatch = userText.replace(/,/g, '').match(/\d+/);
+        if (budgetNumMatch) {
+          const val = parseInt(budgetNumMatch[0]);
+          let amount = val;
+          if (lowerText.includes('lakh') || lowerText.includes('lac') || lowerText.includes('lacs')) {
+            amount = val * 100000;
+          } else if (val < 100) {
+            amount = val * 100000;
+          }
+          
+          if (amount < 500000) newData.budget = 'Under 5 Lakh';
+          else if (amount <= 1500000) newData.budget = '5 - 15 Lakh';
+          else if (amount <= 3000000) newData.budget = '15 - 30 Lakh';
+          else newData.budget = '30 Lakh+';
+        } else {
+          newData.budget = userText;
+        }
 
         // Enhanced Suggestion Logic Based on Inputs
         let recommendations = "";
@@ -280,7 +394,7 @@ export function EventAIChat({ onSuccess }: { onSuccess: () => void }) {
       if (inputMode === 'audio') {
         speakText(aiResponse, language);
       }
-    }, 1500);
+    }, 1200);
   };
 
   const submitText = (text: string, isAudio = false) => {

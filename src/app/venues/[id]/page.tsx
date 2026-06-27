@@ -24,7 +24,9 @@ const VENUE_DB = [
     images: [
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1507504038482-76210374c27d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=800&auto=format&fit=crop"
     ],
     maxGuests: 1200,
     description: "The Royal Palm Grand Ballroom offers an exquisite experience with premium crystal chandeliers, central air conditioning, and full-service gourmet catering. Perfect for luxury weddings and grand corporate events."
@@ -40,9 +42,11 @@ const VENUE_DB = [
     price: 450000,
     unit: "event",
     images: [
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1549417229-aa67d3263c09?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519225495810-7512c696af05?q=80&w=800&auto=format&fit=crop"
     ],
     maxGuests: 800,
     description: "Nestled in the beautiful Margalla hills, this marquee provides a breathtaking view of the city alongside state-of-the-art facilities and open-air lawn extensions."
@@ -59,8 +63,10 @@ const VENUE_DB = [
     unit: "night",
     images: [
       "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop"
     ],
     maxGuests: 250,
     description: "A serene and private farmhouse featuring a large swimming pool, lush green botanical gardens, and 4 luxury bedrooms for overnight stays."
@@ -77,8 +83,10 @@ const VENUE_DB = [
     unit: "guest",
     images: [
       "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606214588494-dfaf448d37aa?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505236858219-8359eb29e3a9?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?q=80&w=800&auto=format&fit=crop"
     ],
     maxGuests: 2000,
     menus: [
@@ -263,16 +271,16 @@ Milestone 2: 50% remaining balance due on or before the event date.`
             <img src={venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Main" />
           </div>
           <div className="relative group overflow-hidden">
-            <img src={venue.images[1]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 1" />
+            <img src={venue.images[1] || venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 1" />
           </div>
           <div className="relative group overflow-hidden">
-            <img src={venue.images[2]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 2" />
+            <img src={venue.images[2] || venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 2" />
           </div>
           <div className="relative group overflow-hidden">
-            <img src={venue.images[1]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 3" />
+            <img src={venue.images[3] || venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 3" />
           </div>
           <div className="relative group overflow-hidden">
-            <img src={venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 4" />
+            <img src={venue.images[4] || venue.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Secondary 4" />
           </div>
         </div>
 
@@ -388,17 +396,15 @@ Milestone 2: 50% remaining balance due on or before the event date.`
             <div className="pb-8 border-b border-slate-200">
               <h3 className="text-xl font-bold mb-6">Where you'll be</h3>
               <div className="w-full h-[300px] bg-slate-100 rounded-2xl overflow-hidden relative mb-4">
-                {/* Mock Map Image */}
-                <img 
-                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200&auto=format&fit=crop" 
-                  alt="Map Location" 
-                  className="w-full h-full object-cover opacity-80 mix-blend-multiply"
+                <iframe
+                  title="Venue Location Map"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(venue.location || "Lahore, Pakistan")}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white/50">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                </div>
               </div>
               <h4 className="font-bold text-lg">{venue.location}</h4>
               <p className="text-slate-500">Exact location provided after booking is confirmed.</p>

@@ -49,6 +49,7 @@ export function GlobalHeader() {
     pathname?.startsWith('/admin') ||
     pathname?.startsWith('/onboarding') ||
     pathname?.startsWith('/business/storefront') ||
+    pathname?.startsWith('/explore') ||
     pathname?.startsWith('/site')
 
   // Handle scroll effect for the floating pill

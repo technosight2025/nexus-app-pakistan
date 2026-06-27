@@ -5,10 +5,24 @@ import { createPortal } from 'react-dom';
 import { Search, MapPin, Calendar, SearchIcon, Sparkles, X, ChevronRight, Building, Tent, Home, Utensils, Sun, Briefcase, Camera, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function VenueHero() {
+interface VenueHeroProps {
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+  selectedCity: string;
+  setSelectedCity: (val: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+}
+
+export function VenueHero({
+  searchQuery,
+  setSearchQuery,
+  selectedCity,
+  setSelectedCity,
+  selectedCategory,
+  setSelectedCategory
+}: VenueHeroProps) {
   const [activeMenu, setActiveMenu] = useState<'where' | 'when' | 'search' | null>(null);
-  const [query, setQuery] = useState("");
-  const [location, setLocation] = useState("Islamabad");
   const [dateStr, setDateStr] = useState("Add dates");
   const [showAIModal, setShowAIModal] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -30,6 +44,7 @@ export function VenueHero() {
   }, []);
 
   const categories = [
+    { name: "All Types", icon: Building, color: "text-slate-500", bg: "bg-slate-50" },
     { name: "Marquees", icon: Tent, color: "text-emerald-500", bg: "bg-emerald-50" },
     { name: "Banquet Halls", icon: Building, color: "text-blue-500", bg: "bg-blue-50" },
     { name: "Farmhouses", icon: Home, color: "text-amber-500", bg: "bg-amber-50" },
@@ -40,7 +55,7 @@ export function VenueHero() {
     { name: "Studios", icon: Video, color: "text-indigo-500", bg: "bg-indigo-50" }
   ];
 
-  const cities = ["Islamabad", "Lahore", "Karachi", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Quetta"];
+  const cities = ["All", "Islamabad", "Lahore", "Karachi", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Quetta"];
   const dates = ["This Weekend", "Next Week", "This Month", "Next Month", "Pick a custom date"];
 
   return (
@@ -83,7 +98,7 @@ export function VenueHero() {
             className={`hidden md:flex flex-col justify-center px-8 rounded-full h-16 cursor-pointer transition-colors w-1/4 relative group ${activeMenu === 'where' ? 'bg-white shadow-lg z-20' : 'hover:bg-[#F2EFE9] z-10'}`}
           >
             <span className="text-xs font-bold text-[#1D1C17] uppercase tracking-wider">Where</span>
-            <span className={`text-sm truncate ${location === 'Anywhere' ? 'text-[#5E6460]' : 'text-[#1D1C17] font-bold'}`}>{location}</span>
+            <span className={`text-sm truncate ${selectedCity === 'All' ? 'text-[#5E6460]' : 'text-[#1D1C17] font-bold'}`}>{selectedCity}</span>
             {activeMenu !== 'where' && <div className="absolute inset-y-2 right-0 w-[1px] bg-[#E6E2DA] transition-colors group-hover:bg-[#E6E2DA]" />}
           </div>
           
@@ -109,15 +124,18 @@ export function VenueHero() {
                 type="text"
                 placeholder="Marquee, Farmhouse, Hotel..."
                 className="w-full bg-transparent border-none outline-none text-[#1D1C17] text-sm md:text-base placeholder:text-[#5E6460]/70 font-medium"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setActiveMenu('search')}
               />
             </div>
           </div>
 
           {/* Search Button */}
-          <button className="bg-[#D9467A] hover:bg-[#C23366] text-white h-14 w-14 md:h-16 md:w-32 rounded-full font-bold transition-all flex items-center justify-center gap-2 shrink-0 shadow-[0_4px_14px_0_rgba(217,70,122,0.39)] hover:shadow-[0_6px_20px_rgba(217,70,122,0.23)] hover:-translate-y-0.5 z-20">
+          <button 
+            onClick={() => setActiveMenu(null)}
+            className="bg-[#D9467A] hover:bg-[#C23366] text-white h-14 w-14 md:h-16 md:w-32 rounded-full font-bold transition-all flex items-center justify-center gap-2 shrink-0 shadow-[0_4px_14px_0_rgba(217,70,122,0.39)] hover:shadow-[0_6px_20px_rgba(217,70,122,0.23)] hover:-translate-y-0.5 z-20"
+          >
             <Search className="w-5 h-5 md:w-6 md:h-6" />
             <span className="hidden md:inline text-lg">Search</span>
           </button>
@@ -144,11 +162,11 @@ export function VenueHero() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.03 }}
                           key={city}
-                          onClick={() => { setLocation(city); setActiveMenu('when'); }}
-                          className={`p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border-2 transition-all group ${location === city ? 'border-[#0F5B3E] bg-[#E6F0EC] shadow-inner' : 'border-[#E6E2DA] hover:border-[#0F5B3E] hover:shadow-md'}`}
+                          onClick={() => { setSelectedCity(city); setActiveMenu('when'); }}
+                          className={`p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border-2 transition-all group ${selectedCity === city ? 'border-[#0F5B3E] bg-[#E6F0EC] shadow-inner' : 'border-[#E6E2DA] hover:border-[#0F5B3E] hover:shadow-md'}`}
                         >
-                          <MapPin className={`w-6 h-6 transition-transform group-hover:scale-110 group-hover:-translate-y-1 ${location === city ? 'text-[#0F5B3E]' : 'text-[#5E6460]'}`} />
-                          <span className={`font-bold text-sm ${location === city ? 'text-[#0F5B3E]' : 'text-[#1D1C17]'}`}>{city}</span>
+                          <MapPin className={`w-6 h-6 transition-transform group-hover:scale-110 group-hover:-translate-y-1 ${selectedCity === city ? 'text-[#0F5B3E]' : 'text-[#5E6460]'}`} />
+                          <span className={`font-bold text-sm ${selectedCity === city ? 'text-[#0F5B3E]' : 'text-[#1D1C17]'}`}>{city}</span>
                         </motion.button>
                       ))}
                     </div>
@@ -193,7 +211,7 @@ export function VenueHero() {
                             transition={{ delay: idx * 0.02 }}
                             key={idx}
                             className="w-full text-left p-3 hover:bg-[#FAF7F2] border border-transparent hover:border-[#E6E2DA] rounded-2xl flex items-center gap-4 transition-all hover:shadow-sm group"
-                            onClick={() => { setQuery(cat.name); setActiveMenu(null); }}
+                            onClick={() => { setSelectedCategory(cat.name); if (cat.name !== "All Types") { setSearchQuery(cat.name); } else { setSearchQuery(""); } setActiveMenu(null); }}
                           >
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shrink-0 ${cat.bg}`}>
                               <Icon className={`w-5 h-5 ${cat.color}`} />

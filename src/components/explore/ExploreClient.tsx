@@ -175,7 +175,10 @@ const MOCK_LISTINGS: ExploreListing[] = [
     unit: "day",
     images: [
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1507504038482-76210374c27d?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 31.47,
     lng: 74.38,
@@ -194,7 +197,10 @@ const MOCK_LISTINGS: ExploreListing[] = [
     unit: "day",
     images: [
       "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 31.52,
     lng: 74.34
@@ -210,8 +216,11 @@ const MOCK_LISTINGS: ExploreListing[] = [
     price: 450000,
     unit: "day",
     images: [
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1549417229-aa67d3263c09?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519225495810-7512c696af05?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 33.72,
     lng: 73.06,
@@ -229,7 +238,11 @@ const MOCK_LISTINGS: ExploreListing[] = [
     price: 180000,
     unit: "night",
     images: [
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 31.40,
     lng: 74.45,
@@ -247,7 +260,11 @@ const MOCK_LISTINGS: ExploreListing[] = [
     price: 35000,
     unit: "rental",
     images: [
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 31.52,
     lng: 74.35,
@@ -265,7 +282,11 @@ const MOCK_LISTINGS: ExploreListing[] = [
     price: 15000,
     unit: "hour",
     images: [
-      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 24.81,
     lng: 67.03,
@@ -283,7 +304,11 @@ const MOCK_LISTINGS: ExploreListing[] = [
     price: 95000,
     unit: "day",
     images: [
-      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 24.83,
     lng: 67.07,
@@ -302,7 +327,10 @@ const MOCK_LISTINGS: ExploreListing[] = [
     unit: "guest",
     images: [
       "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1606214588494-dfaf448d37aa?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606214588494-dfaf448d37aa?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505236858219-8359eb29e3a9?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?q=80&w=600&auto=format&fit=crop"
     ],
     lat: 31.47,
     lng: 74.38,
@@ -346,6 +374,13 @@ export function ExploreClient() {
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites()
   const [imageIndices, setImageIndices] = useState<Record<string, number>>({})
   const [selectedListing, setSelectedListing] = useState<ExploreListing | null>(null)
+
+  // Advanced Filters State
+  const [showFilterModal, setShowFilterModal] = useState(false)
+  const [filterMinPrice, setFilterMinPrice] = useState<number>(0)
+  const [filterMaxPrice, setFilterMaxPrice] = useState<number>(1000000)
+  const [filterCity, setFilterCity] = useState<string>("All")
+  const [filterMinGuests, setFilterMinGuests] = useState<number>(0)
 
   const handleMainTabChange = (tab: 'venues' | 'vendors' | 'professionals') => {
     setActiveMainTab(tab)
@@ -694,6 +729,15 @@ export function ExploreClient() {
     if (guestsCount.organisers > 0) {
       if (item.maxGuests !== undefined && item.maxGuests < 100) return false
     }
+
+    // Advanced Price Filter
+    if (item.price < filterMinPrice || item.price > filterMaxPrice) return false
+
+    // Advanced City Filter
+    if (filterCity !== "All" && !item.location.toLowerCase().includes(filterCity.toLowerCase())) return false
+
+    // Advanced Guest Capacity Filter
+    if (filterMinGuests > 0 && item.maxGuests !== undefined && item.maxGuests < filterMinGuests) return false
     
     return true
   })
@@ -1402,7 +1446,7 @@ export function ExploreClient() {
 
           {/* Filters Button */}
           <button 
-            onClick={() => alert("Airbnb custom filter dialog opened!")}
+            onClick={() => setShowFilterModal(true)}
             className="flex items-center gap-2 border border-slate-200 rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wider text-slate-700 bg-white hover:border-slate-800 transition-colors shrink-0 cursor-pointer shadow-3xs mb-2"
           >
             <SlidersHorizontal className="w-3.5 h-3.5" /> Filters
@@ -1969,6 +2013,127 @@ export function ExploreClient() {
                     View Details & Book
                   </button>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <FavoritesTray />
+
+      {/* Advanced Filters Modal */}
+      <AnimatePresence>
+        {showFilterModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowFilterModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-white rounded-3xl overflow-hidden w-full max-w-lg shadow-2xl relative p-6 sm:p-8"
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setShowFilterModal(false)}
+                className="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full cursor-pointer"
+              >
+                <X className="w-4 h-4 text-slate-800" />
+              </button>
+
+              <h3 className="text-xl font-black text-slate-900 mb-6 text-left">Advanced Filters</h3>
+
+              <div className="space-y-6 text-left">
+                {/* City Dropdown */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">City</label>
+                  <select
+                    value={filterCity}
+                    onChange={(e) => setFilterCity(e.target.value)}
+                    className="w-full p-3 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-slate-900 bg-white"
+                  >
+                    <option value="All">All Cities</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Islamabad">Islamabad</option>
+                  </select>
+                </div>
+
+                {/* Guest Capacity Selector */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Minimum Capacity (Guests)</label>
+                  <div className="flex items-center gap-4">
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="2000" 
+                      step="50"
+                      value={filterMinGuests} 
+                      onChange={(e) => setFilterMinGuests(Number(e.target.value))}
+                      className="flex-1 accent-[#FF385C]"
+                    />
+                    <span className="text-sm font-bold text-slate-900 min-w-[70px] text-right">{filterMinGuests === 0 ? "Any" : `${filterMinGuests}+`}</span>
+                  </div>
+                </div>
+
+                {/* Price Range Filter */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Price Range (PKR)</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-400 block mb-1 font-sans">Min Price</span>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rs.</span>
+                        <input 
+                          type="number"
+                          value={filterMinPrice}
+                          onChange={(e) => setFilterMinPrice(Number(e.target.value))}
+                          className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-slate-900"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-400 block mb-1 font-sans">Max Price</span>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rs.</span>
+                        <input 
+                          type="number"
+                          value={filterMaxPrice}
+                          onChange={(e) => setFilterMaxPrice(Number(e.target.value))}
+                          className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-slate-900"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="pt-4 flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilterMinPrice(0)
+                      setFilterMaxPrice(1000000)
+                      setFilterCity("All")
+                      setFilterMinGuests(0)
+                    }}
+                    className="flex-1 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-sm transition-colors cursor-pointer"
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowFilterModal(false)}
+                    className="flex-1 py-3 bg-[#FF385C] hover:bg-[#e62248] text-white rounded-xl font-bold text-sm transition-colors cursor-pointer"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+
               </div>
             </motion.div>
           </motion.div>

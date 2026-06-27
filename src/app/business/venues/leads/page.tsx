@@ -161,14 +161,18 @@ function CRMLeadsContent() {
     { name: "Ayesha Bibi", email: "ayesha@shadiportal.pk", phone: "+92 315 5554449", events: 1, spent: "Rs. 3,50,000", status: "Active" }
   ]
 
-  // Guest list RSVP responses
-  const guests = [
-    { name: "Tariq Mahmood", relation: "Groom's Uncle", rsvp: "Attending", guests: 4, table: "Table 12", dietary: "No Beef" },
-    { name: "Shaheen Ara", relation: "Bride's Mother Friend", rsvp: "Attending", guests: 2, table: "Table 4", dietary: "Diabetic Meal" },
-    { name: "Arsalan Riaz", relation: "Groom's Friend", rsvp: "Pending", guests: 1, table: "Table 18", dietary: "None" },
-    { name: "Farooq Siddiqui", relation: "Corporate Guest", rsvp: "Declined", guests: 0, table: "N/A", dietary: "N/A" },
-    { name: "Dr. Samina Jamil", relation: "Bride's Aunt", rsvp: "Attending", guests: 3, table: "Table 2", dietary: "Vegetarian" }
-  ]
+  // Guest list RSVP responses with check-in state
+  const [guestsList, setGuestsList] = useState([
+    { name: "Tariq Mahmood", relation: "Groom's Uncle", rsvp: "Attending", guests: 4, table: "Table 12", dietary: "No Beef", checkedIn: false },
+    { name: "Shaheen Ara", relation: "Bride's Mother Friend", rsvp: "Attending", guests: 2, table: "Table 4", dietary: "Diabetic Meal", checkedIn: false },
+    { name: "Arsalan Riaz", relation: "Groom's Friend", rsvp: "Pending", guests: 1, table: "Table 18", dietary: "None", checkedIn: false },
+    { name: "Farooq Siddiqui", relation: "Corporate Guest", rsvp: "Declined", guests: 0, table: "N/A", dietary: "N/A", checkedIn: false },
+    { name: "Dr. Samina Jamil", relation: "Bride's Aunt", rsvp: "Attending", guests: 3, table: "Table 2", dietary: "Vegetarian", checkedIn: false }
+  ])
+
+  const toggleCheckIn = (index: number) => {
+    setGuestsList(prev => prev.map((g, i) => i === index ? { ...g, checkedIn: !g.checkedIn } : g))
+  }
 
   // Pakistani WhatsApp template messages
   const communicationTemplates = [
@@ -204,7 +208,7 @@ function CRMLeadsContent() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="text-left">
           <h1 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-            <UserCheck className="w-6 h-6 text-[#0F5B3E]" /> CRM & Customer Relations
+            <UserCheck className="w-6 h-6 text-[#0F5B3E]" /> CRM & Contacts Directory
           </h1>
           <p className="text-gray-500 mt-1 text-[13px] font-medium">
             Manage event inquiries, lead pipelines, client communications, and guest list RSVPs.
@@ -214,7 +218,7 @@ function CRMLeadsContent() {
         <button className="px-4 py-2 bg-[#0F5B3E] hover:bg-[#0A3B2A] text-white rounded-xl font-bold text-[12px] transition-colors shadow-sm flex items-center gap-2">
           <Plus className="w-3.5 h-3.5" /> 
           {activeTab === "leads" && "Add Lead"}
-          {activeTab === "customers" && "Register Customer"}
+          {(activeTab === "contacts" || activeTab === "customers") && "Register Contact"}
           {activeTab === "guests" && "Add Guest RSVP"}
           {activeTab === "chat" && "New Template Message"}
         </button>
@@ -233,14 +237,14 @@ function CRMLeadsContent() {
           Leads Pipeline
         </button>
         <button 
-          onClick={() => setTab("customers")}
+          onClick={() => setTab("contacts")}
           className={`px-4 py-1.5 rounded-xl text-[11px] font-extrabold transition-all shrink-0 uppercase tracking-wider ${
-            activeTab === "customers" 
+            activeTab === "contacts" || activeTab === "customers"
               ? "bg-[#0F5B3E] text-white shadow-xs" 
               : "text-gray-600 hover:bg-gray-50"
           }`}
         >
-          Customers Directory
+          Contacts Directory
         </button>
         <button 
           onClick={() => setTab("guests")}
@@ -309,7 +313,7 @@ function CRMLeadsContent() {
 
                       <div className="flex items-center gap-2 pt-2.5 mt-2.5 border-t border-gray-100 text-[10px] font-bold">
                         <a 
-                          href={`https://wa.me/${card.phone.replace(/[^0-9]/g, "")}`} 
+                          href={`https://wa.me/${card.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Salam ${card.client}! This is Usman from Royal Garden Banquet. Regarding your inquiry for the ${card.type} event on ${card.date}, we wanted to check if you had any questions or wanted to finalize details. Let us know! JazakAllah.`)}`} 
                           target="_blank" 
                           rel="noopener noreferrer" 
                           className="flex-1 py-1 bg-white hover:bg-gray-50 border border-[#ECE7DF] rounded-lg text-gray-600 flex items-center justify-center gap-1 transition-colors"
@@ -338,14 +342,14 @@ function CRMLeadsContent() {
         </div>
       )}
 
-      {/* Tab 2: Customers directory */}
-      {activeTab === "customers" && (
+      {/* Tab 2: Contacts directory */}
+      {(activeTab === "contacts" || activeTab === "customers") && (
         <Card className="p-5 border border-gray-100 bg-white rounded-[20px] shadow-sm">
           <div className="overflow-x-auto text-left">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-[#ECE7DF] text-[10.5px] text-gray-400 font-extrabold uppercase">
-                  <th className="pb-3.5 pl-2">Customer Profile</th>
+                  <th className="pb-3.5 pl-2">Contact Profile</th>
                   <th className="pb-3.5">Email</th>
                   <th className="pb-3.5">Phone Number</th>
                   <th className="pb-3.5">Bookings Registered</th>
@@ -396,7 +400,7 @@ function CRMLeadsContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 text-[11.5px] font-semibold text-gray-700">
-                {guests.map((g, idx) => (
+                {guestsList.map((g, idx) => (
                   <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-3.5 pl-2 font-bold text-gray-900">{g.name}</td>
                     <td className="py-3.5 text-gray-400 font-bold">{g.relation}</td>
@@ -413,8 +417,15 @@ function CRMLeadsContent() {
                     <td className="py-3.5 font-bold text-gray-600">{g.table}</td>
                     <td className="py-3.5 text-gray-500 font-semibold">{g.dietary}</td>
                     <td className="py-3.5 text-right pr-2">
-                      <button className="px-2.5 py-0.5 rounded-lg bg-[#0F5B3E] hover:bg-[#0A3B2A] text-white text-[9.5px] font-bold">
-                        Check In
+                      <button 
+                        onClick={() => toggleCheckIn(idx)}
+                        className={`px-2.5 py-0.5 rounded-lg text-white text-[9.5px] font-bold transition-all ${
+                          g.checkedIn 
+                            ? "bg-slate-400 hover:bg-slate-500" 
+                            : "bg-[#0F5B3E] hover:bg-[#0A3B2A]"
+                        }`}
+                      >
+                        {g.checkedIn ? "Checked In" : "Check In"}
                       </button>
                     </td>
                   </tr>

@@ -31,8 +31,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "NEXUS — The Modern Standard for Pakistani Events",
-  description: "The serious international platform built for Pakistan's premium venues, managers, and hosts.",
+  title: "Nexus Heritage | Elite Event Planning Platform",
+  description: "The premium digital invitation and management suite for high-net-worth Pakistani weddings, milestones, and elite operators.",
 };
 
 export default function RootLayout({
@@ -42,7 +42,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} ${playfair.variable} ${montserrat.variable}`}>
-      <body suppressHydrationWarning className="antialiased selection:bg-[#C5A880]/30 selection:text-[#FAF5EC]">
+      <head>
+        {/* Importing a soft luxury Serif font from Google Fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body suppressHydrationWarning className="antialiased selection:bg-[#D4AF37]/20 selection:text-[#D4AF37]">
         <ClientProviders>
           {children}
         </ClientProviders>
