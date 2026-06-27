@@ -26,7 +26,7 @@ const cards = [
     titleRU: 'Venue Dhundein',
     descEN: 'Explore premium marquees, banquet halls & farmhouses with live availability.',
     descRU: 'Premium marquees, banquet halls aur farmhouses — live availability aur ratings ke sath.',
-    href: '/venues',
+    href: '/explore?tab=venues',
     ctaEN: 'Browse Venues',
     ctaRU: 'Venues Dekhein',
     image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop'
@@ -38,7 +38,7 @@ const cards = [
     titleRU: 'Professionals Dhundein',
     descEN: 'Browse elite photographers, cinematographers and makeup artists with portfolios.',
     descRU: 'Elite photographers, mehndi artists aur makeup pros — portfolios ke sath.',
-    href: '/explore',
+    href: '/explore?tab=professionals',
     ctaEN: 'Explore Talent',
     ctaRU: 'Talent Dekhein',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop'
@@ -50,7 +50,7 @@ const cards = [
     titleRU: 'Vendors Dhundein',
     descEN: 'Discover premium caterers, florists, decorators and sound systems for your celebration.',
     descRU: 'Premium caterers, florists, decorators aur sound systems — sab ek platform par.',
-    href: '/vendors',
+    href: '/explore?tab=vendors',
     ctaEN: 'Discover Vendors',
     ctaRU: 'Vendors Dekhein',
     image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop'

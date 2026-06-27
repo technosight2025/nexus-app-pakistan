@@ -465,6 +465,17 @@ export function ExploreClient() {
       const endDateParam = searchParams.get('endDate')
       const couplesParam = searchParams.get('couples')
       const organisersParam = searchParams.get('organisers')
+      const tabParam = searchParams.get('tab')
+
+      if (tabParam) {
+        const lowerTab = tabParam.toLowerCase()
+        if (['venues', 'vendors', 'professionals'].includes(lowerTab)) {
+          setActiveMainTab(lowerTab as any)
+          if (lowerTab === 'venues') setActiveCategory('halls')
+          else if (lowerTab === 'vendors') setActiveCategory('catering')
+          else if (lowerTab === 'professionals') setActiveCategory('photographers')
+        }
+      }
 
       if (locationParam) setSearchDest(locationParam)
       if (categoryParam) {
@@ -472,11 +483,11 @@ export function ExploreClient() {
         if (matchedCategory) {
           setActiveCategory(matchedCategory.id)
           // Find main tab for category
-          if (['halls', 'marquees', 'farmhouses', 'lawns', 'stages'].includes(matchedCategory.id)) {
+          if (['halls', 'marquees', 'farmhouses', 'lawns', 'restaurants', 'historical'].includes(matchedCategory.id)) {
             setActiveMainTab('venues')
-          } else if (['suits', 'cars', 'catering'].includes(matchedCategory.id)) {
+          } else if (['catering', 'decor', 'suits', 'jewelry', 'invitations', 'cars', 'gifts'].includes(matchedCategory.id)) {
             setActiveMainTab('vendors')
-          } else if (['studios', 'salons'].includes(matchedCategory.id)) {
+          } else if (['photographers', 'salons', 'planners', 'mehendi', 'djs', 'choreographers', 'stages', 'rentals'].includes(matchedCategory.id)) {
             setActiveMainTab('professionals')
           }
         }

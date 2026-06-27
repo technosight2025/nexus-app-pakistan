@@ -10,18 +10,18 @@ import {
 } from 'lucide-react';
 
 const categories = [
-  { id: 'marquees', nameEN: 'Marquees', nameRU: 'Marquees', icon: Building2, href: '/venues?type=marquee' },
-  { id: 'halls', nameEN: 'Banquet Halls', nameRU: 'Shadi Halls', icon: Home, href: '/venues?type=hall' },
-  { id: 'photographers', nameEN: 'Photographers', nameRU: 'Photographers', icon: Camera, href: '/explore?category=photographer' },
-  { id: 'makeup', nameEN: 'Makeup Artists', nameRU: 'Makeup Artists', icon: Scissors, href: '/explore?category=makeup' },
-  { id: 'mehndi', nameEN: 'Mehndi Artists', nameRU: 'Mehndi Artists', icon: Palette, href: '/explore?category=mehndi' },
-  { id: 'caterers', nameEN: 'Catering', nameRU: 'Pakwan & Catering', icon: Utensils, href: '/vendors?category=caterer' },
-  { id: 'decorators', nameEN: 'Decorators', nameRU: 'Decorators', icon: PartyPopper, href: '/vendors?category=decorator' },
-  { id: 'florists', nameEN: 'Florists', nameRU: 'Phool Walay', icon: Flower2, href: '/vendors?category=florist' },
-  { id: 'sound', nameEN: 'Sound Systems', nameRU: 'Sound Systems', icon: Speaker, href: '/vendors?category=sound' },
-  { id: 'dj', nameEN: 'DJs & Music', nameRU: 'DJ & Music', icon: Music, href: '/explore?category=dj' },
-  { id: 'bridal', nameEN: 'Bridal Wear', nameRU: 'Bridal Wear', icon: Crown, href: '/vendors?category=bridal' },
-  { id: 'cars', nameEN: 'Rent a Car', nameRU: 'Rent a Car', icon: Car, href: '/vendors?category=car' },
+  { id: 'marquees', nameEN: 'Marquees', nameRU: 'Marquees', icon: Building2, href: '/explore?category=marquees' },
+  { id: 'halls', nameEN: 'Banquet Halls', nameRU: 'Shadi Halls', icon: Home, href: '/explore?category=halls' },
+  { id: 'photographers', nameEN: 'Photographers', nameRU: 'Photographers', icon: Camera, href: '/explore?category=photographers' },
+  { id: 'makeup', nameEN: 'Makeup Artists', nameRU: 'Makeup Artists', icon: Scissors, href: '/explore?category=salons' },
+  { id: 'mehndi', nameEN: 'Mehndi Artists', nameRU: 'Mehndi Artists', icon: Palette, href: '/explore?category=mehendi' },
+  { id: 'caterers', nameEN: 'Catering', nameRU: 'Pakwan & Catering', icon: Utensils, href: '/explore?category=catering' },
+  { id: 'decorators', nameEN: 'Decorators', nameRU: 'Decorators', icon: PartyPopper, href: '/explore?category=decor' },
+  { id: 'florists', nameEN: 'Florists', nameRU: 'Phool Walay', icon: Flower2, href: '/explore?category=decor' },
+  { id: 'sound', nameEN: 'Sound Systems', nameRU: 'Sound Systems', icon: Speaker, href: '/explore?category=djs' },
+  { id: 'dj', nameEN: 'DJs & Music', nameRU: 'DJ & Music', icon: Music, href: '/explore?category=djs' },
+  { id: 'bridal', nameEN: 'Bridal Wear', nameRU: 'Bridal Wear', icon: Crown, href: '/explore?category=suits' },
+  { id: 'cars', nameEN: 'Rent a Car', nameRU: 'Rent a Car', icon: Car, href: '/explore?category=cars' },
 ];
 
 export function HomeCategoryChips() {
