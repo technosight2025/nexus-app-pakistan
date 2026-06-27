@@ -132,63 +132,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Column: Warm Live Concierge Workspace Preview (No Technical Black Terminal) */}
-          <div className="lg:col-span-5 relative w-full bg-white rounded-[2rem] p-6 md:p-8 border border-[#E6CDA7]/30 shadow-md overflow-hidden text-neutral-800 flex flex-col justify-between min-h-[420px]">
-            {/* Background Grid Accent */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #C5A880 1px, transparent 0)', backgroundSize: '16px 16px' }} />
-            
-            {/* Header of Console */}
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-neutral-100 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#C5A880]" />
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#C5A880] font-bold">NEXUS LIVE FEED</span>
-                </div>
-                <span className="font-mono text-[9px] text-neutral-400 uppercase tracking-widest">Workspace Active</span>
-              </div>
-
-              {/* Feed logs in warm layout */}
-              <div className="space-y-4">
-                <AnimatePresence mode="popLayout">
-                  {logs.map((log) => (
-                    <motion.div 
-                      key={log.id}
-                      layout
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.4 }}
-                      className="p-3.5 bg-[#FAF6F0] border border-[#E6CDA7]/20 rounded-2xl flex items-start justify-between gap-4 hover:border-[#C5A880]/30 transition-colors"
-                    >
-                      <div className="flex gap-3 items-start">
-                        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                          log.type === 'rsvp' ? 'bg-[#FF385C]' :
-                          log.type === 'invoice' ? 'bg-[#C5A880]' :
-                          log.type === 'ai' ? 'bg-indigo-500' : 'bg-emerald-500'
-                        }`} />
-                        <div className="text-[12.5px] font-medium leading-tight text-neutral-700">
-                          {isRomanUrdu ? log.textRU : log.textEN}
-                        </div>
-                      </div>
-                      <span className="font-mono text-[9px] text-neutral-400 whitespace-nowrap">{log.time}</span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Simulated Live Analytics Bar */}
-            <div className="pt-6 border-t border-neutral-100 mt-6 flex justify-between items-center text-xs font-mono text-neutral-500">
-              <div>
-                <span className="block text-[10px] text-neutral-400 uppercase tracking-wider mb-0.5">Family Guests</span>
-                <span className="text-neutral-900 font-bold">{guestsCount} registered</span>
-              </div>
-              <div className="text-right">
-                <span className="block text-[10px] text-neutral-400 uppercase tracking-wider mb-0.5">RSVP Status</span>
-                <span className="text-emerald-600 font-bold">92.4% Confirmed</span>
-              </div>
-            </div>
-
+          {/* Right Column: Breathtaking Editorial Luxury Event Imagery */}
+          <div className="lg:col-span-5 relative w-full h-[400px] lg:h-[480px] bg-neutral-50 rounded-3xl overflow-hidden shadow-xs border border-neutral-150">
+            <img 
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop" 
+              alt="Luxury Editorial Event Setting" 
+              className="w-full h-full object-cover contrast-105"
+            />
           </div>
         </div>
       </div>
@@ -283,7 +233,7 @@ export default function HomePage() {
                 step="25"
                 value={guestsCount} 
                 onChange={(e) => setGuestsCount(parseInt(e.target.value))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C5A880]"
+                className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C5A880] [&::-webkit-slider-thumb]:w-10 [&::-webkit-slider-thumb]:h-10 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-[#C5A880] [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-10 [&::-moz-range-thumb]:h-10 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#C5A880] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:cursor-pointer"
               />
             </div>
           </div>
@@ -474,15 +424,15 @@ export default function HomePage() {
               NEXUS <span className="font-semibold font-sans text-lg tracking-widest ml-1 text-[#C5A880]">HERITAGE</span>
             </span>
             <p className="text-xs text-neutral-500 leading-relaxed">
-              Pakistan's premier operating canvas for family event planning and premium hospitality. Handcrafted for beautiful celebrations.
+              Pakistan's premier platform for curated family celebrations. Handcrafted for beautiful celebrations.
             </p>
           </div>
           <div>
             <h4 className="font-bold text-neutral-900 text-[10px] uppercase tracking-widest mb-4">Portals</h4>
             <ul className="space-y-3 text-xs text-neutral-500">
-              <li><Link href="/dashboard" className="hover:text-neutral-900 transition-colors">Family Hosts Portal</Link></li>
+              <li><Link href="/dashboard" className="hover:text-neutral-900 transition-colors">Planning Portal</Link></li>
               <li><Link href="/business" className="hover:text-neutral-900 transition-colors">Marquee & Venue Dashboard</Link></li>
-              <li><Link href="/register?role=artisan" className="hover:text-neutral-900 transition-colors">Artisan Studio Suite</Link></li>
+              <li><Link href="/register?role=artisan" className="hover:text-neutral-900 transition-colors">Vendor & Creative Studio</Link></li>
             </ul>
           </div>
           <div>
@@ -513,7 +463,7 @@ export default function HomePage() {
         href="https://wa.me/923001234567" 
         target="_blank" 
         rel="noopener noreferrer"
-        className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-5 py-3 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 group"
+        className="fixed bottom-20 right-6 md:bottom-8 md:right-8 z-50 flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-5 py-3 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 group"
       >
         <MessageSquare className="w-5 h-5 fill-white" />
         <span className="text-xs font-black uppercase tracking-wider hidden sm:inline-block">

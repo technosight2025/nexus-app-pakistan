@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Hide Clerk development badge overlay on localhost */
+div[id*="clerk-dev"], div[class*="clerk-dev"], .clerk-dev-badge, [class*="cl-internal-"] {
+  display: none !important;
+}
+
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
