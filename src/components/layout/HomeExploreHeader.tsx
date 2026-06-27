@@ -72,48 +72,39 @@ export function HomeExploreHeader() {
                   {/* Venues Tab */}
                   <button 
                     onClick={() => setActiveMainTab('venues')}
-                    className={`flex items-center gap-3 pb-3 cursor-pointer transition-all relative ${
+                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
                       activeMainTab === 'venues' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
                     }`}
                   >
-                    <img src="/images/nexus_shadi_hall_icon.png?v=2" alt="Venues" className="w-12 h-12 object-contain" />
                     <span>Venues</span>
                     {activeMainTab === 'venues' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
                     )}
                   </button>
 
                   {/* Vendors Tab */}
                   <button 
                     onClick={() => setActiveMainTab('vendors')}
-                    className={`flex items-center gap-3 pb-3 cursor-pointer transition-all relative ${
+                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
                       activeMainTab === 'vendors' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
                     }`}
                   >
-                    <div className="relative w-12 h-12 shrink-0">
-                      <img src="/images/nexus_company_icon.png?v=2" alt="Vendors" className="w-full h-full object-contain" />
-                      <span className="absolute -top-1.5 -right-2 px-1 py-0.2 text-[8px] font-black text-white bg-gradient-to-b from-[#3a587d] to-[#20344d] rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.25)] border border-[#1b2b41]/40 flex items-center justify-center tracking-wider leading-none">NEW</span>
-                    </div>
                     <span>Vendors</span>
                     {activeMainTab === 'vendors' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
                     )}
                   </button>
 
                   {/* Professionals Tab */}
                   <button 
                     onClick={() => setActiveMainTab('professionals')}
-                    className={`flex items-center gap-3 pb-3 cursor-pointer transition-all relative ${
+                    className={`flex items-center gap-1.5 pb-3.5 cursor-pointer transition-all relative ${
                       activeMainTab === 'professionals' ? 'text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'
                     }`}
                   >
-                    <div className="relative w-12 h-12 shrink-0">
-                      <img src="/images/nexus_photographer_icon.png?v=2" alt="Professionals" className="w-full h-full object-contain" />
-                      <span className="absolute -top-1.5 -right-2 px-1 py-0.2 text-[8px] font-black text-white bg-gradient-to-b from-[#3a587d] to-[#20344d] rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.25)] border border-[#1b2b41]/40 flex items-center justify-center tracking-wider leading-none">NEW</span>
-                    </div>
                     <span>Professionals</span>
                     {activeMainTab === 'professionals' && (
-                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+                      <motion.div layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 rounded-full" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
                     )}
                   </button>
                 </motion.div>
