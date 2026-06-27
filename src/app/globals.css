@@ -5,8 +5,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Hide Clerk development badge overlay on localhost */
-div[id*="clerk-dev"], div[class*="clerk-dev"], .clerk-dev-badge, [class*="cl-internal-"] {
+/* Hide Clerk development badge and Next.js dev portal overlays on localhost */
+div[id*="clerk-dev"], div[class*="clerk-dev"], .clerk-dev-badge, [class*="cl-internal-"], nextjs-portal {
   display: none !important;
 }
 

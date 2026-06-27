@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  devIndicators: {
-    appIsrStatus: false,
-  },
   
   images: {
     // Replaced the deprecated images.domains array with explicit remotePatterns
