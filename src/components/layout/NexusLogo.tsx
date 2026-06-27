@@ -43,10 +43,9 @@ export function NexusLogo({
       {/* Refined Brand Wordmark */}
       {showText && (
         <span 
-          className={`text-2xl font-semibold tracking-tight ${textColor}`} 
-          style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+          className={`text-lg font-black font-serif tracking-wide uppercase ${textColor}`}
         >
-          nexus
+          NEXUS <span className="font-sans font-semibold text-xs tracking-widest ml-0.5 text-[#E6C594]">HERITAGE</span>
         </span>
       )}
     </div>

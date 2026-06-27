@@ -112,14 +112,25 @@ export function GlobalHeader() {
 
         {/* RIGHT SECTION - SOFT ACTIONS */}
         <div className="flex items-center gap-3 md:gap-4">
-          <Link 
-            href="/create-event" 
-            className={`hidden md:block px-4 py-2 text-sm font-semibold rounded-full transition-colors border ${
-              useDarkText ? "border-slate-200 text-slate-800 hover:bg-slate-50" : "border-white/20 text-white hover:bg-white/5"
-            }`}
-          >
-            Create Event
-          </Link>
+          {pathname === "/business" ? (
+            <Link 
+              href="/login?role=partner" 
+              className={`hidden md:block px-4 py-2 text-sm font-semibold rounded-full transition-colors border ${
+                useDarkText ? "border-slate-200 text-slate-800 hover:bg-slate-50" : "border-white/20 text-white hover:bg-white/5"
+              }`}
+            >
+              Business Login
+            </Link>
+          ) : (
+            <Link 
+              href="/create-event" 
+              className={`hidden md:block px-4 py-2 text-sm font-semibold rounded-full transition-colors border ${
+                useDarkText ? "border-slate-200 text-slate-800 hover:bg-slate-50" : "border-white/20 text-white hover:bg-white/5"
+              }`}
+            >
+              Create Event
+            </Link>
+          )}
 
           {/* English / Urdu Toggle Button */}
           <button

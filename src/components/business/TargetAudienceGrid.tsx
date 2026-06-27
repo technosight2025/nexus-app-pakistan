@@ -4,7 +4,7 @@ import { Building2, Camera, Utensils, Paintbrush, ArrowRight } from "lucide-reac
 
 const AUDIENCES = [
   {
-    role: "For Venues & Marquees",
+    role: "Eliminate Double-Bookings & Secure Your Revenue",
     icon: Building2,
     benefits: [
       "Prevent double bookings automatically",
@@ -16,7 +16,7 @@ const AUDIENCES = [
     bgLight: "bg-emerald-50"
   },
   {
-    role: "For Photographers",
+    role: "Streamline Photo Proofing & Media Deliveries",
     icon: Camera,
     benefits: [
       "Client photo selection portal",
@@ -28,7 +28,7 @@ const AUDIENCES = [
     bgLight: "bg-blue-50"
   },
   {
-    role: "For Caterers",
+    role: "Maximize Profit Margins with Precision Costing",
     icon: Utensils,
     benefits: [
       "Dynamic per-head quotation engine",
@@ -40,7 +40,7 @@ const AUDIENCES = [
     bgLight: "bg-orange-50"
   },
   {
-    role: "For Decorators",
+    role: "Track Floral & Furniture Assets with Visual Moodboards",
     icon: Paintbrush,
     benefits: [
       "Flower & furniture asset tracking",
@@ -67,19 +67,15 @@ export function TargetAudienceGrid() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {AUDIENCES.map((aud, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.5 }}
               className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-shadow group flex flex-col h-full"
             >
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-6 ${aud.color} shadow-lg`}>
                 <aud.icon className="w-7 h-7" />
               </div>
               
-              <h3 className="text-xl font-bold text-slate-900 mb-6">{aud.role}</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-6 leading-snug">{aud.role}</h3>
               
               <ul className="space-y-4 mb-8 flex-1">
                 {aud.benefits.map((benefit, bIdx) => (
@@ -90,10 +86,10 @@ export function TargetAudienceGrid() {
                 ))}
               </ul>
               
-              <button className="text-sm font-bold text-slate-900 flex items-center gap-2 group-hover:text-primary transition-colors mt-auto">
+              <button className="text-sm font-bold text-slate-900 flex items-center gap-2 group-hover:text-primary transition-colors mt-auto min-h-[44px] py-2 cursor-pointer">
                 See Features <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-            </motion.div>
+            </div>
           ))}
         </div>
 
