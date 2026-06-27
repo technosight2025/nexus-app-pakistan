@@ -47,7 +47,7 @@ export default function StudioUploadDropzone({ bookingId, onUploadSuccess }: Upl
         
         // Generate a clean deterministic file structural path inside the bucket
         const fileExtension = file.name.split('.').pop();
-        const cleanFileName = `${bookingId}_${crypto.randomUUID()}.${fileExtension}`;
+        const cleanFileName = `${bookingId}_${Math.random().toString(36).substring(2, 10)}.${fileExtension}`;
         const storagePath = `${pathPrefix}/${cleanFileName}`;
 
         const { error } = await supabase.storage

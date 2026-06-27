@@ -1,163 +1,162 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
-import { Search, Plus, Filter, FileText, Send, CheckCircle, Clock } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import {
+  FileText, Search, Plus, Filter, Send, CheckCircle2,
+  Clock, MoreVertical, Edit, Copy, Trash2, Eye, Download
+} from "lucide-react"
+
+import { getQuotations } from "@/lib/mock-db"
+
+const STATUS_STYLES: Record<string, string> = {
+  "Draft": "bg-gray-100 text-gray-600 dark:bg-white/8 dark:text-gray-400",
+  "Sent": "bg-sky-100 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400",
+  "Approved": "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+  "Rejected": "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
+}
+
+const STATUS_ICONS: Record<string, React.ElementType> = {
+  Draft: Clock, Sent: Send, Approved: CheckCircle2,
+}
 
 export default function QuotationsPage() {
-  const quotes = [
-    {
-      id: "QT-2026-001",
-      client: "Ahmed & Sana",
-      eventName: "3-Day Wedding Package",
-      amount: "Rs 500,000",
-      status: "Draft",
-      statusColor: "bg-gray-100 text-gray-700",
-      date: "Oct 10, 2026",
-    },
-    {
-      id: "QT-2026-002",
-      client: "Zainab Engagement",
-      eventName: "Engagement Shoot + Album",
-      amount: "Rs 150,000",
-      status: "Sent",
-      statusColor: "bg-blue-100 text-blue-700",
-      date: "Oct 08, 2026",
-    },
-    {
-      id: "QT-2026-003",
-      client: "Ali & Fatima",
-      eventName: "Luxury Wedding Coverage",
-      amount: "Rs 850,000",
-      status: "Accepted",
-      statusColor: "bg-green-100 text-green-700",
-      date: "Oct 01, 2026",
-    },
-    {
-      id: "QT-2026-004",
-      client: "TechCorp",
-      eventName: "Annual Gala Video",
-      amount: "Rs 300,000",
-      status: "Sent",
-      statusColor: "bg-blue-100 text-blue-700",
-      date: "Oct 05, 2026",
-    }
-  ]
+  const router = useRouter()
+  const [search, setSearch] = useState("")
+  const [quotations, setQuotations] = useState<any[]>([])
+
+  // Load from local storage on mount to avoid hydration mismatch
+  useEffect(() => {
+    setQuotations(getQuotations())
+  }, [])
+
+  const filtered = quotations.filter(q => 
+    q.client?.toLowerCase().includes(search.toLowerCase()) || 
+    q.id?.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const stats = {
+    total: quotations.length,
+    accepted: quotations.filter(q => q.status === "Approved").length,
+    sent: quotations.filter(q => q.status === "Sent").length,
+    value: quotations.filter(q => q.status === "Approved").reduce((a, b) => a + b.total, 0),
+  }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black font-poppins text-gray-900 dark:text-white tracking-tight">
-            Quotations
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium">
-            Build packages, send quotes to clients, and track approvals.
-          </p>
+          <h1 className="text-[22px] md:text-[26px] font-black text-[#111827] dark:text-white">Quotations</h1>
+          <p className="text-[12px] text-[#9CA3AF] mt-0.5">Create and send itemized packages to your leads</p>
         </div>
-        <button className="px-5 py-2.5 bg-[#0A3B2A] dark:bg-cyan-600 text-white rounded-full font-bold text-sm hover:bg-[#0F5B3E] dark:hover:bg-cyan-500 transition-colors shadow-lg flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Create Quote
+        <button onClick={() => router.push("/studio/quotations/new")} className="flex items-center gap-2 px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl text-[11px] font-black hover:bg-indigo-700 transition-all cursor-pointer shadow-sm">
+          <Plus className="w-4 h-4" /> New Quotation
         </button>
       </div>
 
-      {/* Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-5 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-            <Send className="w-5 h-5" />
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: "Total Value (Accepted)", value: `₨${(stats.value / 1000).toFixed(0)}K`, color: "text-[#22C55E]", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
+          { label: "Pending (Sent)", value: stats.sent, color: "text-[#F59E0B]", bg: "bg-amber-50 dark:bg-amber-500/10" },
+          { label: "Accepted", value: stats.accepted, color: "text-[#4F46E5]", bg: "bg-[#EEF2FF] dark:bg-indigo-500/10" },
+          { label: "Total Quotes", value: stats.total, color: "text-[#6B7280]", bg: "bg-[#F8FAFC] dark:bg-white/5" },
+        ].map(s => (
+          <div key={s.label} className={`${s.bg} rounded-2xl p-4`}>
+            <div className={`text-[22px] font-black ${s.color}`}>{s.value}</div>
+            <div className="text-[9px] font-black text-[#9CA3AF] uppercase tracking-widest mt-0.5">{s.label}</div>
           </div>
-          <div>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white">12</h3>
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Quotes Sent</p>
-          </div>
-        </Card>
-
-        <Card className="p-5 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 flex items-center justify-center">
-            <CheckCircle className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white">8</h3>
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Accepted</p>
-          </div>
-        </Card>
-
-        <Card className="p-5 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-white/10 text-gray-600 dark:text-gray-300 flex items-center justify-center">
-            <Clock className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white">4</h3>
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Pending Reply</p>
-          </div>
-        </Card>
+        ))}
       </div>
 
-      {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="relative flex-1 max-w-md w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
-          <input 
-            type="text" 
-            placeholder="Search quotations..." 
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0A3B2A]/20 dark:focus:ring-cyan-500/30 focus:border-[#0A3B2A] dark:focus:border-cyan-500 text-sm"
-          />
+      {/* Controls */}
+      <div className="bg-white dark:bg-[#111118] border border-[#E5E7EB] dark:border-white/8 rounded-2xl p-4 flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search quotations…" className="w-full pl-9 pr-4 py-2 text-[12px] font-semibold bg-[#F8FAFC] dark:bg-white/5 border border-[#E5E7EB] dark:border-white/10 rounded-xl text-[#111827] dark:text-white placeholder-[#9CA3AF] outline-none focus:ring-2 focus:ring-[#4F46E5]/20 focus:border-[#4F46E5] transition-all" />
         </div>
-        <button className="px-4 py-2.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full text-sm font-semibold text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
-          <Filter className="w-4 h-4" /> Filter
+        <button className="flex items-center justify-center gap-2 px-4 py-2 bg-[#F8FAFC] dark:bg-white/5 border border-[#E5E7EB] dark:border-white/10 text-[#374151] dark:text-gray-300 rounded-xl text-[11px] font-black cursor-pointer hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+          <Filter className="w-3.5 h-3.5" /> Filter
         </button>
       </div>
 
-      {/* Quotes List */}
-      <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] overflow-hidden dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10">
+      {/* Desktop Table */}
+      <div className="hidden sm:block bg-white dark:bg-[#111118] border border-[#E5E7EB] dark:border-white/8 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="bg-gray-50/50 dark:bg-black/40 border-b border-gray-100 dark:border-white/10 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold">
-                <th className="px-6 py-4">Quote ID</th>
-                <th className="px-6 py-4">Client & Details</th>
-                <th className="px-6 py-4">Amount</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+              <tr className="bg-[#F8FAFC] dark:bg-white/3 border-b border-[#E5E7EB] dark:border-white/8">
+                {["Quotation", "Event", "Items", "Total", "Status", "Actions"].map(h => (
+                  <th key={h} className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-widest text-[#9CA3AF]">{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-white/10">
-              {quotes.map((quote) => (
-                <tr key={quote.id} className="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors group">
-                  <td className="px-6 py-4">
-                    <p className="font-bold text-gray-900 dark:text-white text-sm">{quote.id}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">{quote.date}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-bold text-gray-900 dark:text-white">{quote.client}</p>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-0.5">{quote.eventName}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-bold text-gray-800 dark:text-gray-200">{quote.amount}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${quote.statusColor} dark:bg-opacity-20`}>
-                      {quote.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="px-3 py-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 rounded-full hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
-                        View
-                      </button>
-                      <button className="px-3 py-1.5 text-xs font-bold text-[#0A3B2A] dark:text-cyan-400 bg-[#0A3B2A]/5 dark:bg-white/5 rounded-full hover:bg-[#0A3B2A]/10 dark:hover:bg-white/10 transition-colors hidden sm:block">
-                        Convert to Booking
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            <tbody>
+              {filtered.map(q => {
+                const SIcon = STATUS_ICONS[q.status] || CheckCircle2
+                return (
+                  <tr key={q.id} onClick={() => router.push(`/studio/quotations/${q.id}`)} className="border-b border-[#F9FAFB] dark:border-white/3 hover:bg-[#F8FAFC] dark:hover:bg-white/3 transition-colors cursor-pointer">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-xl ${q.color} text-white text-[10px] font-black flex items-center justify-center shrink-0`}>{q.initials}</div>
+                        <div>
+                          <div className="text-[12px] font-bold text-[#111827] dark:text-white">{q.client}</div>
+                          <div className="text-[9px] text-[#9CA3AF]">{q.id} · {q.date}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 text-[11px] font-semibold text-[#374151] dark:text-gray-300">{q.event}</td>
+                    <td className="px-5 py-4 text-[10px] text-[#6B7280] dark:text-gray-400">{q.items?.length || 0} items</td>
+                    <td className="px-5 py-4 text-[11px] font-black text-[#111827] dark:text-white">₨{q.total.toLocaleString()}</td>
+                    <td className="px-5 py-4">
+                      <span className={`flex items-center gap-1 w-fit text-[8px] font-black px-2 py-1 rounded-full ${STATUS_STYLES[q.status]}`}>
+                        <SIcon className="w-2.5 h-2.5" /> {q.status}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-1.5 text-[#9CA3AF]">
+                        <button onClick={() => router.push(`/studio/quotations/${q.id}`)} className="p-1.5 hover:text-[#4F46E5] hover:bg-[#EEF2FF] dark:hover:bg-indigo-500/10 rounded-lg transition-colors"><Eye className="w-3.5 h-3.5" /></button>
+                        <button className="p-1.5 hover:text-[#4F46E5] hover:bg-[#EEF2FF] dark:hover:bg-indigo-500/10 rounded-lg transition-colors"><Edit className="w-3.5 h-3.5" /></button>
+                        <button className="p-1.5 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-lg transition-colors"><Send className="w-3.5 h-3.5" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
+      {/* Mobile Cards */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {filtered.map(q => {
+          const SIcon = STATUS_ICONS[q.status] || CheckCircle2
+          return (
+            <div key={q.id} onClick={() => router.push(`/studio/quotations/${q.id}`)} className="bg-white dark:bg-[#111118] border border-[#E5E7EB] dark:border-white/8 rounded-2xl p-4 cursor-pointer hover:border-[#4F46E5]/40 transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-9 h-9 rounded-xl ${q.color} text-white text-[11px] font-black flex items-center justify-center shrink-0`}>{q.initials}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-black text-[#111827] dark:text-white">{q.client}</div>
+                  <div className="text-[10px] text-[#9CA3AF]">{q.id} · {q.event}</div>
+                </div>
+                <span className={`flex items-center gap-1 text-[8px] font-black px-2 py-0.5 rounded-full ${STATUS_STYLES[q.status]}`}>
+                  <SIcon className="w-2.5 h-2.5" /> {q.status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-[#9CA3AF]">{q.items?.length || 0} items</span>
+                <span className="font-black text-[#111827] dark:text-white">₨{q.total.toLocaleString()}</span>
+              </div>
+              <div className="mt-3 pt-3 border-t border-[#F3F4F6] dark:border-white/5 flex justify-end gap-2" onClick={e => e.stopPropagation()}>
+                <button onClick={() => router.push(`/studio/quotations/${q.id}`)} className="px-3 py-1.5 bg-[#F8FAFC] dark:bg-white/5 text-[#374151] dark:text-gray-300 rounded-lg text-[10px] font-black">View</button>
+                <button className="px-3 py-1.5 bg-indigo-50 text-[#4F46E5] dark:bg-indigo-500/10 dark:text-indigo-400 rounded-lg text-[10px] font-black flex items-center gap-1"><Send className="w-3 h-3" /> Send</button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

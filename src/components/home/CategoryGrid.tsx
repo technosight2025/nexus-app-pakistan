@@ -1,59 +1,76 @@
-import * as React from "react"
-import Link from "next/link"
-import { Container } from "@/components/ui/Container"
+"use client"
+import React from 'react'
+import Link from 'next/link'
+import { 
+  Building2, Camera, Video, User, Sparkles, Utensils, 
+  Layers, Music, Flame, Calendar, Speaker, ArrowRight, Laptop 
+} from 'lucide-react'
 
 export function CategoryGrid() {
   const categories = [
-    { name: "Venues", count: "120+", emoji: "🏰", slug: "venues" },
-    { name: "Photographers", count: "85+", emoji: "📸", slug: "photographers" },
-    { name: "Caterers", count: "60+", emoji: "🍲", slug: "caterers" },
-    { name: "Decorators", count: "45+", emoji: "🌸", slug: "decorators" },
-    { name: "Makeup Artists", count: "40+", emoji: "💄", slug: "makeup-artists" },
-    { name: "Qawwals", count: "15+", emoji: "🎤", slug: "qawwals" },
-    { name: "Rentals", count: "30+", emoji: "🚗", slug: "rentals" },
-    { name: "Event Planners", count: "25+", emoji: "📋", slug: "planners" },
-    { name: "Videographers", count: "35+", emoji: "🎥", slug: "videographers" }
+    { name: 'Venues', count: '450+ listings', icon: Building2, slug: 'venues', image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=300' },
+    { name: 'Photography', icon: Camera, slug: 'photographers', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=300' },
+    { name: 'Videography', icon: Video, slug: 'photographers', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=300' },
+    { name: 'Makeup', icon: User, slug: 'salons', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=300' },
+    { name: 'Decor', icon: Sparkles, slug: 'decor', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=300' },
+    { name: 'Catering', icon: Utensils, slug: 'catering', image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=300' },
+    { name: 'Bridal Wear', icon: Layers, slug: 'rentals', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=300' },
+    { name: 'Rentals', icon: Layers, slug: 'rentals', image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=300' },
+    { name: 'Entertainment', icon: Music, slug: 'djs', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=300' },
+    { name: 'Florists', icon: Flame, slug: 'florists', image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=300' },
+    { name: 'Event Planners', icon: Calendar, slug: 'planners', image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=300' },
+    { name: 'Production', icon: Laptop, slug: 'sound', image: 'https://images.unsplash.com/photo-1478812954026-9c750f0e89fc?q=80&w=300' }
   ]
 
   return (
-    <section className="py-20 bg-white border-b border-[#E6E2DA]">
-      <Container>
+    <section className="py-24 max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 bg-slate-50">
+      <div className="flex justify-between items-baseline mb-12">
+        <div className="text-left">
+          <span className="font-mono text-xs uppercase tracking-widest text-[#4F46E5] block font-bold mb-1">Explore Marketplace</span>
+          <h2 className="text-3xl font-black font-sans text-slate-900 tracking-tight">Browse by Category</h2>
+        </div>
         
-        {/* Header */}
-        <div className="text-center max-w-xl mx-auto mb-14 space-y-2">
-          <span className="text-[10px] font-black uppercase text-[#D4AF37] tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
-            🗂️ Browse Directories
-          </span>
-          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#1A1A1A]">
-            Browse by Category
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 font-semibold leading-relaxed">
-            Find checked, highly-rated specialists in Pakistan matching your event needs.
-          </p>
-        </div>
+        <Link href="/explore" className="text-xs font-black uppercase tracking-wider text-[#4F46E5] hover:underline flex items-center gap-1.5 min-h-[44px]">
+          View All <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
 
-        {/* 3x3 Grid (2x2 on Mobile) */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={`/search?category=${cat.slug}`}
-              className="group bg-[#FDF8F0]/40 hover:bg-white border border-[#E6E2DA] hover:border-[#D4AF37]/50 rounded-[20px] p-6 text-center flex flex-col items-center justify-center gap-2 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(212,175,55,0.08)] transition-all duration-300 cursor-pointer h-36"
+      {/* Horizontal categories slider element */}
+      <div className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide text-left w-full">
+        {categories.map((cat, index) => {
+          const Icon = cat.icon
+          return (
+            <Link 
+              key={index}
+              href={`/explore?category=${cat.slug}`}
+              className="group relative flex-shrink-0 w-64 h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white"
             >
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-300 select-none">
-                {cat.emoji}
-              </span>
-              <h3 className="font-heading font-bold text-sm sm:text-base text-[#1A1A1A]">
-                {cat.name}
-              </h3>
-              <span className="text-[10px] font-black tracking-widest text-[#0F5B3E] bg-[#0F5B3E]/5 px-2.5 py-0.5 rounded-full border border-[#0F5B3E]/10">
-                {cat.count}
-              </span>
-            </Link>
-          ))}
-        </div>
+              {/* Background cover image */}
+              <img 
+                src={cat.image} 
+                alt={cat.name} 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              />
+              {/* Dark overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
-      </Container>
+              {/* Category Icon and count details */}
+              <div className="absolute top-4 left-4 w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center">
+                <Icon className="w-4.5 h-4.5" />
+              </div>
+
+              <div className="absolute bottom-5 left-5 right-5 text-left">
+                <h3 className="text-base font-bold text-white leading-tight mb-1">
+                  {cat.name}
+                </h3>
+                <span className="text-[10px] font-semibold text-slate-300">
+                  {cat.count}
+                </span>
+              </div>
+            </Link>
+          )
+        })}
+      </div>
     </section>
   )
 }

@@ -35,6 +35,8 @@ export const metadata: Metadata = {
   description: "The premium digital invitation and management suite for high-net-worth Pakistani weddings, milestones, and elite operators.",
 };
 
+import NotificationManager from "@/components/NotificationManager";
+
 export default function RootLayout({
   children,
 }: {
@@ -50,6 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="antialiased selection:bg-[#D4AF37]/20 selection:text-[#D4AF37]">
+        <NotificationManager />
         <ClientProviders>
           {children}
         </ClientProviders>
