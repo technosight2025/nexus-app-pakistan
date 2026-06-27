@@ -29,12 +29,22 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const loadMessages = () => {
+  const loadMessages = async () => {
     try {
-      const data = localStorage.getItem(storageKey);
-      if (data) {
-        const parsed = JSON.parse(data);
-        if (Array.isArray(parsed)) {
+      // 1. Attempt to fetch from Supabase
+      const { fetchMessages } = await import('@/lib/supabase/chat');
+      const data = await fetchMessages(bookingId);
+      
+      if (data && data.length > 0) {
+        setMessages(data);
+        return;
+      }
+
+      // 2. Fallback to LocalStorage if Supabase is empty (for backward compatibility during demo)
+      const localData = localStorage.getItem(storageKey);
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
           setMessages(parsed);
           return;
         }
@@ -43,25 +53,51 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
       console.error("Corrupted chat data, resetting", e);
     }
     
-    // Default initial message if empty or corrupted
+    // 3. Default initial message if empty
     const initMsg = {
       id: Math.random().toString(36).substring(2, 15),
       booking_id: bookingId,
       sender_type: 'system',
       sender_name: 'Nexus System',
-      message: 'Project portal communication established. Messages are synced locally.',
+      message: 'Project portal communication established. Messages are synced securely.',
       created_at: new Date().toISOString()
     };
-    localStorage.setItem(storageKey, JSON.stringify([initMsg]));
     setMessages([initMsg]);
   };
 
   useEffect(() => {
-    loadMessages();
-    setLoading(false);
-    setTimeout(scrollToBottom, 50);
+    let isMounted = true;
+    let cleanupSync: (() => void) | undefined;
 
-    // Cross-tab synchronization
+    const initializeChat = async () => {
+      await loadMessages();
+      if (isMounted) setLoading(false);
+      setTimeout(scrollToBottom, 50);
+
+      // Start Realtime sync
+      const { syncLiveDiscussion } = await import('@/lib/discussion/sync-live-discussion');
+      cleanupSync = syncLiveDiscussion(bookingId);
+    };
+
+    initializeChat();
+
+    // Listen to real-time events from Supabase
+    const handleNewMessage = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail.bookingId === bookingId) {
+        const newMsg = customEvent.detail.message;
+        setMessages((prev) => {
+          // Avoid duplicates
+          if (Array.isArray(prev) && prev.some(m => m.id === newMsg.id)) return prev;
+          return [...(Array.isArray(prev) ? prev : []), newMsg];
+        });
+        setTimeout(scrollToBottom, 50);
+      }
+    };
+
+    window.addEventListener('nexus:discussion:message', handleNewMessage);
+
+    // Cross-tab synchronization (fallback for local storage mode)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === storageKey && e.newValue) {
         try {
@@ -77,11 +113,18 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    
+    return () => {
+      isMounted = false;
+      window.removeEventListener('nexus:discussion:message', handleNewMessage);
+      window.removeEventListener('storage', handleStorageChange);
+      if (cleanupSync) cleanupSync();
+    };
   }, [bookingId]);
 
-  const saveMessage = (textOrDataUrl: string) => {
-    const newMsg = {
+  const saveMessage = async (textOrDataUrl: string) => {
+    // Optimistic UI Update
+    const optimisticMsg = {
       id: Math.random().toString(36).substring(2, 15),
       booking_id: bookingId,
       sender_type: senderType,
@@ -90,12 +133,28 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
       created_at: new Date().toISOString()
     };
 
-    // Ensure we are working with an array
     const currentMessages = Array.isArray(messages) ? messages : [];
-    const updated = [...currentMessages, newMsg];
+    const updated = [...currentMessages, optimisticMsg];
     setMessages(updated);
-    localStorage.setItem(storageKey, JSON.stringify(updated));
     setTimeout(scrollToBottom, 50);
+
+    // Persist to Supabase
+    try {
+      const { insertMessage } = await import('@/lib/supabase/chat');
+      const savedMsg = await insertMessage(bookingId, senderType, senderName, textOrDataUrl);
+      
+      if (savedMsg) {
+        // Replace optimistic msg with real one from DB (to get correct UUID)
+        setMessages((prev) => 
+          prev.map((m) => m.id === optimisticMsg.id ? savedMsg : m)
+        );
+      } else {
+        // Fallback to local storage if DB fails
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+      }
+    } catch (err) {
+      localStorage.setItem(storageKey, JSON.stringify(updated));
+    }
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
