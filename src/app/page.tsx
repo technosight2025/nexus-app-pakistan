@@ -232,7 +232,13 @@ export default function HomePage() {
                 max="1000" 
                 step="25"
                 value={guestsCount} 
-                onChange={(e) => setGuestsCount(parseInt(e.target.value))}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setGuestsCount(val);
+                  if (typeof window !== 'undefined' && navigator.vibrate) {
+                    navigator.vibrate(5);
+                  }
+                }}
                 className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C5A880] [&::-webkit-slider-thumb]:w-10 [&::-webkit-slider-thumb]:h-10 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-[#C5A880] [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-10 [&::-moz-range-thumb]:h-10 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#C5A880] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:cursor-pointer"
               />
             </div>

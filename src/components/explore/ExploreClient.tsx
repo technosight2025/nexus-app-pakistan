@@ -1507,6 +1507,12 @@ export function ExploreClient() {
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-101"
                           />
                           
+                          {/* Verified Partner Badge */}
+                          <div className="absolute top-3 left-3 z-10 bg-white/95 border border-[#E6DCCF] px-2.5 py-1 rounded-full text-[8px] font-black text-slate-800 tracking-wider uppercase shadow-xs flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            Verified Partner
+                          </div>
+                          
                           {/* Heart favorite icon */}
                           <button
                             onClick={(e) => toggleWishlist(e, listing)}
@@ -1590,6 +1596,10 @@ export function ExploreClient() {
                       >
                         <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 shadow-3xs">
                           <img src={listing.images[activeIdx]} className="w-full h-full object-cover" alt="" />
+                          <div className="absolute top-2 left-2 z-10 bg-white/95 border border-[#E6DCCF] px-2 py-0.5 rounded-full text-[7px] font-black text-slate-800 tracking-wider uppercase shadow-xs flex items-center gap-0.5">
+                            <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                            Verified
+                          </div>
                           <button
                             onClick={(e) => toggleWishlist(e, listing)}
                             className="absolute top-2.5 right-2.5 z-10 p-1"

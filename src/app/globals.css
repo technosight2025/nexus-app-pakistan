@@ -96,44 +96,44 @@ div[id*="clerk-dev"], div[class*="clerk-dev"], .clerk-dev-badge, [class*="cl-int
 
 :root {
   /* Heritage Ivory (Primary Light Utility Mode) */
-  --background: #FAF5EC; /* Soft Cream Invitation Backdrop */
-  --foreground: #111C15; /* Deep Emerald-Black */
+  --background: #FAF6F0; /* Soft Cream/Champagne Invitation Backdrop */
+  --foreground: #1E2229; /* Dark Charcoal */
   
-  --primary: #0F2E1E;
+  --primary: #0F1E36; /* Deep Navy */
   --primary-foreground: #FAF9F6;
-  --primary-container: #F5F2EB;
+  --primary-container: #FAF6F0;
   
-  --secondary: #4A4E4B; /* Warm charcoal slate */
+  --secondary: #2D3142; /* Charcoal */
   --secondary-foreground: #FAF9F6;
-  --secondary-container: #EAE6DF;
+  --secondary-container: #F0EAE1;
   
-  --surface: #F5F2EB; /* Warm off-white surface */
+  --surface: #FAF6F0; /* Soft cream surface */
   --surface-container: #FAF9F6;
-  --on-surface: #0F2E1E;
-  --on-surface-variant: #4A4E4B;
+  --on-surface: #0F1E36;
+  --on-surface-variant: #2D3142;
   
-  --outline: #EAE6DF; /* Soft sage/cream border */
+  --outline: #E6DCCF; /* Champagne outline */
   --error: #991B1B; /* Deep Crimson */
 
-  --card: #F5F2EB;
-  --card-foreground: #0F2E1E;
+  --card: #FAF6F0;
+  --card-foreground: #0F1E36;
   
-  --popover: #F5F2EB;
-  --popover-foreground: #0F2E1E;
+  --popover: #FAF6F0;
+  --popover-foreground: #0F1E36;
   
-  --muted: #EAE6DF;
-  --muted-foreground: #4A4E4B;
+  --muted: #E6DCCF;
+  --muted-foreground: #2D3142;
   
-  --accent: #E5BA73; /* Brushed Metallic Gold */
-  --accent-foreground: #0F2E1E;
+  --accent: #E6C594; /* Champagne Gold */
+  --accent-foreground: #0F1E36;
   --orange: #F97316;
   
-  --border: #EAE6DF;
-  --input: #EAE6DF;
-  --ring: #10B981; /* Rich Sovereign Emerald */
+  --border: #E6DCCF;
+  --input: #E6DCCF;
+  --ring: #E6C594; /* Champagne Gold */
   
-  --brand-emerald: #10B981;
-  --brand-gold: #E5BA73;
+  --brand-emerald: #0F1E36; /* Unified to Deep Navy */
+  --brand-gold: #E6C594; /* Champagne Gold */
   
   --radius: 1.25rem;
 }

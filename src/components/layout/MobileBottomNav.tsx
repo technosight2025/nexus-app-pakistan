@@ -14,6 +14,12 @@ export function MobileBottomNav() {
     { name: "My Event", href: "/dashboard", icon: Calendar },
   ]
 
+  const triggerHaptic = () => {
+    if (typeof window !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  };
+
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-150 z-50 pb-safe">
       <div className="flex justify-around items-center h-16 px-2">
@@ -27,6 +33,7 @@ export function MobileBottomNav() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={triggerHaptic}
                 className="flex flex-col items-center justify-center w-16 h-full text-emerald-600 active:scale-95 transition-all"
               >
                 <div className="relative">
@@ -43,6 +50,7 @@ export function MobileBottomNav() {
             <Link 
               key={item.name} 
               href={item.href}
+              onClick={triggerHaptic}
               className={`flex flex-col items-center justify-center w-16 h-full transition-colors relative ${
                 isActive ? "text-[#C5A880]" : "text-neutral-400 hover:text-neutral-900"
               }`}
