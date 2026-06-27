@@ -1380,43 +1380,62 @@ export function ExploreClient() {
       <section className="bg-white border-b border-slate-100 sticky top-[72px] z-30 shadow-xs transition-all duration-300">
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pt-4 pb-2 flex items-center justify-between gap-6 overflow-hidden">
           
-          {/* Scrollable list */}
-          <div className="flex items-center gap-8 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-1">
-            {CATEGORIES.filter(cat => {
-              if (activeMainTab === 'venues') {
-                return ['halls', 'marquees', 'farmhouses', 'lawns', 'restaurants', 'historical'].includes(cat.id)
-              } else if (activeMainTab === 'vendors') {
-                return ['catering', 'decor', 'suits', 'jewelry', 'invitations', 'cars', 'gifts'].includes(cat.id)
-              } else {
-                return ['photographers', 'salons', 'planners', 'mehendi', 'djs', 'choreographers', 'stages', 'rentals'].includes(cat.id)
-              }
-            }).map((cat) => {
-              const isActive = activeCategory === cat.id
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    setActiveCategory(cat.id)
-                    setActiveSubcategory(cat.subcategories[0].id)
-                  }}
-                  className={`flex flex-col items-center gap-2 pb-2.5 transition-all cursor-pointer whitespace-nowrap group shrink-0 relative ${
-                    isActive 
-                      ? 'text-[#222222]' 
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <span className="text-xl group-hover:scale-105 transition-transform">{cat.icon}</span>
-                  <span className="text-[10px] font-black uppercase tracking-wider">{cat.name}</span>
-                  {isActive && (
-                    <motion.div 
-                      layoutId="activeCategoryUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#222222] rounded-full"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </button>
-              )
-            })}
+          {/* Scrollable list container with relative positioning */}
+          <div className="relative flex-1 flex items-center min-w-0">
+            <div 
+              id="categories-scroll"
+              className="flex items-center gap-8 overflow-x-auto no-scrollbar scroll-smooth flex-1 py-1 pr-12"
+            >
+              {CATEGORIES.filter(cat => {
+                if (activeMainTab === 'venues') {
+                  return ['halls', 'marquees', 'farmhouses', 'lawns', 'restaurants', 'historical'].includes(cat.id)
+                } else if (activeMainTab === 'vendors') {
+                  return ['catering', 'decor', 'suits', 'jewelry', 'invitations', 'cars', 'gifts'].includes(cat.id)
+                } else {
+                  return ['photographers', 'salons', 'planners', 'mehendi', 'djs', 'choreographers', 'stages', 'rentals'].includes(cat.id)
+                }
+              }).map((cat) => {
+                const isActive = activeCategory === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      setActiveCategory(cat.id)
+                      setActiveSubcategory(cat.subcategories[0].id)
+                    }}
+                    className={`flex flex-col items-center gap-2 pb-2.5 transition-all cursor-pointer whitespace-nowrap group shrink-0 relative ${
+                      isActive 
+                        ? 'text-[#222222]' 
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    <span className="text-xl group-hover:scale-105 transition-transform">{cat.icon}</span>
+                    <span className="text-[10px] font-black uppercase tracking-wider">{cat.name}</span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="activeCategoryUnderline"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#222222] rounded-full"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Fade & Scroll Arrow Button */}
+            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none flex items-center justify-end">
+              <button 
+                onClick={() => {
+                  document.getElementById('categories-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })
+                }}
+                className="w-7 h-7 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center cursor-pointer pointer-events-auto hover:scale-105 hover:shadow-md transition-all text-slate-600 mr-1"
+                title="Scroll to see more"
+                aria-label="Scroll right for more categories"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Filters Button */}
