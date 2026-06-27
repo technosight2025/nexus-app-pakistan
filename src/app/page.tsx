@@ -23,6 +23,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { PlanYourEventSection } from '@/components/home/PlanYourEventSection';
 import { HomeEntryCards } from '@/components/home/HomeEntryCards';
 import { HomeCategoryChips } from '@/components/home/HomeCategoryChips';
+import { HomeExploreHeader } from '@/components/layout/HomeExploreHeader';
 
 const AnimatedDropdown = ({ options, placeholder, value, onChange, isSleek }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,44 +118,8 @@ export default function HomePage() {
   return (
     <div className="w-full bg-[#FAF5EC] dark:bg-[#0B120E] min-h-screen font-sans pb-0 selection:bg-amber-100 antialiased transition-colors duration-300">
       
-      {/* 1. LUXURY TRANSPARENT NAVIGATION HEADER */}
-      <header className="absolute top-0 inset-x-0 z-[100] w-full pointer-events-auto">
-        <div className="max-w-[1400px] mx-auto px-6 h-20 md:h-24 flex items-center justify-between">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2 group">
-              <span className="text-2xl font-serif tracking-wide text-white">
-                NEXUS <span className="gold-shimmer font-semibold font-sans text-xl tracking-widest ml-1">HERITAGE</span>
-              </span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-4 md:gap-6">
-            <Link 
-              href="/venues" 
-              className="text-xs font-sans font-bold tracking-widest text-white/90 hover:text-[#E6CDA7] transition-colors"
-            >
-              EXPLORE VENUES
-            </Link>
-            
-            <button
-              onClick={() => setIsRomanUrdu(!isRomanUrdu)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-black tracking-wider uppercase rounded-full transition-all border border-white/20 text-white hover:bg-white/10 bg-white/5 cursor-pointer"
-            >
-              <span>{isRomanUrdu ? "Urdu" : "EN"}</span>
-            </button>
-
-            <div className="hidden sm:flex items-center space-x-3 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full shadow-lg">
-              <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span className="text-xs font-mono tracking-tight text-white/90">
-                PK-VIP-0902
-              </span>
-              <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#AA7C11] flex items-center justify-center text-white text-xs font-bold font-sans">
-                N
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* 1. GLOBAL EXPLORE-STYLE HEADER */}
+      <HomeExploreHeader />
 
       {/* 2. SLIDER HERO SECTION */}
       <div className="relative w-full h-screen min-h-[700px] flex items-center justify-center shadow-2xl bg-black">
