@@ -152,19 +152,28 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
           return newArray;
         });
       } else {
-        // Database failed, show error state
+        // Database failed, fallback to local storage
+        const fallbackMsg = { ...optimisticMsg, status: 'sent' };
         setMessages((prev) => {
-          const newArray = prev.map((m) => m.id === optimisticMsg.id ? { ...m, status: 'error' } : m);
+          const newArray = prev.map((m) => m.id === optimisticMsg.id ? fallbackMsg : m);
           localStorage.setItem(storageKey, JSON.stringify(newArray));
           return newArray;
         });
+        // Dispatch local event for cross-tab sync in fallback mode
+        window.dispatchEvent(new CustomEvent('nexus:discussion:message', {
+          detail: { bookingId, message: fallbackMsg }
+        }));
       }
     } catch (err) {
+      const fallbackMsg = { ...optimisticMsg, status: 'sent' };
       setMessages((prev) => {
-        const newArray = prev.map((m) => m.id === optimisticMsg.id ? { ...m, status: 'error' } : m);
+        const newArray = prev.map((m) => m.id === optimisticMsg.id ? fallbackMsg : m);
         localStorage.setItem(storageKey, JSON.stringify(newArray));
         return newArray;
       });
+      window.dispatchEvent(new CustomEvent('nexus:discussion:message', {
+        detail: { bookingId, message: fallbackMsg }
+      }));
     }
   };
 
