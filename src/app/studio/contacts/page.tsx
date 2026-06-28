@@ -20,8 +20,8 @@ export default function CRMPage() {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("All")
-  const [selectedContact, setSelectedContact] = useState<any | null>(null)
   const CONTACTS = getContacts()
+  const [selectedContact, setSelectedContact] = useState<ReturnType<typeof getContacts>[0] | null>(null)
 
   const filters = ["All", "Clients", "Vendors", "Freelancers", "Leads", "VIP"]
 

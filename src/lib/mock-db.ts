@@ -234,7 +234,7 @@ export const DEFAULT_CONTACTS = [
   },
 ]
 
-export function getContacts() {
+export function getContacts(): typeof DEFAULT_CONTACTS {
   if (typeof window === 'undefined') return DEFAULT_CONTACTS;
   const stored = localStorage.getItem("nexus_contacts");
   if (stored) return JSON.parse(stored);
