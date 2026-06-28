@@ -4,12 +4,21 @@ import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Search, Plus, Phone, Video, MoreVertical, Loader2, MessageSquare } from "lucide-react"
 import { getQuotations } from "@/lib/mock-db"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import NexusChat from "@/components/NexusChat"
 
 export default function MessagesPage() {
   const [conversations, setConversations] = useState<any[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isNewMessageOpen, setIsNewMessageOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
     // Load all non-draft quotations as potential conversations
@@ -36,9 +45,58 @@ export default function MessagesPage() {
             Communicate with clients and team members in real-time.
           </p>
         </div>
-        <button className="px-5 py-2.5 bg-[#0A3B2A] dark:bg-cyan-600 text-white rounded-full font-bold text-sm hover:bg-[#0F5B3E] dark:hover:bg-cyan-500 transition-colors shadow-lg flex items-center gap-2">
-          <Plus className="w-4 h-4" /> New Message
-        </button>
+        <Dialog open={isNewMessageOpen} onOpenChange={setIsNewMessageOpen}>
+          <DialogTrigger asChild>
+            <button className="px-5 py-2.5 bg-[#0A3B2A] dark:bg-cyan-600 text-white rounded-full font-bold text-sm hover:bg-[#0F5B3E] dark:hover:bg-cyan-500 transition-colors shadow-lg flex items-center gap-2">
+              <Plus className="w-4 h-4" /> New Message
+            </button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden border-none shadow-2xl">
+            <DialogHeader className="p-6 bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/10 pb-4">
+              <DialogTitle className="text-xl font-black">Start New Message</DialogTitle>
+            </DialogHeader>
+            <div className="p-4 border-b border-slate-100 dark:border-white/10">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search contacts..." 
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0A3B2A]/20 dark:focus:ring-cyan-500/30 text-sm"
+                />
+              </div>
+            </div>
+            <div className="max-h-[300px] overflow-y-auto">
+              {conversations
+                .filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((conv) => (
+                <div 
+                  key={`new-msg-${conv.id}`} 
+                  onClick={() => {
+                    setActiveId(conv.id);
+                    setIsNewMessageOpen(false);
+                    setSearchQuery("");
+                  }}
+                  className="p-4 flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b border-slate-50 dark:border-white/5 last:border-0"
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white ${conv.color || 'bg-indigo-500'}`}>
+                    {conv.initials || conv.client.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 dark:text-white text-sm">{conv.client}</h4>
+                    <p className="text-xs text-gray-500">{conv.event}</p>
+                  </div>
+                </div>
+              ))}
+              {conversations.filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                <div className="p-8 text-center text-gray-500 text-sm">
+                  No contacts found.
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Chat Interface */}
