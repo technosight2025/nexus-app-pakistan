@@ -103,14 +103,12 @@ export default function MessagesPage() {
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full bg-white dark:bg-transparent overflow-hidden relative">
           {activeQuote ? (
-            <div className="absolute inset-0">
                <NexusChat 
                  key={activeQuote.id}
                  bookingId={activeQuote.id} 
                  senderType="studio_admin" 
                  senderName="Creative Studio" 
                />
-            </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-gray-400 h-full">
               <MessageSquare className="w-12 h-12 mb-4 opacity-20" />
