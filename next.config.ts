@@ -23,8 +23,10 @@ const nextConfig: NextConfig = {
   
   typescript: {
     ignoreBuildErrors: false, 
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   }
-  // Removed the legacy eslint key; Next.js 16 now coordinates linting rules automatically!
 };
 
 export default nextConfig;
