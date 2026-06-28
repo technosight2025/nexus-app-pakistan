@@ -24,7 +24,7 @@ export default function MessagesPage() {
   const activeQuote = conversations.find(c => c.id === activeId)
 
   return (
-    <div className="absolute inset-0 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 mb-8">

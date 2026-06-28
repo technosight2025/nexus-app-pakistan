@@ -61,7 +61,7 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
           >
             <StudioHeader onMobileSidebarToggle={() => setMobileSidebarOpen(true)} />
 
-            <div className="flex-1 p-4 sm:p-5 md:p-6 xl:p-10 w-full min-w-0 max-w-[1600px] mx-auto">
+            <div className="flex-1 flex flex-col p-4 sm:p-5 md:p-6 xl:p-10 w-full min-w-0 max-w-[1600px] mx-auto">
               {children}
             </div>
           </main>
