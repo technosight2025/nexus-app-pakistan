@@ -19,18 +19,25 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true)
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [allContacts, setAllContacts] = useState<any[]>([])
 
   useEffect(() => {
-    // Load all non-draft quotations as potential conversations
-    const quotes = getQuotations().filter((q: any) => q.status !== "Draft")
-    setConversations(quotes)
-    if (quotes.length > 0) {
-      setActiveId(quotes[0].id)
+    // Load all quotations as potential new message contacts
+    const allQuotes = getQuotations()
+    setAllContacts(allQuotes)
+    
+    // Default sidebar conversations (non-drafts)
+    const activeQuotes = allQuotes.filter((q: any) => q.status !== "Draft")
+    setConversations(activeQuotes)
+    
+    if (activeQuotes.length > 0) {
+      setActiveId(activeQuotes[0].id)
     }
     setLoading(false)
   }, [])
 
-  const activeQuote = conversations.find(c => c.id === activeId)
+  // The active quote needs to look in allContacts in case it's a new conversation
+  const activeQuote = allContacts.find(c => c.id === activeId)
 
   return (
     <div className="flex-1 flex flex-col min-h-0 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -68,13 +75,20 @@ export default function MessagesPage() {
               </div>
             </div>
             <div className="max-h-[300px] overflow-y-auto">
-              {conversations
+              {allContacts
                 .filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase()))
                 .map((conv) => (
                 <div 
                   key={`new-msg-${conv.id}`} 
                   onClick={() => {
                     setActiveId(conv.id);
+                    // Add to active conversations if not already there
+                    setConversations(prev => {
+                      if (!prev.find(p => p.id === conv.id)) {
+                        return [conv, ...prev];
+                      }
+                      return prev;
+                    });
                     setIsNewMessageOpen(false);
                     setSearchQuery("");
                   }}
@@ -89,7 +103,7 @@ export default function MessagesPage() {
                   </div>
                 </div>
               ))}
-              {conversations.filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+              {allContacts.filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
                 <div className="p-8 text-center text-gray-500 text-sm">
                   No contacts found.
                 </div>
