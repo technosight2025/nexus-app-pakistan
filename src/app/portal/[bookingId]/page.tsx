@@ -424,7 +424,9 @@ export default function NexusClientFacingPortal({ params }: PageProps) {
 
         {/* Real-time Multi-Portal Live Discussion Tab Layout Block */}
         <div className="space-y-3 pt-2">
-          <NexusChat bookingId={bookingId} senderType="host" senderName={booking?.host_name || 'Host'} />
+          <div className="h-[500px] w-full">
+            <NexusChat bookingId={bookingId} senderType="host" senderName={booking?.host_name || 'Host'} />
+          </div>
         </div>
 
       </main>

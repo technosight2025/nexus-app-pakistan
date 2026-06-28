@@ -248,27 +248,27 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex-1 flex flex-col min-h-0 h-full w-full relative">
+    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-none rounded-2xl dark:rounded-none shadow-sm dark:shadow-none overflow-hidden flex-1 flex flex-col min-h-0 h-full w-full relative">
       
       {/* Chat Sub-Header */}
-      <div className="bg-slate-50 border-b border-slate-100 p-3.5 flex items-center justify-between shrink-0">
+      <div className="bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/10 p-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-[#0F5B3E]" />
-          <span className="text-xs font-black text-slate-700 tracking-tight uppercase">Live Discussion Hub</span>
+          <MessageSquare className="w-4 h-4 text-[#0F5B3E] dark:text-cyan-400" />
+          <span className="text-xs font-black text-slate-700 dark:text-white tracking-tight uppercase">Live Discussion Hub</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span className="text-[10px] bg-emerald-50 text-emerald-600 font-black px-2 py-0.5 rounded-full uppercase">
+          <span className="text-[10px] bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black px-2 py-0.5 rounded-full uppercase">
             Sync Active
           </span>
         </div>
       </div>
 
       {/* Message History Feed */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAF7F2]/30 min-h-0">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAF7F2]/30 dark:bg-transparent min-h-0">
         {Array.isArray(messages) && messages.map((msg, index) => {
           if (!msg) return null;
           const isMe = msg.sender_type === senderType;
@@ -279,20 +279,20 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
           if (isSystem) {
              return (
                <div key={msg.id || index} className="flex justify-center my-2">
-                 <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">{messageText}</span>
+                 <span className="text-[10px] font-bold text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-white/10 px-3 py-1 rounded-full">{messageText}</span>
                </div>
              )
           }
 
           return (
             <div key={msg.id || index} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-              <span className="text-[9px] text-slate-400 font-bold mb-0.5 px-1">
+              <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold mb-0.5 px-1">
                 {msg.sender_name || 'User'} • {msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
               </span>
               <div className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs font-medium shadow-sm leading-relaxed ${
                 isMe 
-                  ? msg.status === 'error' ? 'bg-red-500 text-white rounded-tr-none' : 'bg-[#0F5B3E] text-white rounded-tr-none' 
-                  : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none'
+                  ? msg.status === 'error' ? 'bg-red-500 text-white rounded-tr-none' : 'bg-[#0F5B3E] dark:bg-cyan-600 text-white rounded-tr-none' 
+                  : 'bg-white dark:bg-white/10 text-slate-800 dark:text-white border border-slate-200 dark:border-white/10 rounded-tl-none'
               }`}>
                 {isAudio ? (
                   <audio controls src={messageText} className="h-8 w-48 sm:w-64 outline-none" />
@@ -317,7 +317,7 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
       </div>
 
       {/* Input Form Action Strip */}
-      <div className="p-3 border-t border-slate-100 bg-white shrink-0">
+      <div className="p-3 border-t border-slate-100 dark:border-white/10 bg-white dark:bg-transparent shrink-0">
         {isRecording ? (
           <div className="flex items-center justify-between bg-red-50 border border-red-100 rounded-xl px-4 py-2">
             <div className="flex items-center gap-3">
@@ -343,13 +343,13 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-medium focus:outline-none focus:border-[#0F5B3E] transition-all"
+              className="flex-1 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-medium focus:outline-none focus:border-[#0F5B3E] dark:focus:border-cyan-500 transition-all dark:text-white"
             />
             
             {newMessage.trim() ? (
               <button 
                 type="submit" 
-                className="bg-[#0F5B3E] hover:bg-[#0a3f2b] text-white p-2.5 rounded-xl shadow-sm transition-all flex items-center justify-center"
+                className="bg-[#0F5B3E] dark:bg-cyan-600 hover:bg-[#0a3f2b] dark:hover:bg-cyan-700 text-white p-2.5 rounded-xl shadow-sm transition-all flex items-center justify-center"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -357,7 +357,7 @@ export default function NexusChat({ bookingId, senderType, senderName }: ChatPro
               <button 
                 type="button" 
                 onClick={startRecording}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2.5 rounded-xl transition-all flex items-center justify-center border border-slate-200"
+                className="bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 p-2.5 rounded-xl transition-all flex items-center justify-center border border-slate-200 dark:border-white/10"
                 title="Send Voice Note"
               >
                 <Mic className="w-4 h-4" />

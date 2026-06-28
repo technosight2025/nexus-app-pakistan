@@ -196,7 +196,9 @@ export default function NexusB2BStudioWorkspace() {
               </div>
             </div>
             
-            <NexusChat bookingId={testBookingId} senderType="studio_admin" senderName="Studio Director" />
+            <div className="min-h-[500px] w-full">
+              <NexusChat bookingId={testBookingId} senderType="studio_admin" senderName="Studio Director" />
+            </div>
           </div>
         )}
 
