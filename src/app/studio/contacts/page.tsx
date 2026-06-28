@@ -7,103 +7,7 @@ import {
   Calendar, DollarSign, MoreVertical, Filter, Users,
   TrendingUp, Heart, Clock, Briefcase, Home
 } from "lucide-react"
-
-const CONTACTS = [
-  {
-    id: "CL-001", name: "Ayesha Khan", type: "Bride", city: "Lahore",
-    email: "ayesha@gmail.com", phone: "+92-300-1234567",
-    homeAddress: "DHA Phase 6, Lahore", businessAddress: "",
-    bookings: 3, totalValue: 245000, lastEvent: "Walima – Jul 5",
-    rating: 5, status: "Active", initials: "AK", color: "bg-indigo-500",
-    tags: ["Wedding","VIP"], joined: "Jan 2024",
-    timeline: [
-      { date: "Jun 20", event: "Final album delivered" },
-      { date: "May 25", event: "Walima shoot completed" },
-      { date: "May 1", event: "Booking confirmed – ₨1,20,000" },
-    ]
-  },
-  {
-    id: "CL-002", name: "Hassan Ali", type: "Groom", city: "Islamabad",
-    email: "hassan@hotmail.com", phone: "+92-321-9876543",
-    homeAddress: "F-8/4, Islamabad", businessAddress: "",
-    bookings: 2, totalValue: 120000, lastEvent: "Walima – Jul 18",
-    rating: 5, status: "Active", initials: "HA", color: "bg-emerald-500",
-    tags: ["Wedding"], joined: "Mar 2024",
-    timeline: [
-      { date: "Jul 2", event: "Advance payment received" },
-      { date: "Jun 15", event: "Contract signed" },
-    ]
-  },
-  {
-    id: "CL-003", name: "Sara Imran", type: "Client", city: "Karachi",
-    email: "sara.imran@corp.pk", phone: "+92-333-5551234",
-    homeAddress: "Clifton Block 5, Karachi", businessAddress: "",
-    bookings: 1, totalValue: 45000, lastEvent: "Bridal Shoot – Jul 10",
-    rating: 4, status: "Pending", initials: "SI", color: "bg-sky-500",
-    tags: ["Shoot"], joined: "Jun 2024",
-    timeline: [
-      { date: "Jun 28", event: "Inquiry submitted" },
-    ]
-  },
-  {
-    id: "CL-004", name: "Farhan Malik", type: "Corporate", city: "Lahore",
-    email: "farhan@techcorp.pk", phone: "+92-300-7890123",
-    homeAddress: "Askari 11, Lahore", businessAddress: "TechCorp Plaza, Gulberg III",
-    bookings: 4, totalValue: 380000, lastEvent: "Product Launch – Jul 22",
-    rating: 5, status: "Active", initials: "FM", color: "bg-amber-500",
-    tags: ["Corporate","VIP","Repeat"], joined: "Oct 2023",
-    timeline: [
-      { date: "Jul 1", event: "New project created" },
-      { date: "May 30", event: "Invoice #INV-098 paid" },
-      { date: "Apr 12", event: "Corporate shoot completed" },
-    ]
-  },
-  {
-    id: "CL-005", name: "Nadia Hussain", type: "Bride", city: "Faisalabad",
-    email: "nadia@gmail.com", phone: "+92-311-4445678",
-    homeAddress: "Peoples Colony, Faisalabad", businessAddress: "",
-    bookings: 1, totalValue: 35000, lastEvent: "Mehndi – Jul 18",
-    rating: 4, status: "Active", initials: "NH", color: "bg-rose-500",
-    tags: ["Wedding"], joined: "May 2024",
-    timeline: [
-      { date: "Jun 10", event: "Booking finalized" },
-    ]
-  },
-  {
-    id: "CT-006", name: "Bilal Khan", type: "Corporate", city: "Karachi",
-    email: "bilal@brand.pk", phone: "+92-321-2223344",
-    homeAddress: "", businessAddress: "I.I. Chundrigar Road, Karachi",
-    bookings: 1, totalValue: 95000, lastEvent: "Product Launch – Aug 2",
-    rating: 0, status: "Lead", initials: "BK", color: "bg-cyan-500",
-    tags: ["Corporate","New Lead"], joined: "Jul 2024",
-    timeline: [
-      { date: "Jul 5", event: "Inquiry received via website" },
-    ]
-  },
-  {
-    id: "CT-007", name: "Alpha Prints", type: "Vendor", city: "Lahore",
-    email: "orders@alphaprints.pk", phone: "+92-300-1112233",
-    homeAddress: "", businessAddress: "Shop 12, Photography Market, Nisbat Road",
-    bookings: 14, totalValue: 250000, lastEvent: "Album Printing",
-    rating: 5, status: "Active", initials: "AP", color: "bg-orange-500",
-    tags: ["Printing", "Vendor", "Reliable"], joined: "Jan 2023",
-    timeline: [
-      { date: "Jul 1", event: "Delivered 5 albums" },
-      { date: "Jun 15", event: "Invoice paid" },
-    ]
-  },
-  {
-    id: "CT-008", name: "Zain Drone Pro", type: "Freelancer", city: "Islamabad",
-    email: "zain.drones@gmail.com", phone: "+92-333-9998877",
-    homeAddress: "G-11 Markaz, Islamabad", businessAddress: "",
-    bookings: 8, totalValue: 160000, lastEvent: "Walima Coverage",
-    rating: 4, status: "Active", initials: "ZD", color: "bg-violet-500",
-    tags: ["Drone Operator", "Freelancer"], joined: "Nov 2023",
-    timeline: [
-      { date: "Jul 4", event: "Hired for BK-1024" },
-    ]
-  },
-]
+import { getContacts } from "@/lib/mock-db"
 
 const STATUS_STYLES: Record<string, string> = {
   "Active": "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
@@ -116,7 +20,8 @@ export default function CRMPage() {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("All")
-  const [selectedContact, setSelectedContact] = useState<typeof CONTACTS[0] | null>(null)
+  const [selectedContact, setSelectedContact] = useState<any | null>(null)
+  const CONTACTS = getContacts()
 
   const filters = ["All", "Clients", "Vendors", "Freelancers", "Leads", "VIP"]
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Search, Plus, Phone, Video, MoreVertical, Loader2, MessageSquare } from "lucide-react"
-import { getQuotations } from "@/lib/mock-db"
+import { getQuotations, getContacts } from "@/lib/mock-db"
 import {
   Dialog,
   DialogContent,
@@ -22,9 +22,23 @@ export default function MessagesPage() {
   const [allContacts, setAllContacts] = useState<any[]>([])
 
   useEffect(() => {
-    // Load all quotations as potential new message contacts
+    // Load all quotations and contacts as potential new message contacts
     const allQuotes = getQuotations()
-    setAllContacts(allQuotes)
+    const allRawContacts = getContacts()
+    
+    const mappedContacts = allRawContacts.map((c: any) => ({
+      ...c,
+      client: c.name,
+      event: c.type + (c.city ? ` · ${c.city}` : ""),
+    }))
+
+    const combinedContacts = [...mappedContacts, ...allQuotes]
+    
+    // Optional: filter out duplicates if needed, but simple combination is fine
+    // deduplicate by ID just in case
+    const uniqueContacts = Array.from(new Map(combinedContacts.map(item => [item.id, item])).values());
+    
+    setAllContacts(uniqueContacts)
     
     // Default sidebar conversations (non-drafts)
     const activeQuotes = allQuotes.filter((q: any) => q.status !== "Draft")
@@ -76,7 +90,7 @@ export default function MessagesPage() {
             </div>
             <div className="max-h-[300px] overflow-y-auto">
               {allContacts
-                .filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase()))
+                .filter(c => (c?.client || "").toLowerCase().includes((searchQuery || "").toLowerCase()))
                 .map((conv) => (
                 <div 
                   key={`new-msg-${conv.id}`} 
@@ -103,7 +117,7 @@ export default function MessagesPage() {
                   </div>
                 </div>
               ))}
-              {allContacts.filter(c => c.client.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+              {allContacts.filter(c => (c?.client || "").toLowerCase().includes((searchQuery || "").toLowerCase())).length === 0 && (
                 <div className="p-8 text-center text-gray-500 text-sm">
                   No contacts found.
                 </div>
