@@ -42,7 +42,7 @@ export default function MessagesPage() {
       </div>
 
       {/* Chat Interface */}
-      <Card className="flex-1 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] overflow-hidden dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10 flex min-h-0">
+      <Card className="flex-1 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] overflow-hidden dark:bg-white/5 dark:backdrop-blur-xl dark:border dark:border-white/10 flex flex-row min-h-0 p-0 gap-0">
         
         {/* Conversations Sidebar */}
         <div className="w-80 border-r border-gray-100 dark:border-white/10 flex flex-col shrink-0 bg-white/50 dark:bg-transparent hidden lg:flex">
